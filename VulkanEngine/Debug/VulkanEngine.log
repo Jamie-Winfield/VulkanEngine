@@ -1,0 +1,15 @@
+﻿  main.cpp
+main.obj : error LNK2019: unresolved external symbol _vkCreateInstance@12 referenced in function "private: void __thiscall HelloTriangleApplication::createInstance(void)" (?createInstance@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _vkDestroyInstance@8 referenced in function "private: void __thiscall HelloTriangleApplication::cleanup(void)" (?cleanup@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _vkEnumerateInstanceLayerProperties@8 referenced in function "private: bool __thiscall HelloTriangleApplication::checkValidationLayerSupport(void)" (?checkValidationLayerSupport@HelloTriangleApplication@@AAE_NXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwInit referenced in function "private: void __thiscall HelloTriangleApplication::initWindow(void)" (?initWindow@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwTerminate referenced in function "private: void __thiscall HelloTriangleApplication::cleanup(void)" (?cleanup@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwWindowHint referenced in function "private: void __thiscall HelloTriangleApplication::initWindow(void)" (?initWindow@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwCreateWindow referenced in function "private: void __thiscall HelloTriangleApplication::initWindow(void)" (?initWindow@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwDestroyWindow referenced in function "private: void __thiscall HelloTriangleApplication::cleanup(void)" (?cleanup@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwWindowShouldClose referenced in function "private: void __thiscall HelloTriangleApplication::mainLoop(void)" (?mainLoop@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwPollEvents referenced in function "private: void __thiscall HelloTriangleApplication::mainLoop(void)" (?mainLoop@HelloTriangleApplication@@AAEXXZ)
+main.obj : error LNK2019: unresolved external symbol _glfwGetRequiredInstanceExtensions referenced in function "private: void __thiscall HelloTriangleApplication::createInstance(void)" (?createInstance@HelloTriangleApplication@@AAEXXZ)
+C:\Game Engine Parts\VulkanSDK\1.2.182.0\Lib\vulkan-1.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Game Engine Parts\glfw-3.3.4.bin.WIN64\lib-vc2019\glfw3.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\jamie\source\repos\VulkanEngine\Debug\VulkanEngine.exe : fatal error LNK1120: 11 unresolved externals
