@@ -18,7 +18,7 @@
 #include <set>
 #include <optional>
 
-
+//TODO STAGING BUFFER
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
