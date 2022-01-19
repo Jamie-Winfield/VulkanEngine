@@ -13,6 +13,7 @@
 #include "settings.hpp"
 #include "helpers.cpp"
 #include "Vertex.h"
+#include "triangle.h"
 
 #include <map>
 #include <set>
@@ -112,6 +113,8 @@ private:
     VkBuffer vertexBuffer2;
     VkDeviceMemory vertexBufferMemory2;
 
+    std::vector<Triangle> triangles;
+
 
 public:
     void run()
@@ -154,46 +157,51 @@ private:
         createGraphicsPipeline();
         createFramebuffers();
         createCommandPool();
-        createVertexBuffer();
+        createTris();
+        //createVertexBuffer();
         createCommandBuffers();
         createSyncObjects();
     }
 
+    void createTris()
+    {
+        Triangle tri1;
+        Triangle tri2;
+        triangles.emplace_back(std::move(tri1));
+        triangles.emplace_back(std::move(tri2));
+
+        for (auto vertex : vertices)
+        {
+            triangles[0].addVertex(vertex);
+        }
+        for (auto vertex : vertices2)
+        {
+            triangles[1].addVertex(vertex);
+        }
+        triangles[0].createBuffer(device, physicalDevice, commandPool, graphicsQueue);
+        triangles[1].createBuffer(device, physicalDevice, commandPool, graphicsQueue);
+
+    }
+
     void createVertexBuffer()
     {
-        VkBufferCreateInfo bufferInfo{};
-        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferInfo.size = sizeof(vertices[0]) * vertices.size();
-        bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-        auto result = vkCreateBuffer(device, &bufferInfo, nullptr, &vertexBuffer);
-        if (result != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to create vertex buffer! vk error: " + std::to_string(result));
-        }
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingBufferMemory;
+        Helpers::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory, device, physicalDevice);
 
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(device, vertexBuffer, &memRequirements);
-
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = Helpers::findMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, physicalDevice);
-
-        result = vkAllocateMemory(device, &allocInfo, nullptr, &vertexBufferMemory);
-        if (result != VK_SUCCESS)
-        {
-            throw std::runtime_error("failed to allocate vertex buffer memory! vk error: " + std::to_string(result));
-        }
-
-        vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);
 
         void* data;
-        vkMapMemory(device, vertexBufferMemory, 0, bufferInfo.size, 0, &data);
-        memcpy(data, vertices.data(), static_cast<size_t>(bufferInfo.size));
-        vkUnmapMemory(device, vertexBufferMemory);
+        vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+        memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
+        vkUnmapMemory(device, stagingBufferMemory);
 
+        Helpers::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory, device, physicalDevice);
+        Helpers::copyBuffer(stagingBuffer, vertexBuffer, bufferSize, commandPool, graphicsQueue, device);
+
+        vkDestroyBuffer(device, stagingBuffer, nullptr);
+        vkFreeMemory(device, stagingBufferMemory, nullptr);
         createvertexBuffer2();
         
     }
@@ -346,6 +354,16 @@ private:
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
             vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,graphicsPipeline);
 
+
+            for (auto triangle : triangles)
+            {
+                VkBuffer vertexBuffers[] = { triangle.vertexBuffer };
+                VkDeviceSize offsets[] = { 0 };
+                vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+
+                vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+            }
+            /*
             VkBuffer vertexBuffers[] = { vertexBuffer };
             VkDeviceSize offsets[] = { 0 };
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
@@ -358,7 +376,7 @@ private:
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers2, offsets2);
 
             vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
-
+            */
             vkCmdEndRenderPass(commandBuffers[i]);
 
             result = vkEndCommandBuffer(commandBuffers[i]);
@@ -1088,9 +1106,14 @@ private:
     {
         cleanupSwapChain();
 
+        for (auto triangle : triangles)
+        {
+            triangle.free(device);
+        }
+        /*
         vkDestroyBuffer(device, vertexBuffer, nullptr);
         vkFreeMemory(device, vertexBufferMemory, nullptr);
-
+        */
         for (size_t i = 0; i < settings.MAX_FRAMES_IN_FLIGHT; ++i)
         {
             vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
