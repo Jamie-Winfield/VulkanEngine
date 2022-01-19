@@ -97,18 +97,25 @@ private:
 
     const std::vector<Vertex> vertices =
     {
-        {{0.f, -1.f}, {1.f, 1.f, 1.f}},
-        {{0.5f, 0.f}, {0.f, 1.f, 0.f}},
-        {{-0.5f, 0.f}, {0.f, 0.f, 1.f}}
+        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
     };
+
+    const std::vector<uint16_t> indices = {
+    0, 1, 2, 2, 3, 0
+    };
+
     VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
 
     const std::vector<Vertex> vertices2 =
     {
-        {{0.f, -0.5f}, {1.f, 1.f, 1.f}},
-        {{0.5f, 0.5f}, {0.f, 1.f, 0.f}},
-        {{-0.5f, 0.5f}, {0.f, 0.f, 1.f}}
+        {{-0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 1.f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f, 1.f}, {1.0f, 1.0f, 1.0f}}
     };
     VkBuffer vertexBuffer2;
     VkDeviceMemory vertexBufferMemory2;
@@ -170,16 +177,24 @@ private:
         triangles.emplace_back(std::move(tri1));
         triangles.emplace_back(std::move(tri2));
 
-        for (auto vertex : vertices)
+        for (auto const vertex : vertices)
         {
             triangles[0].addVertex(vertex);
         }
-        for (auto vertex : vertices2)
+        for (auto const vertex : vertices2)
         {
             triangles[1].addVertex(vertex);
         }
-        triangles[0].createBuffer(device, physicalDevice, commandPool, graphicsQueue);
-        triangles[1].createBuffer(device, physicalDevice, commandPool, graphicsQueue);
+        for (auto const index : indices)
+        {
+            triangles[0].addIndex(index);
+            triangles[1].addIndex(index);
+        }
+        triangles[0].createVertexBuffer(device, physicalDevice, commandPool, graphicsQueue);
+        triangles[1].createVertexBuffer(device, physicalDevice, commandPool, graphicsQueue);
+        triangles[0].createIndexBuffer(device, physicalDevice, commandPool, graphicsQueue);
+        triangles[1].createIndexBuffer(device, physicalDevice, commandPool, graphicsQueue);
+
 
     }
 
@@ -202,44 +217,6 @@ private:
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
-        createvertexBuffer2();
-        
-    }
-
-    void createvertexBuffer2()
-    {
-        VkBufferCreateInfo bufferInfo{};
-        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferInfo.size = sizeof(vertices2[0]) * vertices2.size();
-        bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-        auto result = vkCreateBuffer(device, &bufferInfo, nullptr, &vertexBuffer2);
-        if (result != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to create vertex buffer! vk error: " + std::to_string(result));
-        }
-
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(device, vertexBuffer2, &memRequirements);
-
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = Helpers::findMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, physicalDevice);
-
-        result = vkAllocateMemory(device, &allocInfo, nullptr, &vertexBufferMemory2);
-        if (result != VK_SUCCESS)
-        {
-            throw std::runtime_error("failed to allocate vertex buffer memory! vk error: " + std::to_string(result));
-        }
-
-        vkBindBufferMemory(device, vertexBuffer2, vertexBufferMemory2, 0);
-
-        void* data;
-        vkMapMemory(device, vertexBufferMemory2, 0, bufferInfo.size, 0, &data);
-        memcpy(data, vertices2.data(), static_cast<size_t>(bufferInfo.size));
-        vkUnmapMemory(device, vertexBufferMemory2);
     }
 
     void recreateSwapChain()
@@ -360,8 +337,9 @@ private:
                 VkBuffer vertexBuffers[] = { triangle.vertexBuffer };
                 VkDeviceSize offsets[] = { 0 };
                 vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+                vkCmdBindIndexBuffer(commandBuffers[i], triangle.indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
-                vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(triangle.indices.size()), 1, 0, 0, 0);
             }
             /*
             VkBuffer vertexBuffers[] = { vertexBuffer };
