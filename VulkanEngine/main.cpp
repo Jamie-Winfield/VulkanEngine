@@ -242,7 +242,7 @@ private:
 
     void createUniformBuffers()
     {
-        VkDeviceSize bufferSize = sizeof(UniformBufferObject) * 2;
+        VkDeviceSize bufferSize = sizeof(UniformBufferObject) * triangles.size();
         uniformBuffers.resize(swapChainImages.size());
         uniformBuffersMemory.resize(swapChainImages.size());
 
@@ -280,11 +280,11 @@ private:
         triangles.emplace_back(std::move(tri1));
         triangles.emplace_back(std::move(tri2));
 
-        for (auto const vertex : vertices)
+        for (const auto vertex : vertices)
         {
             triangles[0].addVertex(vertex);
         }
-        for (auto const vertex : vertices2)
+        for (const auto vertex : vertices2)
         {
             triangles[1].addVertex(vertex);
         }
@@ -301,6 +301,7 @@ private:
         triangles[1].updateModelMatrix();
         triangles[0].pos_x = 1;
         triangles[0].updateModelMatrix();
+        triangles[0].rot_angle = 45.f;
 
 
     }
@@ -1179,9 +1180,9 @@ private:
         for (size_t i = 0; i < triangles.size(); ++i)
         {
             
-            ubo.model = glm::rotate(triangles[i].modelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
-            ubo.view = glm::lookAt(glm::vec3(2.f, 2.f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 1.f));
-            ubo.proj = glm::perspective(glm::radians(45.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
+            ubo.model = glm::rotate(triangles[i].modelMatrix, time * glm::radians(triangles[i].rot_angle), glm::vec3(0.f, 0.f, 1.f));
+            ubo.view = glm::lookAt(glm::vec3(0.f, 0.0f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+            ubo.proj = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
             ubo.proj[1][1] *= -1;
 
             void* data;

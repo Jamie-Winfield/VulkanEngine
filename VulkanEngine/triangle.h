@@ -77,6 +77,8 @@ struct Triangle
     float rot_y = 0;
     float rot_z = 0;
 
+    float rot_angle = 0;
+
     glm::mat4 modelMatrix = glm::mat4(1.f);
 
     void updateModelMatrix()

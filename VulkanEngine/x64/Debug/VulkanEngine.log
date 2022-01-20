@@ -1,3 +1,3 @@
 ﻿  main.cpp
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\main.cpp(437,1): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\main.cpp(438,1): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
   VulkanEngine.vcxproj -> C:\Users\jamie\source\repos\temp\VulkanEngine\x64\Debug\VulkanEngine.exe
