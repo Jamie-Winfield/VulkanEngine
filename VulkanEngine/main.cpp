@@ -14,12 +14,19 @@
 #include "helpers.cpp"
 #include "Vertex.h"
 #include "triangle.h"
+#include "uniformBufferObject.h"
 
 #include <map>
 #include <set>
 #include <optional>
 
-//TODO STAGING BUFFER
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <chrono>
+
+//TODO TEXTURE MAPPING
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
@@ -45,6 +52,8 @@ struct SwapChainSupportDetails
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
+    
+
 };
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
@@ -79,6 +88,9 @@ private:
     std::vector<VkImageView> swapChainImageViews;
 
     VkRenderPass renderPass;
+    VkDescriptorSetLayout descriptorSetLayout;
+    VkDescriptorPool descriptorPool;
+    std::vector<VkDescriptorSet> descriptorSets;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
@@ -97,19 +109,15 @@ private:
 
     const std::vector<Vertex> vertices =
     {
-        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-        {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+        {{-0.5f, -1.f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, -1.f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f, 0.f}, {1.0f, 1.0f, 1.0f}}
     };
 
     const std::vector<uint16_t> indices = {
     0, 1, 2, 2, 3, 0
     };
-
-    VkBuffer vertexBuffer;
-    VkDeviceMemory vertexBufferMemory;
-
     const std::vector<Vertex> vertices2 =
     {
         {{-0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}},
@@ -117,10 +125,11 @@ private:
         {{0.5f, 1.f}, {0.0f, 0.0f, 1.0f}},
         {{-0.5f, 1.f}, {1.0f, 1.0f, 1.0f}}
     };
-    VkBuffer vertexBuffer2;
-    VkDeviceMemory vertexBufferMemory2;
 
     std::vector<Triangle> triangles;
+
+    std::vector<VkBuffer> uniformBuffers;
+    std::vector<VkDeviceMemory> uniformBuffersMemory;
 
 
 public:
@@ -161,13 +170,107 @@ private:
         createSwapChain();
         createImageViews();
         createRenderPass();
+        createDescriptorSetLayout();
         createGraphicsPipeline();
         createFramebuffers();
         createCommandPool();
         createTris();
-        //createVertexBuffer();
+        createUniformBuffers();
+        createDescriptorPool();
+        createDescriptorSets();
         createCommandBuffers();
         createSyncObjects();
+    }
+
+    void createDescriptorSets()
+    {
+        std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
+        VkDescriptorSetAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = descriptorPool;
+        allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
+        allocInfo.pSetLayouts = layouts.data();
+
+        descriptorSets.resize(swapChainImages.size());
+
+        auto result = vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data());
+        if (result != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to allocate descriptor sets! vk error: " + std::to_string(result));
+        }
+
+        for (size_t i = 0; i < swapChainImages.size(); ++i)
+        {
+            VkDescriptorBufferInfo bufferInfo{};
+            bufferInfo.buffer = uniformBuffers[i];
+            bufferInfo.offset = 0;
+            bufferInfo.range = sizeof(UniformBufferObject);
+
+            VkWriteDescriptorSet descriptorWrite{};
+            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite.dstSet = descriptorSets[i];
+            descriptorWrite.dstBinding = 0;
+            descriptorWrite.dstArrayElement = 0;
+            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+            descriptorWrite.descriptorCount = 1;
+            descriptorWrite.pBufferInfo = &bufferInfo;
+            descriptorWrite.pImageInfo = nullptr;
+            descriptorWrite.pTexelBufferView = nullptr;
+
+            vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+        }
+    }
+
+    void createDescriptorPool()
+    {
+        VkDescriptorPoolSize poolSize{};
+        poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+
+        VkDescriptorPoolCreateInfo poolInfo{};
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.poolSizeCount = 1;
+        poolInfo.pPoolSizes = &poolSize;
+        poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+
+        auto result = vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
+        if (result != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create descriptor pool! vk error: " + std::to_string(result));
+        }
+    }
+
+    void createUniformBuffers()
+    {
+        VkDeviceSize bufferSize = sizeof(UniformBufferObject) * 2;
+        uniformBuffers.resize(swapChainImages.size());
+        uniformBuffersMemory.resize(swapChainImages.size());
+
+        for (size_t i = 0; i < swapChainImages.size(); ++i)
+        {
+            Helpers::createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i], device, physicalDevice);
+        }
+    }
+
+    void createDescriptorSetLayout()
+    {
+        VkDescriptorSetLayoutBinding uboLayoutBinding{};
+        uboLayoutBinding.binding = 0;
+        uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        uboLayoutBinding.descriptorCount = 1;
+        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        uboLayoutBinding.pImmutableSamplers = nullptr;
+
+        VkDescriptorSetLayoutCreateInfo layoutInfo{};
+        layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        layoutInfo.bindingCount = 1;
+        layoutInfo.pBindings = &uboLayoutBinding;
+
+        auto result = vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout);
+        if (result != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create descriptor set layout! vk error: " + std::to_string(result));
+        }
     }
 
     void createTris()
@@ -194,29 +297,12 @@ private:
         triangles[1].createVertexBuffer(device, physicalDevice, commandPool, graphicsQueue);
         triangles[0].createIndexBuffer(device, physicalDevice, commandPool, graphicsQueue);
         triangles[1].createIndexBuffer(device, physicalDevice, commandPool, graphicsQueue);
+        triangles[1].pos_x = -1;
+        triangles[1].updateModelMatrix();
+        triangles[0].pos_x = 1;
+        triangles[0].updateModelMatrix();
 
 
-    }
-
-    void createVertexBuffer()
-    {
-        VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
-
-        VkBuffer stagingBuffer;
-        VkDeviceMemory stagingBufferMemory;
-        Helpers::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory, device, physicalDevice);
-
-
-        void* data;
-        vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-        memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
-        vkUnmapMemory(device, stagingBufferMemory);
-
-        Helpers::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory, device, physicalDevice);
-        Helpers::copyBuffer(stagingBuffer, vertexBuffer, bufferSize, commandPool, graphicsQueue, device);
-
-        vkDestroyBuffer(device, stagingBuffer, nullptr);
-        vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
 
     void recreateSwapChain()
@@ -238,11 +324,19 @@ private:
         createRenderPass();
         createGraphicsPipeline();
         createFramebuffers();
+        createUniformBuffers();
+        createDescriptorPool();
+        createDescriptorSets();
         createCommandBuffers();
     }
 
     void cleanupSwapChain()
     {
+        for (size_t i = 0; i < swapChainImages.size(); ++i)
+        {
+            vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+            vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+        }
         vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
         vkDestroyPipeline(device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -256,6 +350,8 @@ private:
             vkDestroyImageView(device, imageView, nullptr);
         }
         vkDestroySwapchainKHR(device, swapChain, nullptr);
+        vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
     }
 
     void createSyncObjects()
@@ -332,29 +428,18 @@ private:
             vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,graphicsPipeline);
 
 
-            for (auto triangle : triangles)
+            for (size_t x = 0; x < triangles.size(); ++x)
             {
-                VkBuffer vertexBuffers[] = { triangle.vertexBuffer };
+                VkBuffer vertexBuffers[] = { triangles[x].vertexBuffer };
                 VkDeviceSize offsets[] = { 0 };
                 vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-                vkCmdBindIndexBuffer(commandBuffers[i], triangle.indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+                vkCmdBindIndexBuffer(commandBuffers[i], triangles[x].indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+                uint32_t dynamicOffset = x * sizeof(UniformBufferObject);
+                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 1, &dynamicOffset);
 
-                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(triangle.indices.size()), 1, 0, 0, 0);
+
+                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(triangles[x].indices.size()), 1, 0, 0, 0);
             }
-            /*
-            VkBuffer vertexBuffers[] = { vertexBuffer };
-            VkDeviceSize offsets[] = { 0 };
-            vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-
-            vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
-
-            // draw second triangle
-            VkBuffer vertexBuffers2[] = { vertexBuffer2 };
-            VkDeviceSize offsets2[] = { 0 };
-            vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers2, offsets2);
-
-            vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
-            */
             vkCmdEndRenderPass(commandBuffers[i]);
 
             result = vkEndCommandBuffer(commandBuffers[i]);
@@ -524,7 +609,7 @@ private:
         rasterizer.polygonMode = VK_POLYGON_MODE_FILL;  // used to set how the fragment shaders colors the polygon
         rasterizer.lineWidth = 1.0f;
         rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-        rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+        rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.depthBiasConstantFactor = 0.0f;
         rasterizer.depthBiasClamp = 0.0f;
@@ -573,8 +658,8 @@ private:
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0;
-        pipelineLayoutInfo.pSetLayouts = nullptr;
+        pipelineLayoutInfo.setLayoutCount = 1;
+        pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
         pipelineLayoutInfo.pushConstantRangeCount = 0;
         pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
@@ -999,6 +1084,7 @@ private:
         while (!glfwWindowShouldClose(window))
         {
             glfwPollEvents();
+            
             drawFrame();
         }
 
@@ -1022,6 +1108,8 @@ private:
         {
             throw std::runtime_error("failed to acquire swap chain image! vk error: " + std::to_string(result));
         }
+
+       updateUniformBuffer(imageIndex);
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
         {
@@ -1063,6 +1151,7 @@ private:
         presentInfo.pImageIndices = &imageIndex;
         presentInfo.pResults = nullptr;
 
+
         result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized)
@@ -1080,9 +1169,33 @@ private:
         
     }
 
+    void updateUniformBuffer(uint32_t currentImage)
+    {
+        static auto startTime = std::chrono::high_resolution_clock::now();
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+        UniformBufferObject ubo{};
+        for (size_t i = 0; i < triangles.size(); ++i)
+        {
+            
+            ubo.model = glm::rotate(triangles[i].modelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+            ubo.view = glm::lookAt(glm::vec3(2.f, 2.f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 1.f));
+            ubo.proj = glm::perspective(glm::radians(45.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
+            ubo.proj[1][1] *= -1;
+
+            void* data;
+            vkMapMemory(device, uniformBuffersMemory[currentImage], sizeof(UniformBufferObject) * i , sizeof(UniformBufferObject), 0, &data);
+            memcpy(data, &ubo, sizeof(UniformBufferObject));
+            vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
+        }
+    }
+
     void cleanup()
     {
         cleanupSwapChain();
+
+        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
         for (auto triangle : triangles)
         {

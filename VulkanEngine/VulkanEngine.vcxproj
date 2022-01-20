@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="settings.hpp" />
     <ClInclude Include="triangle.h" />
+    <ClInclude Include="uniformBufferObject.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
