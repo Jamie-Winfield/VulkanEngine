@@ -83,7 +83,7 @@ struct Triangle
 
     void updateModelMatrix()
     {
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(pos_x, pos_y, pos_z));
+        modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(pos_x, pos_y, pos_z)) * glm::rotate(glm::mat4(1.f),glm::radians(rot_angle),glm::vec3(0.f,0.f,1.f));
     }
 
     void updatePos(float x, float y, float z)

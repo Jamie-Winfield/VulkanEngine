@@ -64,6 +64,8 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
     }
 }
 
+static std::vector<int> keyEvents;
+
 class HelloTriangleApplication
 {
 private:
@@ -131,6 +133,9 @@ private:
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
 
+    
+    float timeBetweenFrames = 0;
+
 
 public:
     void run()
@@ -152,6 +157,15 @@ private:
         window = glfwCreateWindow(settings.W_WIDTH, settings.W_HEIGHT, "Vulkan", nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+        glfwSetKeyCallback(window, key_callback);
+    }
+
+    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        if (std::find(keyEvents.begin(),keyEvents.end(),key) == keyEvents.end())
+        {
+            keyEvents.emplace_back(key);
+        }
     }
 
     static void framebufferResizeCallback(GLFWwindow* window,int width,int height)
@@ -300,8 +314,9 @@ private:
         triangles[1].pos_x = -1;
         triangles[1].updateModelMatrix();
         triangles[0].pos_x = 1;
+        
+        triangles[0].rot_angle = 30.f;
         triangles[0].updateModelMatrix();
-        triangles[0].rot_angle = 45.f;
 
 
     }
@@ -1084,12 +1099,45 @@ private:
     {
         while (!glfwWindowShouldClose(window))
         {
-            glfwPollEvents();
+            auto startTime = std::chrono::high_resolution_clock::now();
+           
             
+            
+            glfwPollEvents();
+            processKeys(timeBetweenFrames);
             drawFrame();
+            updateRotations(timeBetweenFrames);
+            auto finishTime = std::chrono::high_resolution_clock::now();
+            timeBetweenFrames = std::chrono::duration<float, std::chrono::seconds::period>(finishTime - startTime).count();
+
+            
         }
 
         vkDeviceWaitIdle(device);
+    }
+
+    void updateRotations(float time)
+    {
+        triangles[0].rot_angle += 20.f * time;
+        triangles[0].updateModelMatrix();
+    }
+
+    void processKeys(float time)
+    {
+        for (auto key : keyEvents)
+        {
+            if (key == GLFW_KEY_A)
+            {
+                triangles[1].pos_x += -50.f * time;
+                triangles[1].updateModelMatrix();
+            }
+            else if (key == GLFW_KEY_D)
+            {
+                triangles[1].pos_x += 50.f * time;
+                triangles[1].updateModelMatrix();
+            }
+        }
+        keyEvents.clear();
     }
 
     void drawFrame()
@@ -1172,15 +1220,12 @@ private:
 
     void updateUniformBuffer(uint32_t currentImage)
     {
-        static auto startTime = std::chrono::high_resolution_clock::now();
-
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+        
         UniformBufferObject ubo{};
         for (size_t i = 0; i < triangles.size(); ++i)
         {
             
-            ubo.model = glm::rotate(triangles[i].modelMatrix, time * glm::radians(triangles[i].rot_angle), glm::vec3(0.f, 0.f, 1.f));
+            ubo.model = triangles[i].modelMatrix;
             ubo.view = glm::lookAt(glm::vec3(0.f, 0.0f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
             ubo.proj = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
             ubo.proj[1][1] *= -1;
