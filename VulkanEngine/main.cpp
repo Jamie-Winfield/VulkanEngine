@@ -21,10 +21,10 @@
 //TODO TEXTURE MAPPING AND Z-ORDERING
 
 
-
 static std::vector<int> keyEvents;
 
-class HelloTriangleApplication
+
+class EngineApplication
 {
 private:
     GLFWwindow* window;
@@ -32,6 +32,11 @@ private:
     std::unique_ptr<Game> game;
 
     float timeBetweenFrames = 0;
+
+    float frame_count = 0;
+    float time_count = 0;
+
+    
 
 
 private:
@@ -81,7 +86,7 @@ private:
 
     static void framebufferResizeCallback(GLFWwindow* window,int width,int height)
     {
-        auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
+        auto app = reinterpret_cast<EngineApplication*>(glfwGetWindowUserPointer(window));
         app->engine->getRenderer()->framebufferResized = true;
     }
 
@@ -106,11 +111,27 @@ private:
             //updateRotations(timeBetweenFrames);
             auto finishTime = std::chrono::high_resolution_clock::now();
             timeBetweenFrames = std::chrono::duration<float, std::chrono::seconds::period>(finishTime - startTime).count();
-
+            frameCounter(timeBetweenFrames);
             
         }
 
         vkDeviceWaitIdle(engine->getDevice());
+    }
+
+    void frameCounter(float time)
+    {
+        frame_count++;
+        time_count += time;
+        if (time_count >= 1)
+        {
+            
+            std::stringstream ss;
+            ss << "FPS" << "  " << frame_count;
+
+            glfwSetWindowTitle(window, ss.str().c_str());
+            frame_count = 0;
+            time_count = 0;
+        }
     }
 
 
@@ -122,7 +143,7 @@ private:
 
 int main()
 {
-    HelloTriangleApplication app;
+    EngineApplication app;
 
     try
     {

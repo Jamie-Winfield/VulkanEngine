@@ -16,6 +16,7 @@ private:
 	std::unique_ptr<SpriteObject> sprite1;
 	std::unique_ptr<SpriteObject> sprite2;
 	std::unique_ptr<SpriteObject> sprite3;
+	std::vector<std::unique_ptr<SpriteObject>> spriteObjects;
 
 	bool render3 = false;
 };

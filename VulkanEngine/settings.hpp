@@ -5,7 +5,7 @@
 struct Settings
 {
 	const uint32_t W_WIDTH = 800;
-	const uint32_t W_HEIGHT = 600;
+	const uint32_t W_HEIGHT = 800;
 
 	const std::vector<const char*> validationLayers = 
 	{
