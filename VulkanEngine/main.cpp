@@ -13,8 +13,9 @@
 #include "settings.hpp"
 #include "helpers.cpp"
 #include "Vertex.h"
-#include "triangle.h"
+#include "spriteObject.h"
 #include "uniformBufferObject.h"
+#include "Engine.h"
 
 #include <map>
 #include <set>
@@ -39,6 +40,7 @@ VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMes
     }
 }
 
+/*
 struct QueueFamilyIndices
 {
     std::optional<uint32_t> graphicsFamily;
@@ -55,7 +57,7 @@ struct SwapChainSupportDetails
     
 
 };
-
+*/
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
 {
     auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
@@ -73,7 +75,7 @@ private:
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-    Settings settings;
+    std::unique_ptr<Settings> settings;
     VkDevice device;
     VkQueue graphicsQueue;
     VkQueue presentQueue;
@@ -128,7 +130,7 @@ private:
         {{-0.5f, 1.f}, {1.0f, 1.0f, 1.0f}}
     };
 
-    std::vector<Triangle> triangles;
+    std::vector<SpriteObject> triangles;
 
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
@@ -137,13 +139,23 @@ private:
     float timeBetweenFrames = 0;
 
 
+private:
+    std::unique_ptr<Engine> engine;
+
+
 public:
     void run()
     {
+        engine = std::make_unique<Engine>();
+        settings = std::make_unique<Settings>();
         initWindow();
-        initVulkan();
+        engine->initVulkan(settings.get(), window);
+        //initVulkan();
+        createTris();
+        engine->updateRenderables(triangles);
         mainLoop();
-        cleanup();
+        engine->cleanup();
+        //cleanup();
     }
 
 private:
@@ -154,7 +166,7 @@ private:
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-        window = glfwCreateWindow(settings.W_WIDTH, settings.W_HEIGHT, "Vulkan", nullptr, nullptr);
+        window = glfwCreateWindow(settings->W_WIDTH, settings->W_HEIGHT, "Vulkan", nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
         glfwSetKeyCallback(window, key_callback);
@@ -171,29 +183,29 @@ private:
     static void framebufferResizeCallback(GLFWwindow* window,int width,int height)
     {
         auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
-        app->framebufferResized = true;
+        app->engine->getRenderer()->framebufferResized = true;
     }
 
     void initVulkan()
     {
-        createInstance();
-        setupDebugMessenger();
-        createSurface();
-        pickPhysicalDevice();
-        createLogicalDevice();
-        createSwapChain();
-        createImageViews();
-        createRenderPass();
-        createDescriptorSetLayout();
-        createGraphicsPipeline();
-        createFramebuffers();
-        createCommandPool();
-        createTris();
-        createUniformBuffers();
-        createDescriptorPool();
-        createDescriptorSets();
-        createCommandBuffers();
-        createSyncObjects();
+        createInstance(); //
+        setupDebugMessenger(); //
+        createSurface();    //
+        pickPhysicalDevice();   //
+        createLogicalDevice();  //
+        createSwapChain();  //
+        createImageViews(); //
+        createRenderPass(); //
+        createDescriptorSetLayout();    //
+        createGraphicsPipeline();   //
+        createFramebuffers();   //
+        createCommandPool();    //
+        
+        createUniformBuffers(); //
+        createDescriptorPool(); //
+        createDescriptorSets(); //
+        createCommandBuffers(); //
+        createSyncObjects();    //
     }
 
     void createDescriptorSets()
@@ -289,8 +301,8 @@ private:
 
     void createTris()
     {
-        Triangle tri1;
-        Triangle tri2;
+        SpriteObject tri1;
+        SpriteObject tri2;
         triangles.emplace_back(std::move(tri1));
         triangles.emplace_back(std::move(tri2));
 
@@ -307,10 +319,10 @@ private:
             triangles[0].addIndex(index);
             triangles[1].addIndex(index);
         }
-        triangles[0].createVertexBuffer(device, physicalDevice, commandPool, graphicsQueue);
-        triangles[1].createVertexBuffer(device, physicalDevice, commandPool, graphicsQueue);
-        triangles[0].createIndexBuffer(device, physicalDevice, commandPool, graphicsQueue);
-        triangles[1].createIndexBuffer(device, physicalDevice, commandPool, graphicsQueue);
+        triangles[0].createVertexBuffer(engine->getDevice(), engine->getPhysicalDevice(),engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue());
+        triangles[1].createVertexBuffer(engine->getDevice(), engine->getPhysicalDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue());
+        triangles[0].createIndexBuffer(engine->getDevice(), engine->getPhysicalDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue());
+        triangles[1].createIndexBuffer(engine->getDevice(), engine->getPhysicalDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue());
         triangles[1].pos_x = -1;
         triangles[1].updateModelMatrix();
         triangles[0].pos_x = 1;
@@ -372,9 +384,9 @@ private:
 
     void createSyncObjects()
     {
-        imageAvailableSemaphores.resize(settings.MAX_FRAMES_IN_FLIGHT);
-        renderFinishedSemaphores.resize(settings.MAX_FRAMES_IN_FLIGHT);
-        inFlightFences.resize(settings.MAX_FRAMES_IN_FLIGHT);
+        imageAvailableSemaphores.resize(settings->MAX_FRAMES_IN_FLIGHT);
+        renderFinishedSemaphores.resize(settings->MAX_FRAMES_IN_FLIGHT);
+        inFlightFences.resize(settings->MAX_FRAMES_IN_FLIGHT);
         imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
@@ -383,7 +395,7 @@ private:
         fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-        for (size_t i = 0; i < settings.MAX_FRAMES_IN_FLIGHT; ++i)
+        for (size_t i = 0; i < settings->MAX_FRAMES_IN_FLIGHT; ++i)
         {
             auto result_image = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]);
             auto result_render = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]);
@@ -942,10 +954,10 @@ private:
 
 
 
-        if (settings.enableValidationLayers)
+        if (settings->enableValidationLayers)
         {
-            createInfo.enabledLayerCount = static_cast<uint32_t>(settings.validationLayers.size());
-            createInfo.ppEnabledLayerNames = settings.validationLayers.data();
+            createInfo.enabledLayerCount = static_cast<uint32_t>(settings->validationLayers.size());
+            createInfo.ppEnabledLayerNames = settings->validationLayers.data();
         }
         else
         {
@@ -1105,15 +1117,15 @@ private:
             
             glfwPollEvents();
             processKeys(timeBetweenFrames);
-            drawFrame();
-            updateRotations(timeBetweenFrames);
+            engine->getRenderer()->drawFrame(engine->getDevice(),engine->getGraphicsQueue(),engine->getPresentQueue(),window,engine->getPhysicalDevice(),engine->getSurface());
+            //updateRotations(timeBetweenFrames);
             auto finishTime = std::chrono::high_resolution_clock::now();
             timeBetweenFrames = std::chrono::duration<float, std::chrono::seconds::period>(finishTime - startTime).count();
 
             
         }
 
-        vkDeviceWaitIdle(device);
+        vkDeviceWaitIdle(engine->getDevice());
     }
 
     void updateRotations(float time)
@@ -1214,7 +1226,7 @@ private:
             throw std::runtime_error("failed to present swap chain image! vk error: " + std::to_string(result));
         }
 
-        currentFrame = (currentFrame + 1) % settings.MAX_FRAMES_IN_FLIGHT;
+        currentFrame = (currentFrame + 1) % settings->MAX_FRAMES_IN_FLIGHT;
         
     }
 
@@ -1251,7 +1263,7 @@ private:
         vkDestroyBuffer(device, vertexBuffer, nullptr);
         vkFreeMemory(device, vertexBufferMemory, nullptr);
         */
-        for (size_t i = 0; i < settings.MAX_FRAMES_IN_FLIGHT; ++i)
+        for (size_t i = 0; i < settings->MAX_FRAMES_IN_FLIGHT; ++i)
         {
             vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
             vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
@@ -1260,7 +1272,7 @@ private:
         vkDestroyCommandPool(device, commandPool, nullptr);
 
         vkDestroyDevice(device, nullptr);
-        if (settings.enableValidationLayers)
+        if (settings->enableValidationLayers)
         {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
@@ -1278,7 +1290,7 @@ private:
 
     void createInstance()
     {
-        if (settings.enableValidationLayers && !checkValidationLayerSupport())
+        if (settings->enableValidationLayers && !checkValidationLayerSupport())
         {
             throw std::runtime_error("validation layers requested, but not available!");
         }
@@ -1305,10 +1317,10 @@ private:
         createInfo.ppEnabledExtensionNames = extensions.data();
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-        if (settings.enableValidationLayers)
+        if (settings->enableValidationLayers)
         {
-            createInfo.enabledLayerCount = static_cast<uint32_t>(settings.validationLayers.size());
-            createInfo.ppEnabledLayerNames = settings.validationLayers.data();
+            createInfo.enabledLayerCount = static_cast<uint32_t>(settings->validationLayers.size());
+            createInfo.ppEnabledLayerNames = settings->validationLayers.data();
 
             populateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
@@ -1334,7 +1346,7 @@ private:
         std::vector<VkLayerProperties> availableLayers(layerCount);
         vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-        for (const char* layerName : settings.validationLayers)
+        for (const char* layerName : settings->validationLayers)
         {
             bool layerFound = false;
 
@@ -1363,7 +1375,7 @@ private:
 
         std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-        if (settings.enableValidationLayers)
+        if (settings->enableValidationLayers)
         {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
@@ -1373,7 +1385,7 @@ private:
 
     void setupDebugMessenger()
     {
-        if (!settings.enableValidationLayers) return;
+        if (!settings->enableValidationLayers) return;
 
         VkDebugUtilsMessengerCreateInfoEXT createInfo{};
         populateDebugMessengerCreateInfo(createInfo);
