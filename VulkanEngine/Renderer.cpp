@@ -119,7 +119,10 @@ void Renderer::cleanup(VkDevice device)
 
     for (auto sprite : spriteObjects)
     {
-        sprite->free(device);
+        if (sprite != nullptr)
+        {
+            sprite->free(device);
+        }
     }
 
     vkDestroyCommandPool(device, commandPool, nullptr);

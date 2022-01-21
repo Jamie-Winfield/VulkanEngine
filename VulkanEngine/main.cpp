@@ -47,6 +47,7 @@ public:
         initWindow();
         engine->initVulkan(settings.get(), window);
         mainLoop();
+        game->end(engine->getDevice());
         engine->cleanup();
         cleanup();
     }

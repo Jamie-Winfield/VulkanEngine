@@ -15,10 +15,8 @@ struct SpriteObject
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
 
-    std::vector<VkBuffer> uniformBuffers;
-    std::vector<VkDeviceMemory> uniformBuffersMemory;
+    bool freed = false;
 
-    std::vector<VkDescriptorSet> descriptorSets;
 
 
     float pos_x = 0;
@@ -70,9 +68,25 @@ struct SpriteObject
 
     void free(VkDevice device)
     {
-        vkDestroyBuffer(device, vertexBuffer, nullptr);
-        vkFreeMemory(device, vertexBufferMemory, nullptr);
-        vkDestroyBuffer(device, indexBuffer, nullptr);
-        vkFreeMemory(device, indexBufferMemory, nullptr);
+        if (!freed)
+        {
+            if (vertexBuffer != VK_NULL_HANDLE)
+            {
+                vkDestroyBuffer(device, vertexBuffer, nullptr);
+            }
+            if (vertexBufferMemory != VK_NULL_HANDLE)
+            {
+                vkFreeMemory(device, vertexBufferMemory, nullptr);
+            }
+            if (indexBuffer != VK_NULL_HANDLE)
+            {
+                vkDestroyBuffer(device, indexBuffer, nullptr);
+            }
+            if (indexBufferMemory != VK_NULL_HANDLE)
+            {
+                vkFreeMemory(device, indexBufferMemory, nullptr);
+            }
+            freed = true;
+        }
     }
 };

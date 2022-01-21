@@ -9,6 +9,7 @@ public:
 	void update(float gameTime);
 	void render();
 	void keyHandler(int key);
+	void end(VkDevice device);
 
 private:
 	Engine* engine;

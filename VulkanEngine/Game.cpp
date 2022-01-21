@@ -36,3 +36,10 @@ void Game::keyHandler(int key)
 		render3 = false;
 	}
 }
+
+void Game::end(VkDevice device)
+{
+	sprite1->free(device);
+	sprite2->free(device);
+	sprite3->free(device);
+}
