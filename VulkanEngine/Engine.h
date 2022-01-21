@@ -38,6 +38,8 @@
 class Engine
 {
 public:
+
+	std::unique_ptr<SpriteObject> createSprite();
 	void initVulkan(Settings* _settings, GLFWwindow* _window);
 	VkDevice getDevice() { return device; }
 	VkPhysicalDevice getPhysicalDevice() { return physicalDevice; }
@@ -47,7 +49,7 @@ public:
 	VkQueue getPresentQueue() { return presentQueue; }
 	Renderer* getRenderer() { return renderer.get(); }
 	VkSurfaceKHR getSurface() { return surface; }
-	void updateRenderables(std::vector<SpriteObject> objects);
+	void updateRenderables(std::vector<SpriteObject*> objects);
 	void cleanup();
 
 private:
@@ -62,6 +64,8 @@ private:
 	bool checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice);
 	
 	void createLogicalDevice();
+
+
 
 
 

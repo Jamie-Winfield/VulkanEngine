@@ -1,9 +1,2 @@
-﻿  Engine.cpp
-  Renderer.cpp
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(611,69): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-  helpers.cpp
-  main.cpp
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\main.cpp(465,1): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-  spriteObject.cpp
-  Generating Code...
+﻿  main.cpp
   VulkanEngine.vcxproj -> C:\Users\jamie\source\repos\temp\VulkanEngine\x64\Debug\VulkanEngine.exe

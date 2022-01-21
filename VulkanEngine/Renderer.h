@@ -21,9 +21,11 @@ public:
 	
 	void cleanup(VkDevice device);
 
-	void updateRenderables(std::vector<SpriteObject> objects, GLFWwindow* window, VkDevice device,
+	void updateRenderables(std::vector<SpriteObject*> objects, GLFWwindow* window, VkDevice device,
 		VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+	void renderObject(SpriteObject* spriteObject);
 	VkCommandPool getCommandPool() { return commandPool; }
+	
 private:
 	void createSwapChain(VkPhysicalDevice PhysicalDevice, VkDevice device, VkSurfaceKHR surface, GLFWwindow* window);
 	void createImageViews(VkDevice device);
@@ -74,6 +76,7 @@ public:
 	bool framebufferResized = false;
 	
 
-	std::vector<SpriteObject> spriteObjects;
+	std::vector<SpriteObject*> spriteObjects;
+	std::vector<SpriteObject*> spriteObjects_new;
 };
 

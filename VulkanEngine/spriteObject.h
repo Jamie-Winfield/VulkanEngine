@@ -7,6 +7,7 @@
 
 struct SpriteObject
 {
+
     std::vector<Vertex> vertices;
     std::vector<uint16_t> indices;
     VkBuffer vertexBuffer;
@@ -42,6 +43,15 @@ struct SpriteObject
         pos_y += y;
         pos_z += z;
         updateModelMatrix();
+    }
+
+    void setPos(float x, float y, float z)
+    {
+        pos_x = x;
+        pos_y = y;
+        pos_z = z;
+        updateModelMatrix();
+
     }
 
     void addVertex(Vertex vertex)

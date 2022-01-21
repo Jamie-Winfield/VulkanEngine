@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="DebugMessenger.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Game_Engine_Parts\VulkanSDK\1.2.182.0\Include;C:\Game_Engine_Parts\glfw-3.3.4.bin.WIN64\include;C:\Game_Engine_Parts\glm</AdditionalIncludeDirectories>
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="DebugMessenger.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="queueFamilyIndices.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="settings.hpp" />

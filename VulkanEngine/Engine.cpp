@@ -1,6 +1,37 @@
 #include "Engine.h"
 #include "helpers.cpp"
 
+std::unique_ptr<SpriteObject> Engine::createSprite()
+{
+    std::unique_ptr<SpriteObject> spriteObject;
+    spriteObject = std::make_unique<SpriteObject>();
+
+    const std::vector<Vertex> vertices =
+    {
+        {{-0.5f, -1.f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, -1.f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f, 0.f}, {1.0f, 1.0f, 1.0f}}
+    };
+
+    const std::vector<uint16_t> indices = {
+    0, 1, 2, 2, 3, 0
+    };
+
+    for (auto &vertex : vertices)
+    {
+        spriteObject->addVertex(vertex);
+    }
+    for (auto& index : indices)
+    {
+        spriteObject->addIndex(index);
+    }
+    spriteObject->createVertexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
+    spriteObject->createIndexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
+
+    return std::move(spriteObject);
+}
+
 void Engine::initVulkan(Settings* _settings, GLFWwindow* _window)
 {
 	settings = _settings;
@@ -203,7 +234,7 @@ bool Engine::isDeviceSuitable(VkPhysicalDevice physicalDevice)
 
 
 
-void Engine::updateRenderables(std::vector<SpriteObject> objects)
+void Engine::updateRenderables(std::vector<SpriteObject*> objects)
 {
     renderer->updateRenderables(objects, window, device, physicalDevice, surface);
 }
@@ -212,16 +243,15 @@ void Engine::cleanup()
 {
     renderer->cleanup(device);
 
-
     vkDestroyDevice(device, nullptr);
+
     if (settings->enableValidationLayers)
     {
         debugMessenger.DestroyDebugUtilsMessengerEXT(instance, nullptr);
     }
 
-
-
     vkDestroySurfaceKHR(instance, surface, nullptr);
+
     vkDestroyInstance(instance, nullptr);
 }
 

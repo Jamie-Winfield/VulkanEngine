@@ -21,6 +21,13 @@ void Renderer::init(Settings* _settings, VkDevice device, VkPhysicalDevice physi
 void Renderer::drawFrame(VkDevice device, VkQueue graphicsQueue, VkQueue presentQueue,
     GLFWwindow* window, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
+    if (spriteObjects != spriteObjects_new)
+    {
+        updateRenderables(spriteObjects_new, window, device, physicalDevice, surface);
+    }
+
+
+
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
@@ -94,6 +101,7 @@ void Renderer::drawFrame(VkDevice device, VkQueue graphicsQueue, VkQueue present
     }
 
     currentFrame = (currentFrame + 1) % settings->MAX_FRAMES_IN_FLIGHT;
+    spriteObjects_new.clear();
 }
 
 void Renderer::cleanup(VkDevice device)
@@ -111,17 +119,22 @@ void Renderer::cleanup(VkDevice device)
 
     for (auto sprite : spriteObjects)
     {
-        sprite.free(device);
+        sprite->free(device);
     }
 
     vkDestroyCommandPool(device, commandPool, nullptr);
 }
 
-void Renderer::updateRenderables(std::vector<SpriteObject> objects, GLFWwindow* window, VkDevice device,
+void Renderer::updateRenderables(std::vector<SpriteObject*> objects, GLFWwindow* window, VkDevice device,
     VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
     spriteObjects = objects;
     recreateSwapChain(window, device, physicalDevice, surface);
+}
+
+void Renderer::renderObject(SpriteObject* spriteObject)
+{
+    spriteObjects_new.emplace_back(spriteObject);
 }
 
 void Renderer::createSwapChain(VkPhysicalDevice PhysicalDevice, VkDevice device, VkSurfaceKHR surface, GLFWwindow* window)
@@ -604,15 +617,15 @@ void Renderer::createCommandBuffers(VkDevice device)
 
         for (size_t x = 0; x < spriteObjects.size(); ++x)
         {
-            VkBuffer vertexBuffers[] = { spriteObjects[x].vertexBuffer };
+            VkBuffer vertexBuffers[] = { spriteObjects[x]->vertexBuffer };
             VkDeviceSize offsets[] = { 0 };
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-            vkCmdBindIndexBuffer(commandBuffers[i], spriteObjects[x].indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+            vkCmdBindIndexBuffer(commandBuffers[i], spriteObjects[x]->indexBuffer, 0, VK_INDEX_TYPE_UINT16);
             uint32_t dynamicOffset = x * sizeof(UniformBufferObject);
             vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 1, &dynamicOffset);
 
 
-            vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(spriteObjects[x].indices.size()), 1, 0, 0, 0);
+            vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(spriteObjects[x]->indices.size()), 1, 0, 0, 0);
         }
         vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -660,7 +673,7 @@ void Renderer::updateUniformBuffers(uint32_t currentImage, VkDevice device)
     for (size_t i = 0; i < spriteObjects.size(); ++i)
     {
 
-        ubo.model = spriteObjects[i].modelMatrix;
+        ubo.model = spriteObjects[i]->modelMatrix;
         ubo.view = glm::lookAt(glm::vec3(0.f, 0.0f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
         ubo.proj = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
         ubo.proj[1][1] *= -1;
