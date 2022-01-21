@@ -8,10 +8,10 @@ std::unique_ptr<SpriteObject> Engine::createSprite()
 
     const std::vector<Vertex> vertices =
     {
-        {{-0.5f, -1.f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, -1.f}, {0.0f, 1.0f, 0.0f}},
-        {{0.5f, 0.f}, {0.0f, 0.0f, 1.0f}},
-        {{-0.5f, 0.f}, {1.0f, 1.0f, 1.0f}}
+        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}},
+        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}},
+        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}},
+        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}}
     };
 
     const std::vector<uint16_t> indices = {
@@ -29,6 +29,7 @@ std::unique_ptr<SpriteObject> Engine::createSprite()
     spriteObject->createVertexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
     spriteObject->createIndexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
 
+    createdSprites.emplace_back(spriteObject.get());
     return std::move(spriteObject);
 }
 
@@ -244,6 +245,11 @@ void Engine::cleanup()
     renderer->cleanup(device);
 
     vkDestroyDevice(device, nullptr);
+
+    for (auto& sprite : createdSprites)
+    {
+        sprite->free(device);
+    }
 
     if (settings->enableValidationLayers)
     {

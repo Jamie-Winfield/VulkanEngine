@@ -364,7 +364,7 @@ void Renderer::createGraphicsPipeline(VkDevice device)
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;  // used to set how the fragment shaders colors the polygon
     rasterizer.lineWidth = 1.0f;
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
     rasterizer.depthBiasConstantFactor = 0.0f;
     rasterizer.depthBiasClamp = 0.0f;
@@ -676,10 +676,15 @@ void Renderer::updateUniformBuffers(uint32_t currentImage, VkDevice device)
     for (size_t i = 0; i < spriteObjects.size(); ++i)
     {
 
+
+        glm::mat4 ortho;
+        glm::mat4 perspective;
+        perspective = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
+        ortho = glm::ortho(0.0f, (float)swapChainExtent.width, (float)swapChainExtent.height, 0.0f, -1000.f, 1000.f);
         ubo.model = spriteObjects[i]->modelMatrix;
         ubo.view = glm::lookAt(glm::vec3(0.f, 0.0f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-        ubo.proj = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
-        ubo.proj[1][1] *= -1;
+        ubo.proj = ortho;
+        ubo.proj[1][1] *= 1;    // for ortho use 1 and perspective use -1
 
         void* data;
         vkMapMemory(device, uniformBuffersMemory[currentImage], sizeof(UniformBufferObject) * i, sizeof(UniformBufferObject), 0, &data);

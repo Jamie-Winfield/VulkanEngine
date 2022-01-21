@@ -26,13 +26,25 @@ struct SpriteObject
     float rot_y = 0;
     float rot_z = 0;
 
+    float scale_x = 1;
+    float scale_y = 1;
+    float scale_z = 1;
+
     float rot_angle = 0;
 
     glm::mat4 modelMatrix = glm::mat4(1.f);
 
     void updateModelMatrix()
     {
-        modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(pos_x, pos_y, pos_z)) * glm::rotate(glm::mat4(1.f),glm::radians(rot_angle),glm::vec3(0.f,0.f,1.f));
+        modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(pos_x, pos_y, pos_z)) * glm::rotate(glm::mat4(1.f),glm::radians(rot_angle),glm::vec3(0.f,0.f,1.f)) * glm::scale(glm::mat4(1.f),glm::vec3(scale_x,scale_y,scale_z));
+    }
+
+    void setScale(float x, float y, float z)
+    {
+        scale_x = x;
+        scale_y = y;
+        scale_z = z;
+        updateModelMatrix();
     }
 
     void updatePos(float x, float y, float z)

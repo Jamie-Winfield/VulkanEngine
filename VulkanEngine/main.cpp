@@ -18,7 +18,7 @@
 
 #include <chrono>
 
-//TODO TEXTURE MAPPING
+//TODO TEXTURE MAPPING AND Z-ORDERING
 
 
 

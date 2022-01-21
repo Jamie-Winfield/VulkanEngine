@@ -6,9 +6,12 @@ void Game::start()
 	sprite2 = engine->createSprite();
 	sprite3 = engine->createSprite();
 
-	sprite1->setPos(1, 1, 0);
-	sprite2->setPos(-1, 0, 0);
-	sprite3->setPos(-1, 1, 0);
+	sprite1->setPos(400, 300, 0);
+	sprite1->setScale(200, 200, 1);
+	sprite2->setPos(0, 0, 0);
+	sprite3->setPos(0, 1, 0);
+
+
 }
 
 void Game::update(float gameTime)
