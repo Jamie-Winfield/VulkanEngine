@@ -10,6 +10,20 @@ void Game::start()
 	sprite2->setScale(100, 100, 1);
 	sprite2->setPos(600, 200, 0);
 
+	for (int i = 0; i < 400; ++i)
+	{
+		const int range_from = 0;
+		const int range_to = 800;
+		std::random_device                  rand_dev;
+		std::mt19937                        generator(rand_dev());
+		std::uniform_int_distribution<int>  distr(range_from, range_to);
+		auto sprite = engine->createSprite("textures/texture.jpg");
+		sprite->setScale(10, 10, 1);
+		sprite->setPos(distr(generator), distr(generator), 0);
+		sprite->setRotation(distr(generator));
+		spriteObjects.emplace_back(std::move(sprite));
+	}
+
 }
 
 void Game::update(float gameTime)
@@ -24,7 +38,14 @@ void Game::update(float gameTime)
 void Game::render()
 {
 	engine->getRenderer()->renderObject(sprite1.get());
-	engine->getRenderer()->renderObject(sprite2.get());
+	if (render3)
+	{
+		engine->getRenderer()->renderObject(sprite2.get());
+	}
+	for (auto& sprite : spriteObjects)
+	{
+		engine->getRenderer()->renderObject(sprite.get());
+	}
 }
 
 void Game::keyHandler(int key)
