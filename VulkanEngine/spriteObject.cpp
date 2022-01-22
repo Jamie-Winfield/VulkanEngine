@@ -1,6 +1,9 @@
 #include "spriteObject.h"
 #include "helpers.cpp"
 
+
+
+
 void SpriteObject::createVertexBuffer(VkDevice device, VkPhysicalDevice physicalDevice, VkCommandPool commandPool, VkQueue graphicsQueue)
 {
     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();

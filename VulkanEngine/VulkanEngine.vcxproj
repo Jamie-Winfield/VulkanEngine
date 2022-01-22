@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Game_Engine_Parts\VulkanSDK\1.2.182.0\Include;C:\Game_Engine_Parts\glfw-3.3.4.bin.WIN64\include;C:\Game_Engine_Parts\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Game_Engine_Parts\VulkanSDK\1.2.182.0\Include;C:\Game_Engine_Parts\glfw-3.3.4.bin.WIN64\include;C:\Game_Engine_Parts\glm;C:\Game_Engine_Parts\stb-master</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Game_Engine_Parts\VulkanSDK\1.2.182.0\Include;C:\Game_Engine_Parts\glfw-3.3.4.bin.WIN64\include;C:\Game_Engine_Parts\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Game_Engine_Parts\VulkanSDK\1.2.182.0\Include;C:\Game_Engine_Parts\glfw-3.3.4.bin.WIN64\include;C:\Game_Engine_Parts\glm;C:\Game_Engine_Parts\stb-master</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -183,6 +183,9 @@
     <None Include="shaders\shader.frag" />
     <None Include="shaders\shader.vert" />
     <None Include="shaders\vert.spv" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\texture.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

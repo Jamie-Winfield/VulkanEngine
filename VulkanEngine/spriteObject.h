@@ -5,8 +5,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "uniformBufferObject.h"
 
+
+
 struct SpriteObject
 {
+
+    
 
     std::vector<Vertex> vertices;
     std::vector<uint16_t> indices;
@@ -14,6 +18,11 @@ struct SpriteObject
     VkDeviceMemory vertexBufferMemory;
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
+    VkImage textureImage;
+    VkDeviceMemory textureImageMemory;
+    VkImageView textureImageView;
+
+    std::vector<VkDescriptorSet> descriptorSets;
 
     bool freed = false;
 
@@ -71,6 +80,8 @@ struct SpriteObject
 
     }
 
+    void setTextureImageView(VkImageView _textureImageView) { textureImageView = _textureImageView; }
+
     void addVertex(Vertex vertex)
     {
         vertices.emplace_back(vertex);
@@ -105,6 +116,11 @@ struct SpriteObject
             {
                 vkFreeMemory(device, indexBufferMemory, nullptr);
             }
+
+            vkDestroyImageView(device, textureImageView, nullptr);
+            vkDestroyImage(device, textureImage, nullptr);
+            vkFreeMemory(device, textureImageMemory, nullptr);
+
             freed = true;
         }
     }

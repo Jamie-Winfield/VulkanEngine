@@ -75,4 +75,9 @@
     <None Include="shaders\frag.spv" />
     <None Include="shaders\vert.spv" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\texture.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

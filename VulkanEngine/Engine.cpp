@@ -1,17 +1,17 @@
 #include "Engine.h"
 #include "helpers.cpp"
 
-std::unique_ptr<SpriteObject> Engine::createSprite()
+std::unique_ptr<SpriteObject> Engine::createSprite(const char* filename)
 {
     std::unique_ptr<SpriteObject> spriteObject;
     spriteObject = std::make_unique<SpriteObject>();
 
     const std::vector<Vertex> vertices =
     {
-        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}},
-        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}},
-        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}},
-        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}}
+        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}, {1.f, 1.f}},
+        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}, {0.f, 1.f}},
+        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}, {0.f, 0.f}},
+        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}, {1.f, 0.f}}
     };
 
     const std::vector<uint16_t> indices = {
@@ -28,6 +28,9 @@ std::unique_ptr<SpriteObject> Engine::createSprite()
     }
     spriteObject->createVertexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
     spriteObject->createIndexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
+    renderer->createTextureImage(device, physicalDevice, filename,spriteObject->textureImage,
+        spriteObject->textureImageMemory,graphicsQueue);
+    spriteObject->setTextureImageView(renderer->createImageView(spriteObject->textureImage, VK_FORMAT_R8G8B8A8_SRGB, device));
 
     createdSprites.emplace_back(spriteObject.get());
     return std::move(spriteObject);
@@ -224,13 +227,16 @@ bool Engine::isDeviceSuitable(VkPhysicalDevice physicalDevice)
 
     bool swapChainAdequate = false;
 
+    VkPhysicalDeviceFeatures supportedFeatures;
+    vkGetPhysicalDeviceFeatures(physicalDevice, &supportedFeatures);
+
     if (extensionsSupported)
     {
         SwapChainSupportDetails swapChainSupport = Helpers::querySwapChainSupport(physicalDevice, surface);
         swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
     }
 
-    return indices.isComplete() && extensionsSupported && swapChainAdequate;
+    return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
 
 
@@ -301,6 +307,7 @@ void Engine::createLogicalDevice()
 
 
     VkPhysicalDeviceFeatures deviceFeatures{};
+    deviceFeatures.samplerAnisotropy = VK_TRUE;
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 

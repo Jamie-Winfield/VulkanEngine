@@ -39,7 +39,7 @@ class Engine
 {
 public:
 
-	std::unique_ptr<SpriteObject> createSprite();
+	std::unique_ptr<SpriteObject> createSprite(const char* filename);
 	void initVulkan(Settings* _settings, GLFWwindow* _window);
 	VkDevice getDevice() { return device; }
 	VkPhysicalDevice getPhysicalDevice() { return physicalDevice; }
