@@ -132,7 +132,8 @@ void Renderer::updateRenderables(std::vector<SpriteObject*> objects, GLFWwindow*
     VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
     spriteObjects = objects;
-    recreateSwapChain(window, device, physicalDevice, surface);
+    // recreateSwapChain(window, device, physicalDevice, surface);
+    recreateBuffers(device, physicalDevice);
 }
 
 void Renderer::renderObject(SpriteObject* spriteObject)
@@ -712,6 +713,23 @@ void Renderer::recreateSwapChain(GLFWwindow* window, VkDevice device, VkPhysical
     createRenderPass(device);
     createGraphicsPipeline(device);
     createFrameBuffers(device);
+    createUniformBuffers(device, physicalDevice);
+    createDescriptorPool(device);
+    createDescriptorSets(device);
+    createCommandBuffers(device);
+}
+
+void Renderer::recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice)
+{
+    vkDeviceWaitIdle(device);
+    for (size_t i = 0; i < swapChainImages.size(); ++i)
+    {
+        vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+        vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+    }
+    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+    vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
     createUniformBuffers(device, physicalDevice);
     createDescriptorPool(device);
     createDescriptorSets(device);

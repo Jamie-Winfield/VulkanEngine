@@ -10,7 +10,8 @@ void Game::start()
 	sprite1->setPos(400, 300, 0);
 	sprite1->setScale(200, 200, 1);
 	sprite2->setPos(0, 0, 0);
-	sprite3->setPos(0, 1, 0);
+	sprite3->setPos(100, 100, 0);
+	sprite3->setScale(200, 200, 1);
 
 	for (int i = 0; i < 200; ++i)
 	{

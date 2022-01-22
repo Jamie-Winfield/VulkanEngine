@@ -42,6 +42,7 @@ private:
 	void updateUniformBuffers(uint32_t currentImage, VkDevice device);
 	void recreateSwapChain(GLFWwindow* window, VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 	void cleanupSwapChain(VkDevice device);
+	void recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice);
 	VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice device);
 	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresetModes);

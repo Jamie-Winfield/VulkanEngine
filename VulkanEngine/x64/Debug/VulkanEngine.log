@@ -1,3 +1,5 @@
-﻿  main.cpp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  Game.cpp
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(25,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(25,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(26,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   VulkanEngine.vcxproj -> C:\Users\jamie\source\repos\temp\VulkanEngine\x64\Debug\VulkanEngine.exe
