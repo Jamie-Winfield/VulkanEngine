@@ -4,8 +4,11 @@
 void Game::start()
 {
 	sprite1 = engine->createSprite("textures/texture.jpg");
-	
-
+	sprite1->setScale(100, 100, 1);
+	sprite1->setPos(400, 400, 0);
+	sprite2 = engine->createSprite("textures/texture2.png");
+	sprite2->setScale(100, 100, 1);
+	sprite2->setPos(600, 200, 0);
 
 }
 
@@ -21,6 +24,7 @@ void Game::update(float gameTime)
 void Game::render()
 {
 	engine->getRenderer()->renderObject(sprite1.get());
+	engine->getRenderer()->renderObject(sprite2.get());
 }
 
 void Game::keyHandler(int key)
@@ -38,4 +42,5 @@ void Game::keyHandler(int key)
 void Game::end(VkDevice device)
 {
 	sprite1->free(device);
+	sprite2->free(device);
 }

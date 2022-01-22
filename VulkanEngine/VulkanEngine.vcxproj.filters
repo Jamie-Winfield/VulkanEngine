@@ -79,5 +79,8 @@
     <Image Include="textures\texture.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\texture2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
