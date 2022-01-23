@@ -48,15 +48,18 @@ void Game::render()
 	}
 }
 
-void Game::keyHandler(int key)
+void Game::keyHandler(KeyEvent keyEvent)
 {
-	if (key == GLFW_KEY_A)
+	if (keyEvent.action == KeyEvent::ActionCode::KEY_PRESSED)
 	{
-		render3 = true;
-	}
-	else if (key == GLFW_KEY_D)
-	{
-		render3 = false;
+		if (keyEvent.key == GLFW_KEY_A)
+		{
+			render3 = true;
+		}
+		else if (keyEvent.key == GLFW_KEY_D)
+		{
+			render3 = false;
+		}
 	}
 }
 

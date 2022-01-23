@@ -18,12 +18,14 @@
 
 #include <chrono>
 
+#include "keyEvent.h"
+
 
 
 //TODO TEXTURE MAPPING AND Z-ORDERING
 
 
-static std::vector<int> keyEvents;
+
 
 
 class EngineApplication
@@ -37,6 +39,7 @@ private:
 
     float frame_count = 0;
     float time_count = 0;
+    std::vector<KeyEvent> keyEvents;
 
     
 
@@ -80,10 +83,9 @@ private:
 
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        if (std::find(keyEvents.begin(),keyEvents.end(),key) == keyEvents.end())
-        {
-            keyEvents.emplace_back(key);
-        }
+        KeyEvent keyEvent{key,scancode,action,mods};
+        auto app = reinterpret_cast<EngineApplication*>(glfwGetWindowUserPointer(window));
+        app->keyEvents.emplace_back(keyEvent);
     }
 
     static void framebufferResizeCallback(GLFWwindow* window,int width,int height)

@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine.h"
+#include "keyEvent.h"
 class Game
 {
 public:
@@ -8,7 +9,7 @@ public:
 	void start();
 	void update(float gameTime);
 	void render();
-	void keyHandler(int key);
+	void keyHandler(KeyEvent keyEvent);
 	void end(VkDevice device);
 
 private:
