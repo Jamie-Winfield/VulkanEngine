@@ -7,25 +7,33 @@
 
 
 
-struct SpriteObject
+class SpriteObject
 {
 
     
-
+private:
     std::vector<Vertex> vertices;
-    std::vector<uint16_t> indices;
-    VkBuffer vertexBuffer;
+    
+    
     VkDeviceMemory vertexBufferMemory;
-    VkBuffer indexBuffer;
+    
     VkDeviceMemory indexBufferMemory;
+public:
+
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
     VkImageView textureImageView;
+    VkBuffer vertexBuffer;
+    VkBuffer indexBuffer;
+    std::vector<uint16_t> indices;
 
     std::vector<VkDescriptorSet> descriptorSets;
 
     bool freed = false;
 
+    glm::mat4 modelMatrix = glm::mat4(1.f);
+
+private:
 
 
     float pos_x = 0;
@@ -41,7 +49,7 @@ struct SpriteObject
 
     float rot_angle = 0;
 
-    glm::mat4 modelMatrix = glm::mat4(1.f);
+   
 
     void updateModelMatrix()
     {
@@ -50,11 +58,16 @@ struct SpriteObject
             glm::scale(glm::mat4(1.f),glm::vec3(scale_x,scale_y,scale_z));
     }
 
-    void setScale(float x, float y, float z)
+public:
+    float getAngle() { return rot_angle; }
+
+    float getXPos() { return pos_x; }
+    float getYPos() { return pos_y; }
+
+    void setScale(float x, float y)
     {
         scale_x = x;
         scale_y = y;
-        scale_z = z;
         updateModelMatrix();
     }
 

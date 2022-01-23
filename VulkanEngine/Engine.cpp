@@ -8,10 +8,10 @@ std::unique_ptr<SpriteObject> Engine::createSprite(const char* filename)
 
     const std::vector<Vertex> vertices =
     {
-        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}, {1.f, 1.f}},
-        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}, {0.f, 1.f}},
-        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}, {0.f, 0.f}},
-        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}, {1.f, 0.f}}
+        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}, {1.f, 0.f}},
+        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}, {0.f, 0.f}},
+        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}, {0.f, 1.f}},
+        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}, {1.f, 1.f}}
     };
 
     const std::vector<uint16_t> indices = {

@@ -165,6 +165,7 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="spriteObject.cpp" />
+    <ClCompile Include="VulkanEngineApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMessenger.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="swapChainSupportDetails.h" />
     <ClInclude Include="uniformBufferObject.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="VulkanEngineApplication.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.spv" />

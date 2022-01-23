@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <glm/glm.hpp>
 
 struct Settings
 {
@@ -11,6 +12,10 @@ struct Settings
 	{
 		"VK_LAYER_KHRONOS_validation"
 	};
+
+	const float backgroundColorRed = 0.f;
+	const float backgroundColorGreen = 0.f;
+	const float backgroundColorBlue = 1.f;
 
 #ifdef NDEBUG
 	const bool enableValidationLayers = false;

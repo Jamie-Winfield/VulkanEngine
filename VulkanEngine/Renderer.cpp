@@ -14,7 +14,6 @@ void Renderer::init(Settings* _settings, VkDevice device, VkPhysicalDevice physi
     createGraphicsPipeline(device);
     createFrameBuffers(device);
     createCommandPool(device, physicalDevice, surface);
-    // createTextureImage(device, physicalDevice);
     createTextureSampler(physicalDevice,device);
     createUniformBuffers(device, physicalDevice);
     createDescriptorPool(device);
@@ -518,7 +517,7 @@ void Renderer::createGraphicsPipeline(VkDevice device)
     rasterizer.rasterizerDiscardEnable = VK_FALSE;
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;  // used to set how the fragment shaders colors the polygon
     rasterizer.lineWidth = 1.0f;
-    rasterizer.cullMode = VK_CULL_MODE_NONE;
+    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
     rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
     rasterizer.depthBiasConstantFactor = 0.0f;
@@ -787,7 +786,7 @@ void Renderer::createCommandBuffers(VkDevice device)
         renderPassInfo.renderArea.offset = { 0,0 };
         renderPassInfo.renderArea.extent = swapChainExtent;
 
-        VkClearValue clearColor = { {{1.f,0.f,0.f,1.f}} };
+        VkClearValue clearColor = { settings->backgroundColorRed,settings->backgroundColorGreen,settings->backgroundColorBlue,1.f };
         renderPassInfo.clearValueCount = 1;
         renderPassInfo.pClearValues = &clearColor;
 
