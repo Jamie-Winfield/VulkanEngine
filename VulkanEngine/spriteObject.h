@@ -130,9 +130,9 @@ public:
                 vkFreeMemory(device, indexBufferMemory, nullptr);
             }
 
-            vkDestroyImageView(device, textureImageView, nullptr);
-            vkDestroyImage(device, textureImage, nullptr);
-            vkFreeMemory(device, textureImageMemory, nullptr);
+            //vkDestroyImageView(device, textureImageView, nullptr);
+            //vkDestroyImage(device, textureImage, nullptr);
+            //vkFreeMemory(device, textureImageMemory, nullptr);
 
             freed = true;
         }

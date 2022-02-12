@@ -28,8 +28,7 @@ std::unique_ptr<SpriteObject> Engine::createSprite(const char* filename)
     }
     spriteObject->createVertexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
     spriteObject->createIndexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
-    renderer->createTextureImage(device, physicalDevice, filename,spriteObject->textureImage,
-        spriteObject->textureImageMemory,graphicsQueue);
+    spriteObject->textureImage = renderer->createTextureImage(device, physicalDevice, filename,graphicsQueue);
     spriteObject->setTextureImageView(renderer->createImageView(spriteObject->textureImage, VK_FORMAT_R8G8B8A8_SRGB, device));
 
     createdSprites.emplace_back(spriteObject.get());

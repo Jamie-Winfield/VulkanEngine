@@ -28,9 +28,8 @@ public:
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,
 		VkDevice device, VkQueue graphicsQueue);
 	VkImageView createImageView(VkImage image, VkFormat format, VkDevice device);
-	void createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice,
-		const char* filename, VkImage& textureImage, VkDeviceMemory& textureImageMemory,
-		VkQueue graphicsQueue);
+	VkImage createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice,
+		const char* filename, VkQueue graphicsQueue);
 	
 private:
 	void createSwapChain(VkPhysicalDevice PhysicalDevice, VkDevice device, VkSurfaceKHR surface, GLFWwindow* window);
@@ -74,7 +73,7 @@ private:
 	VkDescriptorPool descriptorPool;
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
-	std::vector<VkDescriptorSet> descriptorSets;
+	
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
@@ -82,6 +81,11 @@ private:
 	size_t currentFrame = 0;
 	Settings* settings;
 	VkSampler textureSampler;
+
+	std::vector<std::tuple<std::string, VkImage, VkDeviceMemory>> images;
+	std::vector<std::pair<VkImage, VkImageView>> imageViews;
+	std::vector<std::pair<VkImageView,std::vector<VkDescriptorSet>>> descriptorSets;
+
 
 public:
 	bool framebufferResized = false;

@@ -37,6 +37,8 @@ public:
 private:
 	Engine* engine;
 	std::unique_ptr<SpriteObject> sprite1;
+	std::unique_ptr<SpriteObject> sprite2;
+	std::vector<std::unique_ptr<SpriteObject>> sprites;
 
 	bool renderSprite = false;
 };

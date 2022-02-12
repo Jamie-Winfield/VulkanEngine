@@ -126,6 +126,17 @@ void Renderer::cleanup(VkDevice device)
         vkDestroyFence(device, inFlightFences[i], nullptr);
     }
 
+    for (std::tuple<std::string, VkImage, VkDeviceMemory> image : images)
+    {
+        vkFreeMemory(device, std::get<2>(image), nullptr);
+        vkDestroyImage(device, std::get<1>(image), nullptr);
+    }
+    images.clear();
+    for (std::pair<VkImage, VkImageView> imageView : imageViews)
+    {
+        vkDestroyImageView(device, imageView.second, nullptr);
+    }
+    imageViews.clear();
     for (auto sprite : spriteObjects)
     {
         if (sprite != nullptr)
@@ -150,9 +161,18 @@ void Renderer::renderObject(SpriteObject* spriteObject)
     spriteObjects_new.emplace_back(spriteObject);
 }
 
-void Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, 
-    const char* filename, VkImage& textureImage, VkDeviceMemory& textureImageMemory, VkQueue graphicsQueue)
+VkImage Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, 
+    const char* filename,  VkQueue graphicsQueue)
 {
+
+    for (std::tuple<std::string, VkImage, VkDeviceMemory> image : images)
+    {
+        if (std::get<0>(image) == filename)
+        {
+            return std::get<1>(image);
+        }
+    }
+
     int texWidth;
     int texHeight;
     int texChannels;
@@ -179,19 +199,26 @@ void Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalDevi
 
     stbi_image_free(pixels);
 
+    VkImage image;
+    VkDeviceMemory imageMemory;
+
     Helpers::createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
         VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        textureImage, textureImageMemory, device, physicalDevice);
+        image, imageMemory, device, physicalDevice);
 
-    transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED,
+    transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, device, graphicsQueue);
-    Helpers::copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
+    Helpers::copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
         device, commandPool, graphicsQueue);
-    transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+    transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, device, graphicsQueue);
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+    std::tuple<std::string, VkImage, VkDeviceMemory> imageTuple = std::make_tuple(filename, image, imageMemory);
+    images.emplace_back(std::move(imageTuple));
+    return std::get<1>(images.back());
 
 }
 
@@ -284,6 +311,16 @@ void Renderer::transitionImageLayout(VkImage image, VkFormat format, VkImageLayo
 
 VkImageView Renderer::createImageView(VkImage image, VkFormat format, VkDevice device)
 {
+    for (std::pair<VkImage, VkImageView> imageView : imageViews)
+    {
+        if (image == imageView.first)
+        {
+            return imageView.second;
+        }
+    }
+
+
+
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
@@ -300,7 +337,8 @@ VkImageView Renderer::createImageView(VkImage image, VkFormat format, VkDevice d
         throw std::runtime_error("failed to create texture image view!");
     }
 
-    return imageView;
+    imageViews.emplace_back(std::make_pair(image, imageView));
+    return imageViews.back().second;
 }
 
 void Renderer::createSwapChain(VkPhysicalDevice PhysicalDevice, VkDevice device, VkSurfaceKHR surface, GLFWwindow* window)
@@ -700,6 +738,20 @@ void Renderer::createDescriptorPool(VkDevice device)
 
 void Renderer::createDescriptorSets(VkDevice device, std::vector<VkDescriptorSet>& _descriptorSets, VkImageView textureImageView)
 {
+    for (std::pair<VkImageView, std::vector<VkDescriptorSet>> descriptorSet : descriptorSets)
+    {
+        if (textureImageView == descriptorSet.first)
+        {
+            _descriptorSets.resize(swapChainImages.size());
+            _descriptorSets[0] = (descriptorSet.second[0]);
+            _descriptorSets[1] = (descriptorSet.second[1]);
+            _descriptorSets[2] = (descriptorSet.second[2]);
+            return;
+        }
+    }
+
+    std::vector<VkDescriptorSet> descriptorSet;
+
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -707,14 +759,15 @@ void Renderer::createDescriptorSets(VkDevice device, std::vector<VkDescriptorSet
     allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
     allocInfo.pSetLayouts = layouts.data();
 
-    _descriptorSets.resize(swapChainImages.size());
+    descriptorSet.resize(swapChainImages.size());
 
-    auto result = vkAllocateDescriptorSets(device, &allocInfo, _descriptorSets.data());
+    auto result = vkAllocateDescriptorSets(device, &allocInfo, descriptorSet.data());
     if (result != VK_SUCCESS)
     {
         throw std::runtime_error("failed to allocate descriptor sets! vk error: " + std::to_string(result));
     }
 
+    _descriptorSets.resize(swapChainImages.size());
     for (size_t i = 0; i < swapChainImages.size(); ++i)
     {
         VkDescriptorBufferInfo bufferInfo{};
@@ -731,7 +784,7 @@ void Renderer::createDescriptorSets(VkDevice device, std::vector<VkDescriptorSet
         std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
         descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].dstSet = _descriptorSets[i];
+        descriptorWrites[0].dstSet = descriptorSet[i];
         descriptorWrites[0].dstBinding = 0;
         descriptorWrites[0].dstArrayElement = 0;
         descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
@@ -739,7 +792,7 @@ void Renderer::createDescriptorSets(VkDevice device, std::vector<VkDescriptorSet
         descriptorWrites[0].pBufferInfo = &bufferInfo;
 
         descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[1].dstSet = _descriptorSets[i];
+        descriptorWrites[1].dstSet = descriptorSet[i];
         descriptorWrites[1].dstBinding = 1;
         descriptorWrites[1].dstArrayElement = 0;
         descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -747,7 +800,13 @@ void Renderer::createDescriptorSets(VkDevice device, std::vector<VkDescriptorSet
         descriptorWrites[1].pImageInfo = &imageInfo;
 
         vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+
+        
+        _descriptorSets[i] = (descriptorSet[i]);
+        
+        
     }
+    descriptorSets.emplace_back(std::make_pair(textureImageView, std::move(descriptorSet)));
 }
 
 void Renderer::createCommandBuffers(VkDevice device)
@@ -796,12 +855,22 @@ void Renderer::createCommandBuffers(VkDevice device)
 
         for (size_t x = 0; x < spriteObjects.size(); ++x)
         {
+            std::vector<VkDescriptorSet> descriptorSet;
+            for (std::pair<VkImageView, std::vector<VkDescriptorSet>> descriptor : descriptorSets)
+            {
+                if (spriteObjects[x]->textureImageView == descriptor.first)
+                {
+                    descriptorSet = descriptor.second;
+                }
+            }
+
+        
             VkBuffer vertexBuffers[] = { spriteObjects[x]->vertexBuffer };
             VkDeviceSize offsets[] = { 0 };
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
             vkCmdBindIndexBuffer(commandBuffers[i], spriteObjects[x]->indexBuffer, 0, VK_INDEX_TYPE_UINT16);
             uint32_t dynamicOffset = x * sizeof(UniformBufferObject);
-            vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &spriteObjects[x]->descriptorSets[i], 1, &dynamicOffset);
+            vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet[i], 1, &dynamicOffset);
 
 
             vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(spriteObjects[x]->indices.size()), 1, 0, 0, 0);
@@ -907,6 +976,7 @@ void Renderer::recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice)
     }
     vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+    descriptorSets.clear();
 
     createUniformBuffers(device, physicalDevice);
     createDescriptorPool(device);
@@ -938,6 +1008,7 @@ void Renderer::cleanupSwapChain(VkDevice device)
     }
     vkDestroySwapchainKHR(device, swapChain, nullptr);
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+    descriptorSets.clear();
 }
 
 VkShaderModule Renderer::createShaderModule(const std::vector<char>& code, VkDevice device)

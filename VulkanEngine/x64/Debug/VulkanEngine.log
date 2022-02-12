@@ -1,9 +1,7 @@
-﻿  Engine.cpp
-  Game.cpp
-  Renderer.cpp
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(692,76): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(803,69): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-  spriteObject.cpp
+﻿  Game.cpp
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(23,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(23,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(24,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   VulkanEngineApplication.cpp
   Generating Code...
   main.cpp
