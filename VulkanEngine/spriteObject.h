@@ -9,7 +9,19 @@
 
 class SpriteObject
 {
-
+public:
+    enum Quad
+    {
+        TOP_LEFT = 4,
+        TOP_RIGHT = 5,
+        TOP_LEFT_RIGHT = 20,
+        BOTTOM_LEFT = 2,
+        BOTTOM_RIGHT = 3,
+        BOTTOM_LEFT_RIGHT = 6,
+        LEFT_SIDE = 8,
+        RIGHT_SIDE = 15,
+        ALL = 120
+    }quad = TOP_LEFT;
     
 private:
     std::vector<Vertex> vertices;
@@ -18,7 +30,12 @@ private:
     VkDeviceMemory vertexBufferMemory;
     
     VkDeviceMemory indexBufferMemory;
+
+    VkDevice device;
 public:
+
+    SpriteObject(VkDevice _device, float _screenx, float _screeny);
+    ~SpriteObject();
 
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
@@ -27,6 +44,8 @@ public:
     VkBuffer indexBuffer;
     std::vector<uint16_t> indices;
 
+    
+
     std::vector<VkDescriptorSet> descriptorSets;
 
     bool freed = false;
@@ -34,6 +53,9 @@ public:
     glm::mat4 modelMatrix = glm::mat4(1.f);
 
 private:
+
+    float screen_x = 0;
+    float screen_y = 0;
 
 
     float pos_x = 0;
@@ -49,13 +71,14 @@ private:
 
     float rot_angle = 0;
 
-   
+    void SetQuad();
 
     void updateModelMatrix()
     {
         modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(pos_x, pos_y, pos_z)) * 
             glm::rotate(glm::mat4(1.f),glm::radians(rot_angle),glm::vec3(0.f,0.f,1.f)) *
             glm::scale(glm::mat4(1.f),glm::vec3(scale_x,scale_y,scale_z));
+        SetQuad();
     }
 
 public:
@@ -63,6 +86,8 @@ public:
 
     float getXPos() { return pos_x; }
     float getYPos() { return pos_y; }
+    float GetWidth() { return scale_x; }
+    float GetHeight() { return scale_y; }
 
     void setScale(float x, float y)
     {
@@ -109,7 +134,7 @@ public:
         indices.emplace_back(index);
     }
 
-    void free(VkDevice device)
+    void free()
     {
         if (!freed)
         {
@@ -129,11 +154,6 @@ public:
             {
                 vkFreeMemory(device, indexBufferMemory, nullptr);
             }
-
-            //vkDestroyImageView(device, textureImageView, nullptr);
-            //vkDestroyImage(device, textureImage, nullptr);
-            //vkFreeMemory(device, textureImageMemory, nullptr);
-
             freed = true;
         }
     }

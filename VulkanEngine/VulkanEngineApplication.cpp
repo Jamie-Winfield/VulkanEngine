@@ -8,7 +8,7 @@ void VulkanEngineApplication::run()
     initWindow();
     engine->initVulkan(settings.get(), window);
     mainLoop();
-    game->end(engine->getDevice());
+    game->End();
     engine->cleanup();
     cleanup();
 }
@@ -46,7 +46,7 @@ void VulkanEngineApplication::framebufferResizeCallback(GLFWwindow* window, int 
 
 void VulkanEngineApplication::mainLoop()
 {
-    game->start();
+    game->Start();
     while (!glfwWindowShouldClose(window))
     {
         auto startTime = std::chrono::high_resolution_clock::now();
@@ -54,11 +54,11 @@ void VulkanEngineApplication::mainLoop()
         glfwPollEvents();
         for (auto& keyEvent : keyEvents)
         {
-            game->keyHandler(keyEvent);
+            game->KeyHandler(keyEvent);
         }
         keyEvents.clear();
-        game->update(timeBetweenFrames);
-        game->render(engine->getRenderer());
+        game->Update(timeBetweenFrames);
+        game->Render(engine->getRenderer());
         engine->getRenderer()->drawFrame(engine->getDevice(), engine->getGraphicsQueue(), engine->getPresentQueue(),
             window, engine->getPhysicalDevice(), engine->getSurface());
         auto finishTime = std::chrono::high_resolution_clock::now();

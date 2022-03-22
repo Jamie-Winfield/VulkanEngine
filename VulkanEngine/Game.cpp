@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <random>
 
-void Game::start()
+void Game::Start()
 {
 	sprite1 = engine->createSprite("textures/texture.jpg");
 	sprite1->setScale(100, 100);
@@ -11,6 +11,25 @@ void Game::start()
 	sprite2->setScale(200, 200);
 	sprite2->setPos(400, 400, 0);
 
+	sprite3 = engine->createSprite("textures/texture.jpg");
+	sprite3->setScale(100, 100);
+	sprite3->setPos(650, 650, 0);
+
+	sprite4 = engine->createSprite("textures/texture.jpg");
+	sprite4->setScale(100, 100);
+	sprite4->setPos(100, 100, 0);
+
+	sprite5 = engine->createSprite("textures/texture.jpg");
+	sprite5->setScale(100, 100);
+	sprite5->setPos(350, 100, 0);
+
+	collisions = std::make_unique<CollsionSystem>();
+	collisions->AddSprite(sprite1);
+	collisions->AddSprite(sprite2);
+	collisions->AddSprite(sprite3);
+	collisions->AddSprite(sprite4);
+	collisions->AddSprite(sprite5);
+	/*
 	for (int i = 0; i < 400; ++i)
 	{
 		const int range_from = 0;
@@ -24,49 +43,44 @@ void Game::start()
 		sprite->setRotation(distr(generator));
 		sprites.emplace_back(std::move(sprite));
 	}
+	*/
 
 }
 
-void Game::update(float gameTime)
+void Game::Update(float gameTime)
 {
-	for (auto &sprite : sprites)
-	{
-		sprite->setRotation(sprite->getAngle() + 30 * gameTime);
-	}
-	sprite1->setRotation(sprite1->getAngle() + 30 * gameTime);
-	sprite2->setRotation(sprite2->getAngle() - 30 * gameTime);
+	collisions->UpdateCollsions();
 }
 
-void Game::render(Renderer* renderer)
+void Game::Render(Renderer* renderer)
 {
-	renderer->renderObject(sprite2.get());
-	if (renderSprite)
-	{
-		renderer->renderObject(sprite1.get());
-	}
-	for (auto& sprite : sprites)
-	{
-		renderer->renderObject(sprite.get());
-	}
+	renderer->renderObject(sprite2);
+	renderer->renderObject(sprite1);
+	renderer->renderObject(sprite3);
+	renderer->renderObject(sprite4);
+	renderer->renderObject(sprite5);
+	
 }
 
-void Game::keyHandler(KeyEvent keyEvent)
+void Game::KeyHandler(KeyEvent keyEvent)
 {
 	if (keyEvent.action == KeyEvent::ActionCode::KEY_PRESSED)
 	{
 		if (keyEvent.key == GLFW_KEY_A)
 		{
-			renderSprite = true;
+			sprite1->updatePos(-2, 0, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_D)
 		{
-			renderSprite = false;
+			sprite1->updatePos(2, 0, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_R)
+		{
+			collisions->debug = !collisions->debug;
 		}
 	}
 }
 
-void Game::end(VkDevice device)
+void Game::End()
 {
-	sprite1->free(device);
-	sprite2->free(device);
 }

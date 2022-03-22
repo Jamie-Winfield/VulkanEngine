@@ -1,10 +1,10 @@
 #include "Engine.h"
 #include "helpers.cpp"
 
-std::unique_ptr<SpriteObject> Engine::createSprite(const char* filename)
+SpriteObject* Engine::createSprite(const char* filename)
 {
     std::unique_ptr<SpriteObject> spriteObject;
-    spriteObject = std::make_unique<SpriteObject>();
+    spriteObject = std::make_unique<SpriteObject>(device, settings->W_WIDTH,settings->W_HEIGHT);
 
     const std::vector<Vertex> vertices =
     {
@@ -31,8 +31,8 @@ std::unique_ptr<SpriteObject> Engine::createSprite(const char* filename)
     spriteObject->textureImage = renderer->createTextureImage(device, physicalDevice, filename,graphicsQueue);
     spriteObject->setTextureImageView(renderer->createImageView(spriteObject->textureImage, VK_FORMAT_R8G8B8A8_SRGB, device));
 
-    createdSprites.emplace_back(spriteObject.get());
-    return std::move(spriteObject);
+    createdSprites.emplace_back(std::move(spriteObject));
+    return createdSprites.back().get();
 }
 
 void Engine::initVulkan(Settings* _settings, GLFWwindow* _window)
@@ -249,12 +249,18 @@ void Engine::cleanup()
 {
     renderer->cleanup(device);
 
-    vkDestroyDevice(device, nullptr);
+    
 
     for (auto& sprite : createdSprites)
     {
-        sprite->free(device);
+        if (sprite != nullptr)
+        {
+            sprite->free();
+            sprite.reset(nullptr);
+        }
     }
+
+    vkDestroyDevice(device, nullptr);
 
     if (settings->enableValidationLayers)
     {

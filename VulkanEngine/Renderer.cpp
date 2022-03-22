@@ -137,13 +137,6 @@ void Renderer::cleanup(VkDevice device)
         vkDestroyImageView(device, imageView.second, nullptr);
     }
     imageViews.clear();
-    for (auto sprite : spriteObjects)
-    {
-        if (sprite != nullptr)
-        {
-            sprite->free(device);
-        }
-    }
 
     vkDestroyCommandPool(device, commandPool, nullptr);
 }
