@@ -8,6 +8,8 @@
 
 
 
+
+
 class Renderer
 {
 public:
@@ -27,14 +29,14 @@ public:
 	VkCommandPool getCommandPool() { return commandPool; }
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,
 		VkDevice device, VkQueue graphicsQueue);
-	VkImageView createImageView(VkImage image, VkFormat format, VkDevice device);
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkDevice device);
 	VkImage createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice,
 		const char* filename, VkQueue graphicsQueue);
 	
 private:
 	void createSwapChain(VkPhysicalDevice PhysicalDevice, VkDevice device, VkSurfaceKHR surface, GLFWwindow* window);
 	void createImageViews(VkDevice device);
-	void createRenderPass(VkDevice device);
+	void createRenderPass(VkDevice device, VkPhysicalDevice physicalDevice);
 	void createDescriptorSetLayout(VkDevice device);
 	void createGraphicsPipeline(VkDevice device);
 	void createFrameBuffers(VkDevice device);
@@ -48,7 +50,12 @@ private:
 	void recreateSwapChain(GLFWwindow* window, VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 	void cleanupSwapChain(VkDevice device);
 	void recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice);
-	
+	void createDepthResources(VkPhysicalDevice physicalDevice, VkDevice device);
+
+	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features, VkPhysicalDevice physicalDevice);
+	VkFormat findDepthFormat(VkPhysicalDevice physicalDevice);
+	bool hasStencilComponent(VkFormat format);
+
 	void createTextureSampler(VkPhysicalDevice physicalDevice, VkDevice device);
 	
 	VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice device);
@@ -81,6 +88,10 @@ private:
 	size_t currentFrame = 0;
 	Settings* settings;
 	VkSampler textureSampler;
+
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
 
 	std::vector<std::tuple<std::string, VkImage, VkDeviceMemory>> images;
 	std::vector<std::pair<VkImage, VkImageView>> imageViews;

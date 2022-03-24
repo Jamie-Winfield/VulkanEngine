@@ -18,5 +18,12 @@ private:
 	std::vector<SpriteObject*> quad3;
 	std::vector<SpriteObject*> quad4;
 
+	/*
+	void SolveQuad1();
+	void SolveQuad2();
+	void SolveQuad3();
+	void SolveQuad4();
+	*/
+
 };
 

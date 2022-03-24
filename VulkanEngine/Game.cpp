@@ -68,11 +68,19 @@ void Game::KeyHandler(KeyEvent keyEvent)
 	{
 		if (keyEvent.key == GLFW_KEY_A)
 		{
-			sprite1->updatePos(-2, 0, 0);
+			sprite1->updatePos(-5, 0, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_D)
 		{
-			sprite1->updatePos(2, 0, 0);
+			sprite1->updatePos(5, 0, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_W)
+		{
+			sprite1->updatePos(0, 5, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_S)
+		{
+			sprite1->updatePos(0, -5, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
