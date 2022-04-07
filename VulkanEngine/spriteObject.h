@@ -50,6 +50,12 @@ public:
 
     bool freed = false;
 
+    
+
+    bool updated1 = true;
+    bool updated2 = true;
+    bool updated3 = true;
+
     glm::mat4 modelMatrix = glm::mat4(1.f);
 
 private:
@@ -69,6 +75,10 @@ private:
     float scale_y = 1;
     float scale_z = 1;
 
+    bool flipped = false;
+    float flip = 0;
+    
+
     float rot_angle = 0;
 
     void SetQuad();
@@ -76,9 +86,12 @@ private:
     void updateModelMatrix()
     {
         modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(pos_x, pos_y, pos_z)) * 
-            glm::rotate(glm::mat4(1.f),glm::radians(rot_angle),glm::vec3(0.f,0.f,1.f)) *
+            glm::rotate(glm::mat4(1.f),glm::radians(rot_angle),glm::vec3(0.f,0.f,1.f)) * glm::rotate(glm::mat4(1.f), glm::radians(flip), glm::vec3(0.f, 1.f, 0.f)) *
             glm::scale(glm::mat4(1.f),glm::vec3(scale_x,scale_y,scale_z));
         SetQuad();
+        updated1 = true;
+        updated2 = true;
+        updated3 = true;
     }
 
 public:
@@ -93,6 +106,20 @@ public:
     {
         scale_x = x;
         scale_y = y;
+        updateModelMatrix();
+    }
+
+    void FlipSprite()
+    {
+        if (!flipped)
+        {
+            flip = 180;
+        }
+        else
+        {
+            flip = 0;
+        }
+        flipped = !flipped;
         updateModelMatrix();
     }
 

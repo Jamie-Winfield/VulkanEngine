@@ -70,6 +70,7 @@ VkFormat Renderer::findSupportedFormat(const std::vector<VkFormat>& candidates, 
 void Renderer::drawFrame(VkDevice device, VkQueue graphicsQueue, VkQueue presentQueue,
     GLFWwindow* window, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
+
     if (spriteObjects != spriteObjects_new)
     {
         updateRenderables(spriteObjects_new, window, device, physicalDevice, surface);
@@ -187,6 +188,12 @@ void Renderer::updateRenderables(std::vector<SpriteObject*> objects, GLFWwindow*
     VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
     spriteObjects = objects;
+    for (auto sprite : spriteObjects)
+    {
+        sprite->updated1 = true;
+        sprite->updated3 = true;
+        sprite->updated2 = true;
+    }
     // recreateSwapChain(window, device, physicalDevice, surface);
     recreateBuffers(device, physicalDevice);
 }
@@ -984,21 +991,39 @@ void Renderer::updateUniformBuffers(uint32_t currentImage, VkDevice device)
     UniformBufferObject ubo{};
     for (size_t i = 0; i < spriteObjects.size(); ++i)
     {
+        if (currentImage == 0 && spriteObjects[i]->updated1 || currentImage == 1 && spriteObjects[i]->updated2 || currentImage == 2 && spriteObjects[i]->updated3)
+        {
 
+            glm::mat4 ortho;
+            glm::mat4 perspective;
+            perspective = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
+            ortho = glm::ortho(0.0f, (float)swapChainExtent.width, (float)swapChainExtent.height, 0.0f, -1000.f, 1000.f);
+            ubo.model = spriteObjects[i]->modelMatrix;
+            ubo.view = glm::lookAt(glm::vec3(0.f, 0.0f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+            ubo.proj = ortho;
+            ubo.proj[1][1] *= 1;    // for ortho use 1 and perspective use -1
 
-        glm::mat4 ortho;
-        glm::mat4 perspective;
-        perspective = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
-        ortho = glm::ortho(0.0f, (float)swapChainExtent.width, (float)swapChainExtent.height, 0.0f, -1000.f, 1000.f);
-        ubo.model = spriteObjects[i]->modelMatrix;
-        ubo.view = glm::lookAt(glm::vec3(0.f, 0.0f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-        ubo.proj = ortho;
-        ubo.proj[1][1] *= 1;    // for ortho use 1 and perspective use -1
+            
 
-        void* data;
-        vkMapMemory(device, uniformBuffersMemory[currentImage], sizeof(UniformBufferObject) * i, sizeof(UniformBufferObject), 0, &data);
-        memcpy(data, &ubo, sizeof(UniformBufferObject));
-        vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
+            void* data;
+            vkMapMemory(device, uniformBuffersMemory[currentImage], sizeof(UniformBufferObject) * i, sizeof(UniformBufferObject), 0, &data);
+            memcpy(data, &ubo, sizeof(UniformBufferObject));
+            vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
+
+            if (currentImage == 0)
+            {
+                spriteObjects[i]->updated1 = false;
+            }
+            else if (currentImage == 1)
+            {
+                spriteObjects[i]->updated2 = false;
+            }
+            else if (currentImage == 2)
+            {
+                spriteObjects[i]->updated3 = false;
+            }
+            
+        }
     }
 }
 

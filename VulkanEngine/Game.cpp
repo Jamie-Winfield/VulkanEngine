@@ -29,7 +29,7 @@ void Game::Start()
 	collisions->AddSprite(sprite3);
 	collisions->AddSprite(sprite4);
 	collisions->AddSprite(sprite5);
-	/*
+	
 	for (int i = 0; i < 400; ++i)
 	{
 		const int range_from = 0;
@@ -41,9 +41,10 @@ void Game::Start()
 		sprite->setScale(10, 10);
 		sprite->setPos(distr(generator), distr(generator), 0);
 		sprite->setRotation(distr(generator));
+		
 		sprites.emplace_back(std::move(sprite));
 	}
-	*/
+	
 
 }
 
@@ -59,6 +60,13 @@ void Game::Render(Renderer* renderer)
 	renderer->renderObject(sprite3);
 	renderer->renderObject(sprite4);
 	renderer->renderObject(sprite5);
+	if (flip)
+	{
+		for (auto sprite : sprites)
+		{
+			renderer->renderObject(sprite);
+		}
+	}
 	
 }
 
@@ -85,6 +93,17 @@ void Game::KeyHandler(KeyEvent keyEvent)
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
 			collisions->debug = !collisions->debug;
+		}
+		else if (keyEvent.key == GLFW_KEY_F)
+		{
+			/*
+			for (auto sprite : sprites)
+			{
+				sprite->FlipSprite();
+				
+			}
+			*/
+			flip = !flip;
 		}
 	}
 }
