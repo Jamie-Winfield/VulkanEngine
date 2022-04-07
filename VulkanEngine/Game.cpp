@@ -72,7 +72,7 @@ void Game::Render(Renderer* renderer)
 
 void Game::KeyHandler(KeyEvent keyEvent)
 {
-	if (keyEvent.action == KeyEvent::ActionCode::KEY_PRESSED)
+	if (keyEvent.action == KeyEvent::ActionCode::KEY_HELD)
 	{
 		if (keyEvent.key == GLFW_KEY_A)
 		{

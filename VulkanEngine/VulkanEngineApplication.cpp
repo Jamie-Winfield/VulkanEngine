@@ -35,6 +35,10 @@ void VulkanEngineApplication::key_callback(GLFWwindow* window, int key, int scan
 {
     KeyEvent keyEvent{ key,scancode,action,mods };
     auto app = reinterpret_cast<VulkanEngineApplication*>(glfwGetWindowUserPointer(window));
+    if (std::find(app->prevKeyEvents.begin(), app->prevKeyEvents.end(), keyEvent) != app->prevKeyEvents.end())
+    {
+        keyEvent.action = KeyEvent::KEY_HELD;
+    }
     app->keyEvents.emplace_back(keyEvent);
 }
 
@@ -56,6 +60,7 @@ void VulkanEngineApplication::mainLoop()
         {
             game->KeyHandler(keyEvent);
         }
+        prevKeyEvents = keyEvents;
         keyEvents.clear();
         game->Update(timeBetweenFrames);
         game->Render(engine->getRenderer());
