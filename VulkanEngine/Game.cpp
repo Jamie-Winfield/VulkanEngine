@@ -42,7 +42,7 @@ void Game::Start()
 		sprite->setScale(10, 10);
 		sprite->setPos(distr(generator), distr(generator), 0);
 		sprite->setRotation(distr(generator));
-		collisions->AddSprite(sprite);
+		//collisions->AddSprite(sprite);
 		
 		sprites.emplace_back(std::move(sprite));
 	}

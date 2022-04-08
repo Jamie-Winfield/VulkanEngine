@@ -22,6 +22,11 @@ public:
         RIGHT_SIDE = 15,
         ALL = 120
     }quad = TOP_LEFT;
+
+    bool operator== (SpriteObject& _object)
+    {
+        return _object.GetId() == sprite_id;
+    }
     
 private:
     std::vector<Vertex> vertices;
@@ -32,10 +37,14 @@ private:
     VkDeviceMemory indexBufferMemory;
 
     VkDevice device;
+
+    uint16_t sprite_id = 0;
 public:
 
-    SpriteObject(VkDevice _device, float _screenx, float _screeny);
+    SpriteObject(VkDevice _device, float _screenx, float _screeny, uint16_t _id);
     ~SpriteObject();
+
+    uint16_t GetId() { return sprite_id; }
 
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
@@ -116,7 +125,7 @@ public:
     }
 
     /// <summary>
-    /// Stops the sprite from showing up in the scene by flipping it 180deg doesn't effect preformance
+    /// Stops the sprite from showing up in the scene by flipping it 180deg, doesn't effect preformance
     /// however offers alternative to changing renderables list which does effect preformance
     /// </summary>
     void FlipSprite()

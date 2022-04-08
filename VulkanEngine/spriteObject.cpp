@@ -4,11 +4,12 @@
 
 
 
-SpriteObject::SpriteObject(VkDevice _device, float _screenx, float _screeny)
+SpriteObject::SpriteObject(VkDevice _device, float _screenx, float _screeny, uint16_t _id)
 {
     device = _device;
     screen_x = _screenx;
     screen_y = _screeny;
+    sprite_id = _id;
     SetQuad();
 }
 

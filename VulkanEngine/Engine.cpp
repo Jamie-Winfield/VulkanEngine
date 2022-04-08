@@ -4,7 +4,8 @@
 SpriteObject* Engine::createSprite(const char* filename)
 {
     std::unique_ptr<SpriteObject> spriteObject;
-    spriteObject = std::make_unique<SpriteObject>(device, settings->W_WIDTH,settings->W_HEIGHT);
+    spriteObject = std::make_unique<SpriteObject>(device, settings->W_WIDTH,settings->W_HEIGHT, current_sprite_id);
+    current_sprite_id++;
 
     const std::vector<Vertex> vertices =
     {

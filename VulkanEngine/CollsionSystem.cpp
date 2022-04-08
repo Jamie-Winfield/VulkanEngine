@@ -3,7 +3,19 @@
 
 void CollsionSystem::AddSprite(SpriteObject* _sprite)
 {
-	sprites.emplace_back(_sprite);
+	if (std::find(sprites.begin(), sprites.end(), _sprite) == sprites.end())
+	{
+		sprites.emplace_back(_sprite);
+	}
+}
+
+void CollsionSystem::RemoveSprite(SpriteObject* _sprite)
+{
+	auto position = std::find(sprites.begin(), sprites.end(), _sprite);
+	if (position != sprites.end())
+	{
+		sprites.erase(position);
+	}
 }
 
 

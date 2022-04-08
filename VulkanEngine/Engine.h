@@ -85,5 +85,7 @@ private:
 	};
 	std::unique_ptr<Renderer> renderer;
 	std::vector<std::unique_ptr<SpriteObject>> createdSprites;
+
+	uint16_t current_sprite_id = 0;
 };
 

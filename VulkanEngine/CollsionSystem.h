@@ -5,6 +5,7 @@ class CollsionSystem
 {
 public:
 	void AddSprite(SpriteObject* _sprite);
+	void RemoveSprite(SpriteObject* _sprite);
 	void UpdateCollsions();
 
 	bool debug = false;
