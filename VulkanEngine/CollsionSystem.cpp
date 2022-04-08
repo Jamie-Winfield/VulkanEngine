@@ -150,6 +150,73 @@ void SolveQuad4(std::vector<SpriteObject*> sprites)
 	}
 }
 
+void SolveQuad(std::vector<SpriteObject*> sprites)
+{
+	// check top right quad
+	for (auto _sprite1 : sprites)
+	{
+		for (auto _sprite2 : sprites)
+		{
+			if (_sprite1 == _sprite2)
+			{
+				continue;
+			}
+			float sprite1_x = _sprite1->getXPos();
+			float sprite1_y = _sprite1->getYPos();
+			float sprite1_x_max = _sprite1->getXPos() + _sprite1->GetWidth();
+			float sprite1_y_max = _sprite1->getYPos() + _sprite1->GetHeight();
+
+			float sprite2_x = _sprite2->getXPos();
+			float sprite2_y = _sprite2->getYPos();
+			float sprite2_x_max = _sprite2->getXPos() + _sprite2->GetWidth();
+			float sprite2_y_max = _sprite2->getYPos() + _sprite2->GetHeight();
+			if ((sprite1_x >= sprite2_x && sprite1_x <= sprite2_x_max) ||
+				(sprite1_x_max >= sprite2_x && sprite1_x_max <= sprite2_x_max))
+			{
+				// objects overlap on the x axis
+				if ((sprite1_y >= sprite2_y && sprite1_y <= sprite2_y_max) ||
+					(sprite1_y_max >= sprite2_y && sprite1_y_max <= sprite2_y_max))
+				{
+					//objects also overlap on the y axis
+					
+
+					// displace objects by how much they overlap
+
+					if (_sprite1->vector_x > 0 && _sprite1->moveable)
+					{
+						//moving right
+						float overlap_x = std::abs(sprite1_x_max - sprite2_x) + 1;
+						_sprite1->updatePos(-overlap_x, 0, 0);
+					}
+					else if (_sprite1->vector_x < 0 && _sprite1->moveable)
+					{
+						//moving left
+						float overlap_x = std::abs(sprite1_x - sprite2_x_max) + 1;
+						_sprite1->updatePos(overlap_x, 0, 0);
+					}
+					if (_sprite1->vector_y > 0 && _sprite1->moveable)
+					{
+						//moving up
+						float overlap_y = std::abs(sprite1_y_max - sprite2_y) + 1;
+						_sprite1->updatePos(0, -overlap_y, 0);
+					}
+					else if (_sprite1->vector_y < 0 && _sprite1->moveable)
+					{
+						//moving down
+						float overlap_y = std::abs(sprite1_y - sprite2_y_max) + 1;
+						_sprite1->updatePos(0, overlap_y, 0);
+					}
+
+					std::cout << "objects overlap \n";
+					
+
+
+				}
+			}
+		}
+	}
+}
+
 void CollsionSystem::UpdateCollsions()
 {
 	quad1.clear();
@@ -237,6 +304,11 @@ void CollsionSystem::UpdateCollsions()
 	SolveQuad2(quad2);
 	SolveQuad3(quad3);
 	SolveQuad4(quad4);
+
+	SolveQuad(quad1);
+	SolveQuad(quad2);
+	SolveQuad(quad3);
+	SolveQuad(quad4);
 
 	int total_checks = 0;
 

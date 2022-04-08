@@ -41,6 +41,7 @@ void Game::Start()
 		sprite->setScale(10, 10);
 		sprite->setPos(distr(generator), distr(generator), 0);
 		sprite->setRotation(distr(generator));
+		//collisions->AddSprite(sprite);
 		
 		sprites.emplace_back(std::move(sprite));
 	}
@@ -90,6 +91,26 @@ void Game::KeyHandler(KeyEvent keyEvent)
 		{
 			sprite1->updatePos(0, -5, 0);
 		}
+		
+	}
+	else if (keyEvent.action == KeyEvent::ActionCode::KEY_PRESSED)
+	{
+		if (keyEvent.key == GLFW_KEY_A)
+		{
+			sprite1->updatePos(-5, 0, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_D)
+		{
+			sprite1->updatePos(5, 0, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_W)
+		{
+			sprite1->updatePos(0, 5, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_S)
+		{
+			sprite1->updatePos(0, -5, 0);
+		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
 			collisions->debug = !collisions->debug;
@@ -100,7 +121,7 @@ void Game::KeyHandler(KeyEvent keyEvent)
 			for (auto sprite : sprites)
 			{
 				sprite->FlipSprite();
-				
+
 			}
 			*/
 			flip = !flip;

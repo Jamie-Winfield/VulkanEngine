@@ -56,6 +56,12 @@ public:
     bool updated2 = true;
     bool updated3 = true;
 
+    float vector_x = 0;
+    float vector_y = 0;
+
+
+    bool moveable = true;
+
     glm::mat4 modelMatrix = glm::mat4(1.f);
 
 private:
@@ -109,6 +115,10 @@ public:
         updateModelMatrix();
     }
 
+    /// <summary>
+    /// Stops the sprite from showing up in the scene by flipping it 180deg doesn't effect preformance
+    /// however offers alternative to changing renderables list which does effect preformance
+    /// </summary>
     void FlipSprite()
     {
         if (!flipped)
@@ -130,6 +140,9 @@ public:
     }
     void updatePos(float x, float y, float z)
     {
+        vector_x = x;
+        vector_y = y;
+
         pos_x += x;
         pos_y += y;
         pos_z += z;
