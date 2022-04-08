@@ -1,5 +1,2 @@
-﻿  Game.cpp
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(43,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(43,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(44,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  CollsionSystem.cpp
   VulkanEngine.vcxproj -> C:\Users\jamie\source\repos\temp\VulkanEngine\x64\Debug\VulkanEngine.exe

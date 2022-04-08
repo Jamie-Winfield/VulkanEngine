@@ -44,7 +44,7 @@ private:
 	std::vector<SpriteObject*> sprites;
 	std::unique_ptr<CollsionSystem> collisions;
 
-	bool flip = false;
+	bool flip = true;
 
 	bool renderSprite = false;
 };

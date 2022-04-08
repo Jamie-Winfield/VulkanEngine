@@ -19,9 +19,10 @@ void Game::Start()
 	sprite4->setScale(100, 100);
 	sprite4->setPos(100, 100, 0);
 
-	sprite5 = engine->createSprite("textures/texture.jpg");
+	sprite5 = engine->createSprite("textures/texture2.png");
 	sprite5->setScale(100, 100);
 	sprite5->setPos(350, 100, 0);
+	sprite5->moveable = false;
 
 	collisions = std::make_unique<CollsionSystem>();
 	collisions->AddSprite(sprite1);
@@ -41,7 +42,7 @@ void Game::Start()
 		sprite->setScale(10, 10);
 		sprite->setPos(distr(generator), distr(generator), 0);
 		sprite->setRotation(distr(generator));
-		//collisions->AddSprite(sprite);
+		collisions->AddSprite(sprite);
 		
 		sprites.emplace_back(std::move(sprite));
 	}

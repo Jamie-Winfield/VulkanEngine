@@ -6,153 +6,9 @@ void CollsionSystem::AddSprite(SpriteObject* _sprite)
 	sprites.emplace_back(_sprite);
 }
 
-void SolveQuad1(std::vector<SpriteObject*> sprites)
-{
-	// check bottom left quad
-	for (auto _sprite1 : sprites)
-	{
-		for (auto _sprite2 : sprites)
-		{
-			if (_sprite1 == _sprite2)
-			{
-				continue;
-			}
-			float sprite1_x = _sprite1->getXPos();
-			float sprite1_y = _sprite1->getYPos();
-			float sprite1_x_max = _sprite1->getXPos() + _sprite1->GetWidth();
-			float sprite1_y_max = _sprite1->getYPos() + _sprite1->GetHeight();
-
-			float sprite2_x = _sprite2->getXPos();
-			float sprite2_y = _sprite2->getYPos();
-			float sprite2_x_max = _sprite2->getXPos() + _sprite2->GetWidth();
-			float sprite2_y_max = _sprite2->getYPos() + _sprite2->GetHeight();
-			if ((sprite1_x >= sprite2_x && sprite1_x <= sprite2_x_max) ||
-				(sprite1_x_max >= sprite2_x && sprite1_x_max <= sprite2_x_max))
-			{
-				// objects overlap on the x axis
-				if ((sprite1_y >= sprite2_y && sprite1_y <= sprite2_y_max) ||
-					(sprite1_y_max >= sprite2_y && sprite1_y_max <= sprite2_y_max))
-				{
-					//objects also overlap on the y axis
-					std::cout << "objects overlap \n";
-
-				}
-			}
-		}
-	}
-}
-
-void SolveQuad2(std::vector<SpriteObject*> sprites)
-{
-	// check bottom right quad
-	for (auto _sprite1 : sprites)
-	{
-		for (auto _sprite2 : sprites)
-		{
-			if (_sprite1 == _sprite2)
-			{
-				continue;
-			}
-			float sprite1_x = _sprite1->getXPos();
-			float sprite1_y = _sprite1->getYPos();
-			float sprite1_x_max = _sprite1->getXPos() + _sprite1->GetWidth();
-			float sprite1_y_max = _sprite1->getYPos() + _sprite1->GetHeight();
-
-			float sprite2_x = _sprite2->getXPos();
-			float sprite2_y = _sprite2->getYPos();
-			float sprite2_x_max = _sprite2->getXPos() + _sprite2->GetWidth();
-			float sprite2_y_max = _sprite2->getYPos() + _sprite2->GetHeight();
-			if ((sprite1_x >= sprite2_x && sprite1_x <= sprite2_x_max) ||
-				(sprite1_x_max >= sprite2_x && sprite1_x_max <= sprite2_x_max))
-			{
-				// objects overlap on the x axis
-				if ((sprite1_y >= sprite2_y && sprite1_y <= sprite2_y_max) ||
-					(sprite1_y_max >= sprite2_y && sprite1_y_max <= sprite2_y_max))
-				{
-					//objects also overlap on the y axis
-					std::cout << "objects overlap \n";
-
-				}
-			}
-		}
-	}
-}
-
-void SolveQuad3(std::vector<SpriteObject*> sprites)
-{
-	// check top left quad
-	for (auto _sprite1 : sprites)
-	{
-		for (auto _sprite2 : sprites)
-		{
-			if (_sprite1 == _sprite2)
-			{
-				continue;
-			}
-			float sprite1_x = _sprite1->getXPos();
-			float sprite1_y = _sprite1->getYPos();
-			float sprite1_x_max = _sprite1->getXPos() + _sprite1->GetWidth();
-			float sprite1_y_max = _sprite1->getYPos() + _sprite1->GetHeight();
-
-			float sprite2_x = _sprite2->getXPos();
-			float sprite2_y = _sprite2->getYPos();
-			float sprite2_x_max = _sprite2->getXPos() + _sprite2->GetWidth();
-			float sprite2_y_max = _sprite2->getYPos() + _sprite2->GetHeight();
-			if ((sprite1_x >= sprite2_x && sprite1_x <= sprite2_x_max) ||
-				(sprite1_x_max >= sprite2_x && sprite1_x_max <= sprite2_x_max))
-			{
-				// objects overlap on the x axis
-				if ((sprite1_y >= sprite2_y && sprite1_y <= sprite2_y_max) ||
-					(sprite1_y_max >= sprite2_y && sprite1_y_max <= sprite2_y_max))
-				{
-					//objects also overlap on the y axis
-					std::cout << "objects overlap \n";
-
-				}
-			}
-		}
-	}
-}
-
-void SolveQuad4(std::vector<SpriteObject*> sprites)
-{
-	// check top right quad
-	for (auto _sprite1 : sprites)
-	{
-		for (auto _sprite2 : sprites)
-		{
-			if (_sprite1 == _sprite2)
-			{
-				continue;
-			}
-			float sprite1_x = _sprite1->getXPos();
-			float sprite1_y = _sprite1->getYPos();
-			float sprite1_x_max = _sprite1->getXPos() + _sprite1->GetWidth();
-			float sprite1_y_max = _sprite1->getYPos() + _sprite1->GetHeight();
-
-			float sprite2_x = _sprite2->getXPos();
-			float sprite2_y = _sprite2->getYPos();
-			float sprite2_x_max = _sprite2->getXPos() + _sprite2->GetWidth();
-			float sprite2_y_max = _sprite2->getYPos() + _sprite2->GetHeight();
-			if ((sprite1_x >= sprite2_x && sprite1_x <= sprite2_x_max) ||
-				(sprite1_x_max >= sprite2_x && sprite1_x_max <= sprite2_x_max))
-			{
-				// objects overlap on the x axis
-				if ((sprite1_y >= sprite2_y && sprite1_y <= sprite2_y_max) ||
-					(sprite1_y_max >= sprite2_y && sprite1_y_max <= sprite2_y_max))
-				{
-					//objects also overlap on the y axis
-					std::cout << "objects overlap \n";
-
-				}
-			}
-		}
-	}
-}
 
 void SolveQuad(std::vector<SpriteObject*> sprites)
 {
-	// check top right quad
 	for (auto _sprite1 : sprites)
 	{
 		for (auto _sprite2 : sprites)
@@ -182,29 +38,57 @@ void SolveQuad(std::vector<SpriteObject*> sprites)
 
 					// displace objects by how much they overlap
 
-					if (_sprite1->vector_x > 0 && _sprite1->moveable)
+					if (_sprite1->vector_x > 0)
 					{
 						//moving right
 						float overlap_x = std::abs(sprite1_x_max - sprite2_x) + 1;
-						_sprite1->updatePos(-overlap_x, 0, 0);
+						if (_sprite2->moveable)
+						{
+							_sprite2->updatePos(overlap_x, 0, 0);
+						}
+						if (_sprite1->moveable)
+						{
+							_sprite1->updatePos(-overlap_x, 0, 0);
+						}
 					}
-					else if (_sprite1->vector_x < 0 && _sprite1->moveable)
+					else if (_sprite1->vector_x < 0)
 					{
 						//moving left
 						float overlap_x = std::abs(sprite1_x - sprite2_x_max) + 1;
-						_sprite1->updatePos(overlap_x, 0, 0);
+						if (_sprite2->moveable)
+						{
+							_sprite2->updatePos(-overlap_x, 0, 0);
+						}
+						if (_sprite1->moveable)
+						{
+							_sprite1->updatePos(overlap_x, 0, 0);
+						}
 					}
-					if (_sprite1->vector_y > 0 && _sprite1->moveable)
+					if (_sprite1->vector_y > 0)
 					{
 						//moving up
 						float overlap_y = std::abs(sprite1_y_max - sprite2_y) + 1;
-						_sprite1->updatePos(0, -overlap_y, 0);
+						if (_sprite2->moveable)
+						{
+							_sprite2->updatePos(0, overlap_y, 0);
+						}
+						if (_sprite1->moveable)
+						{
+							_sprite1->updatePos(0, -overlap_y, 0);
+						}
 					}
-					else if (_sprite1->vector_y < 0 && _sprite1->moveable)
+					else if (_sprite1->vector_y < 0)
 					{
 						//moving down
 						float overlap_y = std::abs(sprite1_y - sprite2_y_max) + 1;
-						_sprite1->updatePos(0, overlap_y, 0);
+						if (_sprite2->moveable)
+						{
+							_sprite2->updatePos(0, -overlap_y, 0);
+						}
+						if (_sprite1->moveable)
+						{
+							_sprite1->updatePos(0, overlap_y, 0);
+						}
 					}
 
 					std::cout << "objects overlap \n";
@@ -300,10 +184,7 @@ void CollsionSystem::UpdateCollsions()
 	t4.join();
 	*/
 
-	SolveQuad1(quad1);
-	SolveQuad2(quad2);
-	SolveQuad3(quad3);
-	SolveQuad4(quad4);
+	
 
 	SolveQuad(quad1);
 	SolveQuad(quad2);
