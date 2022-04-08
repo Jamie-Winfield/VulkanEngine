@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include "helpers.cpp"
 
+#include <iostream>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
@@ -224,7 +226,16 @@ VkImage Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalD
 
     if (!pixels)
     {
-        throw std::runtime_error("failed to load texture image!");
+        // TODO : put no texture file somewhere else
+        const char* noTex = "textures/NoTexture.png";
+        pixels = stbi_load(noTex, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        imageSize = texWidth * texHeight * 4;
+        
+        std::cout << "failed to load texture file!" << std::endl;
+        if (!pixels)
+        {
+            throw std::exception("failed to load texture image!");
+        }
     }
 
     VkBuffer stagingBuffer;

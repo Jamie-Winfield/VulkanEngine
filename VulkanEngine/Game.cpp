@@ -7,7 +7,7 @@ void Game::Start()
 	sprite1->setScale(100, 100);
 	sprite1->setPos(200, 400, 0);
 
-	sprite2 = engine->createSprite("textures/texture.jpg");
+	sprite2 = engine->createSprite("textures/texture2.jpg");
 	sprite2->setScale(200, 200);
 	sprite2->setPos(400, 400, 0);
 
