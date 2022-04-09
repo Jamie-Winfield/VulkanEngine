@@ -71,6 +71,8 @@ public:
 
     bool moveable = true;
 
+    float rot_angle = 0;
+
     glm::mat4 modelMatrix = glm::mat4(1.f);
 
 private:
@@ -94,7 +96,7 @@ private:
     float flip = 0;
     
 
-    float rot_angle = 0;
+    
 
     void SetQuad();
 
@@ -147,6 +149,13 @@ public:
         rot_angle = rot;
         updateModelMatrix();
     }
+
+    void Rotate(float _rot)
+    {
+        rot_angle += _rot;
+        updateModelMatrix();
+    }
+
     void updatePos(float x, float y, float z)
     {
         vector_x = x;

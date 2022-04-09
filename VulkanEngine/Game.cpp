@@ -5,7 +5,8 @@ void Game::Start()
 {
 	sprite1 = engine->createSprite("textures/texture.jpg");
 	sprite1->setScale(100, 100);
-	sprite1->setPos(200, 400, 0);
+	sprite1->setPos(200, 200, 0);
+	sprite1->Rotate(90);
 
 	sprite2 = engine->createSprite("textures/texture2.jpg");
 	sprite2->setScale(200, 200);
@@ -111,6 +112,14 @@ void Game::KeyHandler(KeyEvent keyEvent)
 		else if (keyEvent.key == GLFW_KEY_S)
 		{
 			sprite1->updatePos(0, -5, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_Q)
+		{
+			sprite1->Rotate(-5);
+		}
+		else if (keyEvent.key == GLFW_KEY_E)
+		{
+			sprite1->Rotate(5);
 		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
