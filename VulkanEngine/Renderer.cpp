@@ -26,6 +26,7 @@ void Renderer::init(Settings* _settings, VkDevice device, VkPhysicalDevice physi
     }
     createCommandBuffers(device);
     createSyncObjects(device);
+    CreateCamera();
 }
 
 void Renderer::createDepthResources(VkPhysicalDevice physicalDevice, VkDevice device)
@@ -36,6 +37,12 @@ void Renderer::createDepthResources(VkPhysicalDevice physicalDevice, VkDevice de
         VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
         depthImage, depthImageMemory,device,physicalDevice);
     depthImageView = createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, device);
+}
+
+void Renderer::CreateCamera()
+{
+    camera = std::make_unique<Camera>(Camera::ProjectionMode::ORTHOGRATHIC, glm::vec3(0, 0, 2), glm::vec3(0, 0, 0),
+        swapChainExtent.width, swapChainExtent.height);
 }
 
 VkFormat Renderer::findDepthFormat(VkPhysicalDevice physicalDevice)
@@ -273,6 +280,11 @@ VkImage Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalD
     images.emplace_back(std::move(imageTuple));
     return std::get<1>(images.back());
 
+}
+
+Camera* Renderer::GetCamera()
+{
+    return camera.get();
 }
 
 void Renderer::createTextureSampler(VkPhysicalDevice physicalDevice, VkDevice device)
@@ -1002,17 +1014,13 @@ void Renderer::updateUniformBuffers(uint32_t currentImage, VkDevice device)
     UniformBufferObject ubo{};
     for (size_t i = 0; i < spriteObjects.size(); ++i)
     {
-        if (currentImage == 0 && spriteObjects[i]->updated1 || currentImage == 1 && spriteObjects[i]->updated2 || currentImage == 2 && spriteObjects[i]->updated3)
+        if (currentImage == 0 && spriteObjects[i]->updated1 || currentImage == 1 && spriteObjects[i]->updated2 || currentImage == 2 && spriteObjects[i]->updated3 ||
+            currentImage == 0 && camera->updated1 || currentImage == 1 && camera->updated2 || currentImage == 2 && camera->updated3)
         {
 
-            glm::mat4 ortho;
-            glm::mat4 perspective;
-            perspective = glm::perspective(glm::radians(90.f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.f);
-            ortho = glm::ortho(0.0f, (float)swapChainExtent.width, (float)swapChainExtent.height, 0.0f, -1000.f, 1000.f);
             ubo.model = spriteObjects[i]->modelMatrix;
-            ubo.view = glm::lookAt(glm::vec3(0.f, 0.0f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-            ubo.proj = ortho;
-            ubo.proj[1][1] *= 1;    // for ortho use 1 and perspective use -1
+            ubo.view = camera->GetView();
+            ubo.proj = camera->GetProjection();
 
             
 
@@ -1036,6 +1044,19 @@ void Renderer::updateUniformBuffers(uint32_t currentImage, VkDevice device)
             
         }
     }
+    if (currentImage == 0)
+    {
+        camera->updated1 = false;
+    }
+    else if (currentImage == 1)
+    {
+        camera->updated2 = false;
+    }
+    else if (currentImage == 2)
+    {
+        camera->updated3 = false;
+    }
+
 }
 
 void Renderer::recreateSwapChain(GLFWwindow* window, VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)

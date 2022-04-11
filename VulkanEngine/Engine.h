@@ -1,5 +1,6 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN
+#define GLM_SWIZZLE
 #include <GLFW/glfw3.h>
 
 #include <iostream>

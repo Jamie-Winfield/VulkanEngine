@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollsionSystem.cpp" />
     <ClCompile Include="DebugMessenger.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="VulkanGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CollsionSystem.h" />
     <ClInclude Include="DebugMessenger.h" />
     <ClInclude Include="Engine.h" />

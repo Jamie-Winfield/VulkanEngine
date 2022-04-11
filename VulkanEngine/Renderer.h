@@ -5,6 +5,7 @@
 #include "uniformBufferObject.h"
 #include "spriteObject.h"
 #include "settings.hpp"
+#include "Camera.h"
 
 
 
@@ -32,6 +33,8 @@ public:
 	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkDevice device);
 	VkImage createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice,
 		const char* filename, VkQueue graphicsQueue);
+
+	Camera* GetCamera();
 	
 private:
 	void createSwapChain(VkPhysicalDevice PhysicalDevice, VkDevice device, VkSurfaceKHR surface, GLFWwindow* window);
@@ -51,6 +54,7 @@ private:
 	void cleanupSwapChain(VkDevice device);
 	void recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice);
 	void createDepthResources(VkPhysicalDevice physicalDevice, VkDevice device);
+	void CreateCamera();
 
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features, VkPhysicalDevice physicalDevice);
 	VkFormat findDepthFormat(VkPhysicalDevice physicalDevice);
@@ -96,6 +100,8 @@ private:
 	std::vector<std::tuple<std::string, VkImage, VkDeviceMemory>> images;
 	std::vector<std::pair<VkImage, VkImageView>> imageViews;
 	std::vector<std::pair<VkImageView,std::vector<VkDescriptorSet>>> descriptorSets;
+
+	std::unique_ptr<Camera> camera;
 
 
 public:

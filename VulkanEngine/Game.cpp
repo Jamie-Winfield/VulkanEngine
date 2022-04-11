@@ -123,7 +123,7 @@ void Game::KeyHandler(KeyEvent keyEvent)
 		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
-			collisions->debug = !collisions->debug;
+			engine->getRenderer()->GetCamera()->SetPosition(0, 0, 2);
 		}
 		else if (keyEvent.key == GLFW_KEY_F)
 		{
@@ -135,6 +135,23 @@ void Game::KeyHandler(KeyEvent keyEvent)
 			}
 			*/
 			flip = !flip;
+		}
+
+		if (keyEvent.key == GLFW_KEY_KP_4)
+		{
+			engine->getRenderer()->GetCamera()->ChangePosition(-5, 0, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_KP_6)
+		{
+			engine->getRenderer()->GetCamera()->ChangePosition(5, 0, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_KP_8)
+		{
+			engine->getRenderer()->GetCamera()->ChangePosition(0, 5, 0);
+		}
+		else if (keyEvent.key == GLFW_KEY_KP_2)
+		{
+			engine->getRenderer()->GetCamera()->ChangePosition(0, -5, 0);
 		}
 	}
 }
