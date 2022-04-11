@@ -127,14 +127,7 @@ void Game::KeyHandler(KeyEvent keyEvent)
 		}
 		else if (keyEvent.key == GLFW_KEY_F)
 		{
-			/*
-			for (auto sprite : sprites)
-			{
-				sprite->FlipSprite();
-
-			}
-			*/
-			flip = !flip;
+			collisions->use_threads = !collisions->use_threads;
 		}
 
 		if (keyEvent.key == GLFW_KEY_KP_4)

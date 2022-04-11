@@ -1,14 +1,21 @@
 #pragma once
 #include "spriteObject.h"
 #include <iostream>
+#include "ctpl_stl.h"
+#include <atomic>
 class CollsionSystem
 {
 public:
+
+	CollsionSystem();
+
 	void AddSprite(SpriteObject* _sprite);
 	void RemoveSprite(SpriteObject* _sprite);
 	void UpdateCollsions();
 
 	bool debug = false;
+
+	bool use_threads = true;
 
 
 private:
@@ -19,12 +26,9 @@ private:
 	std::vector<SpriteObject*> quad3;
 	std::vector<SpriteObject*> quad4;
 
-	/*
-	void SolveQuad1();
-	void SolveQuad2();
-	void SolveQuad3();
-	void SolveQuad4();
-	*/
+	
+
+	ctpl::thread_pool pool;
 
 };
 

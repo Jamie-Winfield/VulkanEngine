@@ -1,6 +1,14 @@
 #include "CollsionSystem.h"
 #include <thread>
 
+CollsionSystem::CollsionSystem()
+{
+	if (use_threads)
+	{
+		pool.resize(4);
+	}
+}
+
 void CollsionSystem::AddSprite(SpriteObject* _sprite)
 {
 	if (std::find(sprites.begin(), sprites.end(), _sprite) == sprites.end())
@@ -19,7 +27,7 @@ void CollsionSystem::RemoveSprite(SpriteObject* _sprite)
 }
 
 
-void SolveQuad(std::vector<SpriteObject*> sprites)
+void SolveQuad(int id , std::vector<SpriteObject*> sprites)
 {
 	for (auto _sprite1 : sprites)
 	{
@@ -276,6 +284,15 @@ void SolveQuad(std::vector<SpriteObject*> sprites)
 
 void CollsionSystem::UpdateCollsions()
 {
+	if (!use_threads && pool.size() > 0)
+	{
+		pool.resize(0);
+	}
+	else if (use_threads && pool.size() <= 0)
+	{
+		pool.resize(4);
+	}
+
 	quad1.clear();
 	quad2.clear();
 	quad3.clear();
@@ -345,24 +362,31 @@ void CollsionSystem::UpdateCollsions()
 
 	// uses multi threading
 
-	/*
-	std::thread t1(SolveQuad1,quad1);
-	std::thread t2(SolveQuad2, quad2);
-	std::thread t3(SolveQuad3, quad3);
-	std::thread t4(SolveQuad4, quad4);
+	if (use_threads)
+	{
 
-	t1.join();
-	t2.join();
-	t3.join();
-	t4.join();
-	*/
+		pool.push(SolveQuad, quad1);
+		pool.push(SolveQuad, quad2);
+		pool.push(SolveQuad, quad3);
+		pool.push(SolveQuad, quad4);
+		while (pool.n_idle() <= 0)
+		{
+			// wait for threads
+		}
+	}
+	else
+	{
 
+		
+		SolveQuad(0, quad1);
+		SolveQuad(0, quad2);
+		SolveQuad(0, quad3);
+		SolveQuad(0, quad4);
+		
+	}
 
-
-	SolveQuad(quad1);
-	SolveQuad(quad2);
-	SolveQuad(quad3);
-	SolveQuad(quad4);
+	
+	
 
 	int total_checks = 0;
 
