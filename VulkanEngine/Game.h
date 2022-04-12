@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "keyEvent.h"
 #include "VulkanGame.h"
-#include "CollsionSystem.h"
+#include "CollisionSystem.h"
 class Game : public VulkanGame
 {
 public:
@@ -42,7 +42,7 @@ private:
 	SpriteObject* sprite4;
 	SpriteObject* sprite5;
 	std::vector<SpriteObject*> sprites;
-	std::unique_ptr<CollsionSystem> collisions;
+	std::unique_ptr<CollisionSystem> collisions;
 
 	bool flip = false;
 

@@ -4,29 +4,23 @@
 #include<glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "uniformBufferObject.h"
+#include "BoxCollider.h"
+#include "HelperTypes.h"
 
 
 
 class SpriteObject
 {
 public:
-    enum Quad
-    {
-        TOP_LEFT = 4,
-        TOP_RIGHT = 5,
-        TOP_LEFT_RIGHT = 20,
-        BOTTOM_LEFT = 2,
-        BOTTOM_RIGHT = 3,
-        BOTTOM_LEFT_RIGHT = 6,
-        LEFT_SIDE = 8,
-        RIGHT_SIDE = 15,
-        ALL = 120
-    }quad = TOP_LEFT;
+    
+    BoxCollider::Quad quad = BoxCollider::Quad::ALL;
 
     bool operator== (SpriteObject& _object)
     {
         return _object.GetId() == sprite_id;
     }
+
+    
     
 private:
     std::vector<Vertex> vertices;
@@ -75,6 +69,20 @@ public:
 
     glm::mat4 modelMatrix = glm::mat4(1.f);
 
+
+    BoxCollider* GetBoxCollider()
+    {
+        if (boxCollider != nullptr)
+        {
+            return boxCollider.get();
+        }
+        Vector2 position = { pos_x,pos_y };
+        Vector2 scale = { scale_x,scale_y };
+        Vector2 screen = { screen_x,screen_y };
+        boxCollider = std::make_unique<BoxCollider>(position, rot_angle, scale, sprite_id, screen);
+        return boxCollider.get();
+    }
+
 private:
 
     float screen_x = 0;
@@ -94,7 +102,13 @@ private:
 
     bool flipped = false;
     float flip = 0;
+
+
     
+    std::unique_ptr<BoxCollider> boxCollider = nullptr;
+
+    
+
 
     
 
@@ -109,6 +123,11 @@ private:
         updated1 = true;
         updated2 = true;
         updated3 = true;
+        if (boxCollider != nullptr)
+        {
+            Vector2 position = { pos_x,pos_y };
+            boxCollider->UpdateBox(position, rot_angle);
+        }
     }
 
 public:

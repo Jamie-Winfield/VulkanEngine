@@ -131,7 +131,7 @@ void SpriteObject::SetQuad()
         quad_int *= p_4;
     }
 
-    quad = static_cast<Quad>(quad_int);
+    quad = static_cast<BoxCollider::Quad>(quad_int);
 
 }
 

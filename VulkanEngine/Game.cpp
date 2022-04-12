@@ -25,12 +25,17 @@ void Game::Start()
 	sprite5->setPos(350, 100, 0);
 	sprite5->moveable = false;
 
-	collisions = std::make_unique<CollsionSystem>();
+	collisions = std::make_unique<CollisionSystem>();
 	collisions->AddSprite(sprite1);
 	collisions->AddSprite(sprite2);
 	collisions->AddSprite(sprite3);
 	collisions->AddSprite(sprite4);
 	collisions->AddSprite(sprite5);
+	collisions->AddBoxCollider(sprite1->GetBoxCollider());
+	collisions->AddBoxCollider(sprite2->GetBoxCollider());
+	collisions->AddBoxCollider(sprite3->GetBoxCollider());
+	collisions->AddBoxCollider(sprite4->GetBoxCollider());
+	collisions->AddBoxCollider(sprite5->GetBoxCollider());
 	
 	for (int i = 0; i < 400; ++i)
 	{
@@ -123,7 +128,7 @@ void Game::KeyHandler(KeyEvent keyEvent)
 		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
-			engine->getRenderer()->GetCamera()->SetPosition(0, 0, 2);
+			collisions->wait_threads = !collisions->wait_threads;
 		}
 		else if (keyEvent.key == GLFW_KEY_F)
 		{

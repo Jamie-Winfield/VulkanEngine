@@ -155,8 +155,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CollsionSystem.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="DebugMessenger.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -171,12 +172,14 @@
     <ClCompile Include="VulkanGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CollsionSystem.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="ctpl_stl.h" />
     <ClInclude Include="DebugMessenger.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="HelperTypes.h" />
     <ClInclude Include="keyEvent.h" />
     <ClInclude Include="queueFamilyIndices.h" />
     <ClInclude Include="Renderer.h" />
