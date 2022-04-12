@@ -181,6 +181,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="HelperTypes.h" />
     <ClInclude Include="keyEvent.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="queueFamilyIndices.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="settings.hpp" />

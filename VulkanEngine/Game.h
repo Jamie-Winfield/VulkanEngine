@@ -3,6 +3,7 @@
 #include "keyEvent.h"
 #include "VulkanGame.h"
 #include "CollisionSystem.h"
+#include "Mouse.h"
 class Game : public VulkanGame
 {
 public:
@@ -27,7 +28,7 @@ public:
 	/// Used to handle key events.
 	/// </summary>
 	/// <param name="keyEvent"></param>
-	void KeyHandler(KeyEvent keyEvent) override;
+	void KeyHandler(KeyEvent keyEvent, Mouse mouse) override;
 
 	/// <summary>
 	/// Called at the end of the game and should be used to clean up any spriteObjects using free

@@ -1,6 +1,8 @@
 #pragma once
 #include "Engine.h"
 #include "keyEvent.h"
+#include "Mouse.h"
+
 class VulkanGame
 {
 	virtual void Start() = 0;
@@ -9,11 +11,10 @@ class VulkanGame
 
 	virtual void Render(Renderer* renderer) = 0;
 
-	virtual void KeyHandler(KeyEvent keyEvent) = 0;
+	virtual void KeyHandler(KeyEvent keyEvent, Mouse mouse) = 0;
 
 	virtual void End() = 0;
 
 protected:
-	Engine* engine;
+	Engine* engine = nullptr;
 };
-

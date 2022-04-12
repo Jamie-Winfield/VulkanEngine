@@ -1,4 +1,5 @@
 #include "VulkanEngineApplication.h"
+#include "Mouse.h"
 
 void VulkanEngineApplication::run()
 {
@@ -56,9 +57,14 @@ void VulkanEngineApplication::mainLoop()
         auto startTime = std::chrono::high_resolution_clock::now();
 
         glfwPollEvents();
+        Mouse mouse;
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        mouse.x_pos = static_cast<float>(xpos);
+        mouse.y_pos = static_cast<float>(ypos);
         for (auto& keyEvent : keyEvents)
         {
-            game->KeyHandler(keyEvent);
+            game->KeyHandler(keyEvent, mouse);
         }
         prevKeyEvents = keyEvents;
         keyEvents.clear();
@@ -69,7 +75,6 @@ void VulkanEngineApplication::mainLoop()
         auto finishTime = std::chrono::high_resolution_clock::now();
         timeBetweenFrames = std::chrono::duration<float, std::chrono::seconds::period>(finishTime - startTime).count();
         frameCounter(timeBetweenFrames);
-
     }
 
     vkDeviceWaitIdle(engine->getDevice());
@@ -81,9 +86,11 @@ void VulkanEngineApplication::frameCounter(float time)
     time_count += time;
     if (time_count >= 1)
     {
-
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        ypos = settings->W_HEIGHT - ypos;
         std::stringstream ss;
-        ss << "FPS" << "  " << frame_count;
+        ss << "FPS: " << "  " << frame_count << " MouseX: " << xpos << " MouseY: " << ypos ;
 
         glfwSetWindowTitle(window, ss.str().c_str());
         frame_count = 0;

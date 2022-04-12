@@ -78,7 +78,7 @@ void Game::Render(Renderer* renderer)
 	
 }
 
-void Game::KeyHandler(KeyEvent keyEvent)
+void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 {
 	if (keyEvent.action == KeyEvent::ActionCode::KEY_HELD)
 	{
