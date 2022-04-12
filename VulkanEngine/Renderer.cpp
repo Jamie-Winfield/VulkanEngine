@@ -178,17 +178,27 @@ void Renderer::cleanup(VkDevice device)
         vkDestroyFence(device, inFlightFences[i], nullptr);
     }
 
+
+    for (int i = 0; i < imageViews.size(); ++i)
+    {
+        
+        vkDestroyImageView(device, imageViews[i].second, nullptr);
+        
+    }
+    imageViews.clear();
+
     for (std::tuple<std::string, VkImage, VkDeviceMemory> image : images)
     {
         vkFreeMemory(device, std::get<2>(image), nullptr);
         vkDestroyImage(device, std::get<1>(image), nullptr);
     }
     images.clear();
-    for (std::pair<VkImage, VkImageView> imageView : imageViews)
-    {
-        vkDestroyImageView(device, imageView.second, nullptr);
-    }
-    imageViews.clear();
+
+    vkFreeMemory(device, depthImageMemory, nullptr);
+    vkDestroyImage(device, depthImage, nullptr);
+    
+
+    
 
     vkDestroyCommandPool(device, commandPool, nullptr);
 }
@@ -383,8 +393,6 @@ VkImageView Renderer::createImageView(VkImage image, VkFormat format, VkImageAsp
             return imageView.second;
         }
     }
-
-
 
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -1115,6 +1123,9 @@ void Renderer::cleanupSwapChain(VkDevice device)
         vkDestroyBuffer(device, uniformBuffers[i], nullptr);
         vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
     }
+
+   
+
     vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
     vkDestroyPipeline(device, graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -1123,12 +1134,26 @@ void Renderer::cleanupSwapChain(VkDevice device)
     {
         vkDestroyFramebuffer(device, framebuffer, nullptr);
     }
+    
     for (auto imageView : swapChainImageViews)
     {
         vkDestroyImageView(device, imageView, nullptr);
+        for (int i = 0; i < imageViews.size(); ++i)
+        {
+            if (imageView == imageViews[i].second)
+            {
+                auto it = imageViews.begin() + i;
+                imageViews.erase(it);
+            }
+        }
+        imageView = VK_NULL_HANDLE;
     }
+    
     vkDestroySwapchainKHR(device, swapChain, nullptr);
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
+    
+
     descriptorSets.clear();
 }
 

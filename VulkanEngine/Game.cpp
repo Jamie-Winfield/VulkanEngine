@@ -80,6 +80,11 @@ void Game::Render(Renderer* renderer)
 
 void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 {
+	if (keyEvent.key == GLFW_MOUSE_BUTTON_LEFT && keyEvent.action == GLFW_PRESS)
+	{
+		std::cout << "mouse left pressed!" << "\n";
+	}
+
 	if (keyEvent.action == KeyEvent::ActionCode::KEY_HELD)
 	{
 		if (keyEvent.key == GLFW_KEY_A)

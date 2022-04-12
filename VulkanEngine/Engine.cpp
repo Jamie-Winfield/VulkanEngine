@@ -271,6 +271,8 @@ void Engine::cleanup()
     vkDestroySurfaceKHR(instance, surface, nullptr);
 
     vkDestroyInstance(instance, nullptr);
+
+    
 }
 
 void Engine::StopGame()

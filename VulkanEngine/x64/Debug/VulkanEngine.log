@@ -1,15 +1,6 @@
-﻿  Engine.cpp
-  GLM: GLM_SWIZZLE is deprecated, use GLM_FORCE_SWIZZLE instead.
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\memory(3580,56): warning C4244: 'argument': conversion from 'const uint32_t' to 'float', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Engine.cpp(7): message : see reference to function template instantiation 'std::unique_ptr<SpriteObject,std::default_delete<SpriteObject>> std::make_unique<SpriteObject,VkDevice&,const uint32_t&,const uint32_t&,uint16_t&,0>(VkDevice &,const uint32_t &,const uint32_t &,uint16_t &)' being compiled
-  Game.cpp
-  GLM: GLM_SWIZZLE is deprecated, use GLM_FORCE_SWIZZLE instead.
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(49,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(49,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(50,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  VulkanEngineApplication.cpp
-  VulkanGame.cpp
-  GLM: GLM_SWIZZLE is deprecated, use GLM_FORCE_SWIZZLE instead.
-  Generating Code...
-  main.cpp
+﻿  Renderer.cpp
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(830,76): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(974,69): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\memory(3580,56): warning C4244: 'argument': conversion from 'uint32_t' to 'float', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(45): message : see reference to function template instantiation 'std::unique_ptr<Camera,std::default_delete<Camera>> std::make_unique<Camera,Camera::ProjectionMode,glm::vec3,glm::vec3,uint32_t&,uint32_t&,0>(Camera::ProjectionMode &&,glm::vec3 &&,glm::vec3 &&,uint32_t &,uint32_t &)' being compiled
   VulkanEngine.vcxproj -> C:\Users\jamie\source\repos\temp\VulkanEngine\x64\Debug\VulkanEngine.exe
