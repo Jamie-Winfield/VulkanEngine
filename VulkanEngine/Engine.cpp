@@ -273,6 +273,11 @@ void Engine::cleanup()
     vkDestroyInstance(instance, nullptr);
 }
 
+void Engine::StopGame()
+{
+    glfwSetWindowShouldClose(window, 1);
+}
+
 bool Engine::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice)
 {
     uint32_t extensionCount;

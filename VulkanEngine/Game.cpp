@@ -102,6 +102,10 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 	}
 	else if (keyEvent.action == KeyEvent::ActionCode::KEY_PRESSED)
 	{
+		if (keyEvent.key == GLFW_KEY_ESCAPE)
+		{
+			engine->StopGame();
+		}
 		if (keyEvent.key == GLFW_KEY_A)
 		{
 			sprite1->updatePos(-5, 0, 0);

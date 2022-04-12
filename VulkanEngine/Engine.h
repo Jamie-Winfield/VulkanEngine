@@ -54,6 +54,7 @@ public:
 	VkSurfaceKHR getSurface() { return surface; }
 	void updateRenderables(std::vector<SpriteObject*> objects);
 	void cleanup();
+	void StopGame();
 
 private:
 	void createInstance();
