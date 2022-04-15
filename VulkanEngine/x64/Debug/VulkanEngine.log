@@ -1,6 +1,5 @@
-﻿  Renderer.cpp
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(830,76): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(974,69): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\memory(3580,56): warning C4244: 'argument': conversion from 'uint32_t' to 'float', possible loss of data
-C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Renderer.cpp(45): message : see reference to function template instantiation 'std::unique_ptr<Camera,std::default_delete<Camera>> std::make_unique<Camera,Camera::ProjectionMode,glm::vec3,glm::vec3,uint32_t&,uint32_t&,0>(Camera::ProjectionMode &&,glm::vec3 &&,glm::vec3 &&,uint32_t &,uint32_t &)' being compiled
+﻿  Game.cpp
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(50,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(50,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\source\repos\temp\VulkanEngine\VulkanEngine\Game.cpp(51,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   VulkanEngine.vcxproj -> C:\Users\jamie\source\repos\temp\VulkanEngine\x64\Debug\VulkanEngine.exe

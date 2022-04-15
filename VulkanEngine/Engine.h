@@ -1,6 +1,6 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN
-#define GLM_SWIZZLE
+#define GLM_FORCE_SWIZZLE
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -20,6 +20,7 @@
 #include "Renderer.h"
 #include "queueFamilyIndices.h"
 #include "swapChainSupportDetails.h"
+#include "CollisionSystem.h"
 
 #include <map>
 #include <set>
@@ -51,10 +52,14 @@ public:
 	VkQueue getGraphicsQueue() { return graphicsQueue; }
 	VkQueue getPresentQueue() { return presentQueue; }
 	Renderer* getRenderer() { return renderer.get(); }
+	CollisionSystem* GetCollisionSystem() { return collision_system.get(); }
 	VkSurfaceKHR getSurface() { return surface; }
 	void updateRenderables(std::vector<SpriteObject*> objects);
 	void cleanup();
 	void StopGame();
+
+	void EnableCollisionSystem();
+	void DisableCollisionSystem();
 
 private:
 	void createInstance();
@@ -90,5 +95,7 @@ private:
 	std::vector<std::unique_ptr<SpriteObject>> createdSprites;
 
 	uint16_t current_sprite_id = 0;
+
+	std::unique_ptr<CollisionSystem> collision_system;
 };
 

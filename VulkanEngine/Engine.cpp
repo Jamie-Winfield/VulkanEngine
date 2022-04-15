@@ -280,6 +280,16 @@ void Engine::StopGame()
     glfwSetWindowShouldClose(window, 1);
 }
 
+void Engine::EnableCollisionSystem()
+{
+    collision_system = std::make_unique<CollisionSystem>( Vector2(settings->W_WIDTH,settings->W_HEIGHT) );
+}
+
+void Engine::DisableCollisionSystem()
+{
+    collision_system.reset(nullptr);
+}
+
 bool Engine::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice)
 {
     uint32_t extensionCount;

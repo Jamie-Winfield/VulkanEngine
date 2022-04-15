@@ -59,11 +59,7 @@ public:
     bool updated2 = true;
     bool updated3 = true;
 
-    float vector_x = 0;
-    float vector_y = 0;
 
-
-    bool moveable = true;
 
     float rot_angle = 0;
 
@@ -72,15 +68,12 @@ public:
 
     BoxCollider* GetBoxCollider()
     {
-        if (boxCollider != nullptr)
-        {
-            return boxCollider.get();
-        }
-        Vector2 position = { pos_x,pos_y };
-        Vector2 scale = { scale_x,scale_y };
-        Vector2 screen = { screen_x,screen_y };
-        boxCollider = std::make_unique<BoxCollider>(position, rot_angle, scale, sprite_id, screen);
-        return boxCollider.get();
+        return boxCollider;
+    }
+
+    void SetBoxCollider(BoxCollider* _collider)
+    {
+        boxCollider = _collider;
     }
 
 private:
@@ -92,6 +85,9 @@ private:
     float pos_x = 0;
     float pos_y = 0;
     float pos_z = 0;
+
+    Vector2 position;
+
     float rot_x = 0;
     float rot_y = 0;
     float rot_z = 0;
@@ -100,12 +96,14 @@ private:
     float scale_y = 1;
     float scale_z = 1;
 
+    Vector2 scale;
+
     bool flipped = false;
     float flip = 0;
 
 
     
-    std::unique_ptr<BoxCollider> boxCollider = nullptr;
+    BoxCollider* boxCollider = nullptr;
 
     
 
@@ -123,20 +121,23 @@ private:
         updated1 = true;
         updated2 = true;
         updated3 = true;
+        position = { pos_x,pos_y };
+        scale = { scale_x,scale_y };
         if (boxCollider != nullptr)
         {
-            Vector2 position = { pos_x,pos_y };
-            boxCollider->UpdateBox(position, rot_angle);
+            boxCollider->UpdateBox(position, rot_angle, scale);
         }
     }
 
 public:
-    float getAngle() { return rot_angle; }
+    float GetRotation() { return rot_angle; }
 
     float getXPos() { return pos_x; }
     float getYPos() { return pos_y; }
     float GetWidth() { return scale_x; }
     float GetHeight() { return scale_y; }
+    Vector2 GetPos() { return position; }
+    Vector2 GetScale() { return scale; }
 
     void setScale(float x, float y)
     {
@@ -177,8 +178,6 @@ public:
 
     void updatePos(float x, float y, float z)
     {
-        vector_x = x;
-        vector_y = y;
 
         pos_x += x;
         pos_y += y;

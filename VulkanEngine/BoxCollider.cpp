@@ -14,10 +14,13 @@ void BoxCollider::SetRotation(float _rotation)
 	SetCorners();
 }
 
-void BoxCollider::UpdateBox(Vector2 _position, float _rotation)
+void BoxCollider::UpdateBox(Vector2 _position, float _rotation, Vector2 _scale)
 {
     origin = _position;
     rotation = _rotation;
+    scale = _scale;
+    
+
     SetCorners();
 }
 
@@ -42,7 +45,7 @@ uint16_t BoxCollider::GetID()
 void BoxCollider::SetCorners()
 {
 
-	float rotation_radians = glm::radians(rotation);
+	auto rotation_radians = glm::radians(rotation);
 
 	corner1.x = origin.x + (scale.x * std::cos(rotation_radians));
 	corner1.y = origin.y + (scale.x * std::sin(rotation_radians));
@@ -54,6 +57,7 @@ void BoxCollider::SetCorners()
 	corner3.y = origin.y + (scale.y * std::cos(rotation_radians));
 
     SetQuad();
+    UpdateVector();
 }
 
 void BoxCollider::SetQuad()
@@ -171,4 +175,20 @@ void BoxCollider::SetQuad()
     }
 
     quad = static_cast<BoxCollider::Quad>(quad_int);
+}
+
+void BoxCollider::UpdateVector()
+{
+    Vector2 vector0 = origin - prev_origin;
+    Vector2 vector1 = corner1 - prev_corner1;
+    Vector2 vector2 = corner2 - prev_corner2;
+    Vector2 vector3 = corner3 - prev_corner3;
+
+    vector = vector0 + vector1 + vector2 + vector3;
+
+    prev_origin = origin;
+    prev_corner1 = corner1;
+    prev_corner2 = corner2;
+    prev_corner3 = corner3;
+
 }

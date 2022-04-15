@@ -23,6 +23,16 @@ struct Vector3
 
 struct Vector2
 {
+	Vector2 operator -(Vector2 _other)
+	{
+		return { x - _other.x, y - _other.y };
+	}
+
+	Vector2 operator +(Vector2 _other)
+	{
+		return { x + _other.x, y + _other.y };
+	}
+
 	Vector2(float _x, float _y)
 	{
 		x = _x;

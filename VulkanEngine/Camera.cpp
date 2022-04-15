@@ -1,5 +1,5 @@
 #include "Camera.h"
-#define GLM_SWIZZLE
+#define GLM_FORCE_SWIZZLE
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 

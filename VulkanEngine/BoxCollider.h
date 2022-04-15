@@ -1,6 +1,9 @@
 #pragma once
 #include "HelperTypes.h"
+
 #include <array>
+
+class SpriteObject;
 
 class BoxCollider
 {
@@ -10,6 +13,7 @@ public:
 	{
 		return _collider.GetID() == ID;
 	}
+
 
 	enum Quad
 	{
@@ -24,13 +28,19 @@ public:
 		ALL = 120
 	}quad = ALL;
 
-	BoxCollider(Vector2 _position, float _rotation, Vector2 _scale, uint16_t _id, Vector2 _screen)
+
+	BoxCollider(Vector2 _position, float _rotation, Vector2 _scale, uint16_t _id, Vector2 _screen, SpriteObject* _parent)
 	{
 		origin = _position;
 		scale = _scale;
 		rotation = _rotation;
 		ID = _id;
 		screen = _screen;
+		parent = _parent;
+		prev_origin = origin;
+		prev_corner1 = corner1;
+		prev_corner2 = corner2;
+		prev_corner3 = corner3;
 
 		SetCorners();
 	}
@@ -39,7 +49,12 @@ public:
 
 	void SetRotation(float _rotation);
 
-	void UpdateBox(Vector2 _position, float _rotation);
+	void UpdateBox(Vector2 _position, float _rotation, Vector2 _scale);
+
+	SpriteObject* GetParent()
+	{
+		return parent;
+	}
 
 	std::array<Vector2, 4> GetCorners();
 
@@ -58,6 +73,21 @@ public:
 		return screen;
 	}
 
+	Vector2 GetVector()
+	{
+		return vector;
+	}
+
+	void SetMoveable(bool _moveable)
+	{
+		moveable = _moveable;
+	}
+
+	bool GetMoveable()
+	{
+		return moveable;
+	}
+
 	
 
 	uint16_t GetID();
@@ -69,6 +99,15 @@ private:
 	Vector2 corner3 =	{ 0, 0 };
 	Vector2 scale =		{ 0, 0 };
 	Vector2 screen =	{ 0, 0 };
+	Vector2 vector =	{ 0, 0 };
+
+	Vector2 prev_origin = { 0, 0 };
+	Vector2 prev_corner1 = { 0, 0 };
+	Vector2 prev_corner2 = { 0, 0 };
+	Vector2 prev_corner3 = { 0, 0 };
+
+	bool moveable = true;
+
 
 
 	uint16_t ID;
@@ -77,6 +116,9 @@ private:
 
 	void SetCorners();
 	void SetQuad();
+	void UpdateVector();
+
+	SpriteObject* parent;
 
 
 };

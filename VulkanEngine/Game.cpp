@@ -5,7 +5,7 @@ void Game::Start()
 {
 	sprite1 = engine->createSprite("textures/texture.jpg");
 	sprite1->setScale(100, 100);
-	sprite1->setPos(200, 200, 0);
+	sprite1->setPos(200, 300, 0);
 	sprite1->Rotate(90);
 
 	sprite2 = engine->createSprite("textures/texture2.jpg");
@@ -23,19 +23,20 @@ void Game::Start()
 	sprite5 = engine->createSprite("textures/texture2.png");
 	sprite5->setScale(100, 100);
 	sprite5->setPos(350, 100, 0);
-	sprite5->moveable = false;
+	
 
-	collisions = std::make_unique<CollisionSystem>();
-	collisions->AddSprite(sprite1);
-	collisions->AddSprite(sprite2);
-	collisions->AddSprite(sprite3);
-	collisions->AddSprite(sprite4);
-	collisions->AddSprite(sprite5);
-	collisions->AddBoxCollider(sprite1->GetBoxCollider());
-	collisions->AddBoxCollider(sprite2->GetBoxCollider());
-	collisions->AddBoxCollider(sprite3->GetBoxCollider());
-	collisions->AddBoxCollider(sprite4->GetBoxCollider());
-	collisions->AddBoxCollider(sprite5->GetBoxCollider());
+	engine->EnableCollisionSystem();
+
+	collisions = engine->GetCollisionSystem();
+
+	collisions->CreateBoxCollider(sprite1);
+	collisions->CreateBoxCollider(sprite2);
+	collisions->CreateBoxCollider(sprite3);
+	collisions->CreateBoxCollider(sprite4);
+	collisions->CreateBoxCollider(sprite5);
+	sprite5->GetBoxCollider()->SetMoveable(false);
+
+
 	
 	for (int i = 0; i < 400; ++i)
 	{
@@ -48,7 +49,6 @@ void Game::Start()
 		sprite->setScale(10, 10);
 		sprite->setPos(distr(generator), distr(generator), 0);
 		sprite->setRotation(distr(generator));
-		//collisions->AddSprite(sprite);
 		
 		sprites.emplace_back(std::move(sprite));
 	}
@@ -58,13 +58,12 @@ void Game::Start()
 
 void Game::Update(float gameTime)
 {
-	collisions->UpdateCollsions();
 }
 
 void Game::Render(Renderer* renderer)
 {
-	renderer->renderObject(sprite2);
 	renderer->renderObject(sprite1);
+	renderer->renderObject(sprite2);
 	renderer->renderObject(sprite3);
 	renderer->renderObject(sprite4);
 	renderer->renderObject(sprite5);

@@ -33,7 +33,6 @@ private:
     float frame_count = 0;
     float time_count = 0;
     std::vector<KeyEvent> keyEvents;
-    std::vector<KeyEvent> prevKeyEvents;
 
 
 

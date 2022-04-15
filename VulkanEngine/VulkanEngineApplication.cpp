@@ -37,10 +37,6 @@ void VulkanEngineApplication::key_callback(GLFWwindow* window, int key, int scan
 {
     KeyEvent keyEvent{ key,scancode,action,mods };
     auto app = reinterpret_cast<VulkanEngineApplication*>(glfwGetWindowUserPointer(window));
-    if (std::find(app->prevKeyEvents.begin(), app->prevKeyEvents.end(), keyEvent) != app->prevKeyEvents.end())
-    {
-        keyEvent.action = KeyEvent::KEY_HELD;
-    }
     app->keyEvents.emplace_back(keyEvent);
 }
 
@@ -75,7 +71,6 @@ void VulkanEngineApplication::mainLoop()
         {
             game->KeyHandler(keyEvent, mouse);
         }
-        prevKeyEvents = keyEvents;
         keyEvents.clear();
         game->Update(timeBetweenFrames);
         game->Render(engine->getRenderer());
@@ -83,6 +78,10 @@ void VulkanEngineApplication::mainLoop()
             window, engine->getPhysicalDevice(), engine->getSurface());
         auto finishTime = std::chrono::high_resolution_clock::now();
         timeBetweenFrames = std::chrono::duration<float, std::chrono::seconds::period>(finishTime - startTime).count();
+        if (engine->GetCollisionSystem() != nullptr)
+        {
+            engine->GetCollisionSystem()->UpdateCollsions();
+        }
         frameCounter(timeBetweenFrames);
     }
 

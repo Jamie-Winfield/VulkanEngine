@@ -43,7 +43,7 @@ private:
 	SpriteObject* sprite4;
 	SpriteObject* sprite5;
 	std::vector<SpriteObject*> sprites;
-	std::unique_ptr<CollisionSystem> collisions;
+	CollisionSystem* collisions;
 
 	bool flip = false;
 
