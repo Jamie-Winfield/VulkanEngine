@@ -10,7 +10,6 @@
 
 
 
-
 class Renderer
 {
 public:
@@ -33,8 +32,16 @@ public:
 	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkDevice device);
 	VkImage createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice,
 		const char* filename, VkQueue graphicsQueue);
+	VkImage CreateAtlasImage(VkDevice device, VkPhysicalDevice physicalDevice,
+		uint32_t width, uint32_t height, const char* atlasname, VkQueue graphicsQueue);
+
+	unsigned char* GetPixels(const char* filename, int& texWidth, int& texHeight, int& texChannels);
+
+	void FreePixels(unsigned char* pixels);
 
 	Camera* GetCamera();
+
+	VkCommandPool GetCommandPool() { return commandPool; }
 	
 private:
 	void createSwapChain(VkPhysicalDevice PhysicalDevice, VkDevice device, VkSurfaceKHR surface, GLFWwindow* window);

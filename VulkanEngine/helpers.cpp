@@ -166,7 +166,7 @@ public:
 	}
 
 	static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height,
-		VkDevice device, VkCommandPool commandPool, VkQueue graphicsQueue)
+		VkDevice device, VkCommandPool commandPool, VkQueue graphicsQueue, uint32_t offsetX, uint32_t offsetY)
 	{
 		VkCommandBuffer commandBuffer = beginSingleTimeCommands(device, commandPool);
 
@@ -178,7 +178,7 @@ public:
 		region.imageSubresource.mipLevel = 0;
 		region.imageSubresource.baseArrayLayer = 0;
 		region.imageSubresource.layerCount = 1;
-		region.imageOffset = { 0, 0, 0 };
+		region.imageOffset = { static_cast<int>(offsetX), static_cast<int>(offsetY), 0 };
 		region.imageExtent = {
 			width,
 			height,

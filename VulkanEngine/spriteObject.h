@@ -20,6 +20,10 @@ public:
         return _object.GetId() == sprite_id;
     }
 
+
+    void ChangeUVs(Vector2x2 uv, VkDevice device, VkPhysicalDevice physicalDevice,
+        VkCommandPool commandPool, VkQueue graphicsQueue);
+
     
     
 private:

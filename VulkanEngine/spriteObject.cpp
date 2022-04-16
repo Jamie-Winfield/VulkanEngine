@@ -135,6 +135,43 @@ void SpriteObject::SetQuad()
 
 }
 
+void SpriteObject::ChangeUVs(Vector2x2 uv, VkDevice device,
+    VkPhysicalDevice physicalDevice, VkCommandPool commandPool, VkQueue graphicsQueue)
+{
+    const std::vector<Vertex> _vertices =
+    {
+        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}, {uv.y.x, uv.x.y}},
+        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}, {uv.x.x, uv.x.y}},
+        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}, {uv.x.x, uv.y.y}},
+        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}, {uv.y.x, uv.y.y}}
+    };
+
+    vertices = _vertices;
+
+
+    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    Helpers::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory, device, physicalDevice);
+
+
+    void* data;
+    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
+    vkUnmapMemory(device, stagingBufferMemory);
+
+    VkCommandBuffer commandBuffer = Helpers::beginSingleTimeCommands(device, commandPool);
+
+    vkCmdUpdateBuffer(commandBuffer, vertexBuffer, 0, bufferSize, data);
+
+    Helpers::endSingleTimeCommands(commandBuffer, device, graphicsQueue, commandPool);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+}
+
 void SpriteObject::createVertexBuffer(VkDevice device, VkPhysicalDevice physicalDevice, VkCommandPool commandPool, VkQueue graphicsQueue)
 {
     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();

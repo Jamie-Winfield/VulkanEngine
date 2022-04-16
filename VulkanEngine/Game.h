@@ -4,6 +4,7 @@
 #include "VulkanGame.h"
 #include "CollisionSystem.h"
 #include "Mouse.h"
+#include "TextureAtlas.h"
 class Game : public VulkanGame
 {
 public:
@@ -44,6 +45,8 @@ private:
 	SpriteObject* sprite5;
 	std::vector<SpriteObject*> sprites;
 	CollisionSystem* collisions;
+
+	std::unique_ptr<TextureAtlas> atlas;
 
 	bool flip = false;
 

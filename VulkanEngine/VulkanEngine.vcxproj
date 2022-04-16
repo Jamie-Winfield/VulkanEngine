@@ -168,6 +168,7 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="spriteObject.cpp" />
+    <ClCompile Include="TextureAtlas.cpp" />
     <ClCompile Include="VulkanEngineApplication.cpp" />
     <ClCompile Include="VulkanGame.cpp" />
   </ItemGroup>
@@ -187,6 +188,7 @@
     <ClInclude Include="settings.hpp" />
     <ClInclude Include="spriteObject.h" />
     <ClInclude Include="swapChainSupportDetails.h" />
+    <ClInclude Include="TextureAtlas.h" />
     <ClInclude Include="uniformBufferObject.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="VulkanEngineApplication.h" />

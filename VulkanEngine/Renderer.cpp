@@ -29,6 +29,18 @@ void Renderer::init(Settings* _settings, VkDevice device, VkPhysicalDevice physi
     CreateCamera();
 }
 
+unsigned char* Renderer::GetPixels(const char* filename, int& texWidth, int& texHeight, int& texChannels)
+{
+    stbi_uc* pixels = stbi_load(filename, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+
+    return pixels;
+}
+
+void Renderer::FreePixels(unsigned char* pixels)
+{
+
+}
+
 void Renderer::createDepthResources(VkPhysicalDevice physicalDevice, VkDevice device)
 {
     VkFormat depthFormat = findDepthFormat(physicalDevice);
@@ -279,7 +291,7 @@ VkImage Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalD
     transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, device, graphicsQueue);
     Helpers::copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
-        device, commandPool, graphicsQueue);
+        device, commandPool, graphicsQueue,0,0);
     transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, device, graphicsQueue);
 
@@ -290,6 +302,51 @@ VkImage Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalD
     images.emplace_back(std::move(imageTuple));
     return std::get<1>(images.back());
 
+}
+
+VkImage Renderer::CreateAtlasImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height,
+    const char* atlasname, VkQueue graphicsQueue)
+{
+    for (std::tuple<std::string, VkImage, VkDeviceMemory> image : images)
+    {
+        if (std::get<0>(image) == atlasname)
+        {
+            return std::get<1>(image);
+        }
+    }
+
+
+    VkDeviceSize imageSize = width * height * 4;
+ 
+    
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+
+    Helpers::createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        stagingBuffer, stagingBufferMemory, device, physicalDevice);
+
+
+
+    VkImage image;
+    VkDeviceMemory imageMemory;
+
+    Helpers::createImage(width, height, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        image, imageMemory, device, physicalDevice);
+
+    transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, device, graphicsQueue);
+    transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, device, graphicsQueue);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+    std::tuple<std::string, VkImage, VkDeviceMemory> imageTuple = std::make_tuple(atlasname, image, imageMemory);
+    images.emplace_back(std::move(imageTuple));
+    return std::get<1>(images.back());
 }
 
 Camera* Renderer::GetCamera()

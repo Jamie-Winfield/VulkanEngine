@@ -1,12 +1,21 @@
 #include "Game.h"
+
 #include <random>
 
 void Game::Start()
 {
-	sprite1 = engine->createSprite("textures/texture.jpg");
+
+
+	atlas = std::make_unique<TextureAtlas>(1000, 1000, engine, "atlas1");
+	atlas->AddImage("textures/texture.jpg");
+	atlas->AddImage("textures/texture2.png");
+
+
+	sprite1 = engine->createSprite("atlas1");
+	sprite1->ChangeUVs(atlas->GetUV("textures/texture.jpg"), engine->getDevice(),
+		engine->getPhysicalDevice(), engine->getRenderer()->GetCommandPool(), engine->getGraphicsQueue());
 	sprite1->setScale(100, 100);
 	sprite1->setPos(200, 300, 0);
-	sprite1->Rotate(90);
 
 	sprite2 = engine->createSprite("textures/texture2.jpg");
 	sprite2->setScale(200, 200);
@@ -26,6 +35,8 @@ void Game::Start()
 	
 
 	engine->EnableCollisionSystem();
+
+	
 
 	collisions = engine->GetCollisionSystem();
 
@@ -136,7 +147,8 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
-			collisions->wait_threads = !collisions->wait_threads;
+			sprite1->ChangeUVs(atlas->GetUV("textures/texture2.png"), engine->getDevice(),
+				engine->getPhysicalDevice(), engine->getRenderer()->GetCommandPool(), engine->getGraphicsQueue());
 		}
 		else if (keyEvent.key == GLFW_KEY_F)
 		{
