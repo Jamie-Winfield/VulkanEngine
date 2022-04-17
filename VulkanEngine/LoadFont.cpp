@@ -27,29 +27,27 @@ bool LoadFont::Init()
 
 void LoadFont::AddFont()
 {
-	auto error = FT_New_Face(lib, "Fonts/Nasa21-l23X.ttf", 0, &face);
+	auto error = FT_New_Face(lib, "Fonts/SalmaproMedium-0Wooo.ttf", 0, &face);
 	if (error)
 	{
 		throw std::exception("failed to load font file!");
 	}
 
-	error = FT_Set_Pixel_Sizes(face, 0, 24);
+	error = FT_Set_Pixel_Sizes(face, 0, 50);
 	if (error)
 	{
 		throw std::exception("failed to set pixel sizes!");
 	}
 
-	int total_glyphs = face->num_glyphs;
-
-	float atlas_size = 60;
-
-	atlas = std::make_unique<TextureAtlas>(static_cast<uint32_t>(atlas_size), static_cast<uint32_t>(atlas_size),
-		engine, "atlas2");
+	
 
 
-	auto glyph_index = FT_Get_Char_Index(face, 65);
+	auto glyph_index = FT_Get_Char_Index(face, 68);
 	FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
 	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+
+	
+
 
 	const char* name = "ID" + 0;
 
@@ -57,6 +55,22 @@ void LoadFont::AddFont()
 	auto height = face->glyph->bitmap.rows;
 	auto bufferSize = width * height * 4;
 
+	int total_glyphs = face->num_glyphs;
+
+	float x = width;
+	if (height > width)
+	{
+		x = height;
+	}
+
+
+
+	float atlas_size = 51 * (std::roundf(std::sqrtf(total_glyphs) + 1));
+
+	atlas = std::make_unique<TextureAtlas>(static_cast<uint32_t>(atlas_size), static_cast<uint32_t>(atlas_size),
+		engine, "atlas2");
+
+	/*
 	std::vector<uint8_t> buffer(bufferSize);
 
 	uint8_t* src = face->glyph->bitmap.buffer;
@@ -79,9 +93,8 @@ void LoadFont::AddFont()
 	}
 
 	atlas->AddImage(name, buffer.data(), width, height);
-	atlas->AddImage(name, face->glyph->bitmap.buffer, width, height);
-
-	/*
+	*/
+	
 	for (int i = 0; i < total_glyphs; ++i)
 	{
 		error = FT_Load_Glyph(face, i, FT_LOAD_DEFAULT);
@@ -128,8 +141,8 @@ void LoadFont::AddFont()
 		}
 
 
-		atlas->AddImage(name, buffer.data(), 24, 24);
+		atlas->AddImage(name, buffer.data(), width, height);
 	}
-	*/
+	
 	
 }

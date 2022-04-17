@@ -25,8 +25,10 @@ void Game::Start()
 	sprite2->setPos(400, 400, 0);
 
 	sprite3 = engine->createSprite("atlas2");
-	sprite3->setScale(400, 400);
-	sprite3->setPos(0, 0, 1);
+	sprite3->setScale(700, 700);
+	sprite3->setPos(700, 0, 1);
+	sprite3->FlipSprite();
+
 	
 
 	sprite4 = engine->createSprite("textures/alphatest.png");
@@ -143,11 +145,11 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 		}
 		else if (keyEvent.key == GLFW_KEY_Q)
 		{
-			sprite1->Rotate(-5);
+			sprite3->Rotate(-5);
 		}
 		else if (keyEvent.key == GLFW_KEY_E)
 		{
-			sprite1->Rotate(5);
+			sprite3->Rotate(5);
 		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
