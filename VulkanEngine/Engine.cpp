@@ -9,10 +9,10 @@ SpriteObject* Engine::createSprite(const char* filename)
 
     const std::vector<Vertex> vertices =
     {
-        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}, {1.f, 0.f}},
-        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}, {0.f, 0.f}},
-        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}, {0.f, 1.f}},
-        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}, {1.f, 1.f}}
+        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f, 1.f}, {1.f, 0.f}},
+        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f, 1.f}, {0.f, 0.f}},
+        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f, 1.f}, {0.f, 1.f}},
+        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f, 1.f}, {1.f, 1.f}}
     };
 
     const std::vector<uint16_t> indices = {
@@ -41,6 +41,8 @@ void Engine::initVulkan(Settings* _settings, GLFWwindow* _window)
 {
 	settings = _settings;
     window = _window;
+    window_width = settings->W_WIDTH;
+    window_height = settings->W_HEIGHT;
 	createInstance();
     debugMessenger.setupDebugMessenger(settings, instance);
     createSurface(window);

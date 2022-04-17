@@ -73,8 +73,10 @@ bool TextureAtlas::AddImage(const char* filename)
     }
 
     lastArea = area;
-
-    //usedAreas.emplace_back(std::make_pair(filename,area));
+    if (area.posMax.y > rowStartArea.posMax.y)
+    {
+        rowStartArea.posMax.y = area.posMax.y;
+    }
 
     Helpers::createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -100,6 +102,90 @@ bool TextureAtlas::AddImage(const char* filename)
     vkFreeMemory(engine->getDevice(), stagingBufferMemory, nullptr);
 
     usedAreas.emplace_back(std::make_pair(filename, area));
+
+    return true;
+}
+
+bool TextureAtlas::AddImage(const char* name, unsigned char* buffer, int width, int height)
+{
+    int texWidth = width;
+    int texHeight = height;
+
+    unsigned char* pixels = buffer;
+    VkDeviceSize imageSize = texWidth * texHeight * 4;
+
+    if (!pixels)
+    {
+        throw std::exception("failed to load pixels from buffer");
+        
+    }
+
+    
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+
+    uint32_t offset_x;
+    uint32_t offset_y;
+    Area area;
+
+
+    if (lastArea.posMax.x + texWidth < size.x)
+    {
+        if (lastArea.position.y + texHeight < size.y)
+        {
+            area = Area(Vector2(lastArea.posMax.x, lastArea.position.y), UVector2(texWidth, texHeight));
+        }
+        else
+        {
+            throw std::exception("Not enough space in texture atlas");
+            // not enough space
+        }
+    }
+    else
+    {
+        if (rowStartArea.posMax.y + texHeight < size.y)
+        {
+            area = Area(Vector2(rowStartArea.position.x, rowStartArea.posMax.y + texHeight), UVector2(texWidth, texHeight));
+            rowStartArea = area;
+        }
+        else
+        {
+            throw std::exception("Not enough space in texture atlas");
+            // not enough space
+        }
+    }
+
+    lastArea = area;
+    if (area.posMax.y > rowStartArea.posMax.y)
+    {
+        rowStartArea.posMax.y = area.posMax.y;
+    }
+
+    Helpers::createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        stagingBuffer, stagingBufferMemory, engine->getDevice(), engine->getPhysicalDevice());
+
+    void* data;
+    vkMapMemory(engine->getDevice(), stagingBufferMemory, 0, imageSize, 0, &data);
+    memcpy(data, pixels, static_cast<size_t>(imageSize));
+    vkUnmapMemory(engine->getDevice(), stagingBufferMemory);
+
+    engine->getRenderer()->FreePixels(pixels);
+
+    engine->getRenderer()->transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
+
+    Helpers::copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
+        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), area.position.x, area.position.y);
+
+    engine->getRenderer()->transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
+
+    vkDestroyBuffer(engine->getDevice(), stagingBuffer, nullptr);
+    vkFreeMemory(engine->getDevice(), stagingBufferMemory, nullptr);
+
+    usedAreas.emplace_back(std::make_pair(name, area));
 
     return true;
 }

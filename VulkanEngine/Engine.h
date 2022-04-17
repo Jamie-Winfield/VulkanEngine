@@ -58,6 +58,9 @@ public:
 	void cleanup();
 	void StopGame();
 
+	float GetWindowWidth() { return window_width; }
+	float GetWindowHeight() { return window_height; }
+
 	void EnableCollisionSystem();
 	void DisableCollisionSystem();
 
@@ -80,6 +83,8 @@ private:
 
 private:
 	GLFWwindow* window;
+	float window_width = 0;
+	float window_height = 0;
 	Settings* settings;
 	VkInstance instance;
 	DebugMessenger debugMessenger;

@@ -140,10 +140,10 @@ void SpriteObject::ChangeUVs(Vector2x2 uv, VkDevice device,
 {
     const std::vector<Vertex> _vertices =
     {
-        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f}, {uv.y.x, uv.x.y}},
-        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f}, {uv.x.x, uv.x.y}},
-        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f}, {uv.x.x, uv.y.y}},
-        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f}, {uv.y.x, uv.y.y}}
+        {{0.f, 1.f}, {1.0f, 0.0f, 0.0f, 1.f}, {uv.y.x, uv.x.y}},
+        {{1.f, 1.f}, {0.0f, 1.0f, 0.0f, 1.f}, {uv.x.x, uv.x.y}},
+        {{1.f, 0.f}, {0.0f, 0.0f, 1.0f, 1.f}, {uv.x.x, uv.y.y}},
+        {{0.f, 0.f}, {1.0f, 1.0f, 1.0f, 1.f}, {uv.y.x, uv.y.y}}
     };
 
     vertices = _vertices;

@@ -5,6 +5,7 @@
 #include "CollisionSystem.h"
 #include "Mouse.h"
 #include "TextureAtlas.h"
+#include "LoadFont.h"
 class Game : public VulkanGame
 {
 public:
@@ -47,6 +48,7 @@ private:
 	CollisionSystem* collisions;
 
 	std::unique_ptr<TextureAtlas> atlas;
+	std::unique_ptr<LoadFont> font;
 
 	bool flip = false;
 

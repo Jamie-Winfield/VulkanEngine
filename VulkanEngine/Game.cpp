@@ -10,6 +10,9 @@ void Game::Start()
 	atlas->AddImage("textures/texture.jpg");
 	atlas->AddImage("textures/texture2.png");
 
+	font = std::make_unique<LoadFont>(engine);
+	font->AddFont();
+
 
 	sprite1 = engine->createSprite("atlas1");
 	sprite1->ChangeUVs(atlas->GetUV("textures/texture.jpg"), engine->getDevice(),
@@ -17,17 +20,18 @@ void Game::Start()
 	sprite1->setScale(100, 100);
 	sprite1->setPos(200, 300, 0);
 
-	sprite2 = engine->createSprite("textures/texture2.jpg");
+	sprite2 = engine->createSprite("atlas1");
 	sprite2->setScale(200, 200);
 	sprite2->setPos(400, 400, 0);
 
-	sprite3 = engine->createSprite("textures/texture.jpg");
-	sprite3->setScale(100, 100);
-	sprite3->setPos(650, 650, 0);
+	sprite3 = engine->createSprite("atlas2");
+	sprite3->setScale(400, 400);
+	sprite3->setPos(0, 0, 1);
+	
 
-	sprite4 = engine->createSprite("textures/texture.jpg");
+	sprite4 = engine->createSprite("textures/alphatest.png");
 	sprite4->setScale(100, 100);
-	sprite4->setPos(100, 100, 0);
+	sprite4->setPos(50, 600, 0);
 
 	sprite5 = engine->createSprite("textures/texture2.png");
 	sprite5->setScale(100, 100);
@@ -42,7 +46,7 @@ void Game::Start()
 
 	collisions->CreateBoxCollider(sprite1);
 	collisions->CreateBoxCollider(sprite2);
-	collisions->CreateBoxCollider(sprite3);
+	//collisions->CreateBoxCollider(sprite3);
 	collisions->CreateBoxCollider(sprite4);
 	collisions->CreateBoxCollider(sprite5);
 	sprite5->GetBoxCollider()->SetMoveable(false);

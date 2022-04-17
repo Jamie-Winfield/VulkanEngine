@@ -31,6 +31,7 @@ public:
 	TextureAtlas(uint32_t width, uint32_t height, Engine* _engine, const char* _atlasname);
 
 	bool AddImage(const char* filename);
+	bool AddImage(const char* name, unsigned char* buffer, int width, int height);
 
 	Vector2x2 GetUV(const char* filename);
 

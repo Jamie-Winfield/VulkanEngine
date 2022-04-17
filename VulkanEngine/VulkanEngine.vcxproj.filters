@@ -54,6 +54,9 @@
     <ClCompile Include="TextureAtlas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoadFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="settings.hpp">
@@ -116,6 +119,9 @@
     <ClInclude Include="TextureAtlas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LoadFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader.vert" />
@@ -133,5 +139,8 @@
     <Image Include="textures\NoTexture.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\SalmaproMedium-0Wooo.ttf" />
   </ItemGroup>
 </Project>
