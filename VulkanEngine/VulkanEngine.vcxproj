@@ -185,6 +185,7 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="ctpl_stl.h" />
     <ClInclude Include="DebugMessenger.h" />
     <ClInclude Include="Engine.h" />

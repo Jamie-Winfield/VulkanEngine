@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "Colors.h"
 #include <random>
 
 void Game::Start()
@@ -12,7 +12,7 @@ void Game::Start()
 
 	font = std::make_unique<LoadFont>(engine);
 	auto font_id = font->CreateFont("Fonts/SalmaproMedium-0Wooo.ttf", 25);
-	atlas2 = font->LoadText("The quick Brown fox \n Jumped over the red fence", font_id, "atlas2");
+	atlas2 = font->LoadText("The quick Brown fox \n Jumped over the red fence", font_id, "atlas2",Colors::Green);
 
 
 	sprite1 = engine->createSprite("atlas1");

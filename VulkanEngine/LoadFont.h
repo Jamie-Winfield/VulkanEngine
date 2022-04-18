@@ -1,8 +1,5 @@
 #pragma once
 
-
-
-
 #include "Engine.h"
 #include "TextureAtlas.h"
 
@@ -17,7 +14,6 @@ private:
 
 	FT_Library lib;
 
-	FT_Face face;
 
 	std::vector<FT_Face> faces;
 	std::vector<uint32_t> face_sizes;
@@ -30,8 +26,7 @@ private:
 public:
 	LoadFont(Engine* _engine);
 	uint32_t CreateFont(const char* fontname, uint32_t pixel_size );
-	std::unique_ptr<TextureAtlas> LoadText(std::string text, uint32_t font_id, const char* text_name);
+	std::unique_ptr<TextureAtlas> LoadText(std::string text, uint32_t font_id, const char* text_name, Vector3 color);
 
-	void AddFont();
 };
 
