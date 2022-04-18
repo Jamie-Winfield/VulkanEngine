@@ -1,7 +1,7 @@
 #pragma once
 #include "spriteObject.h"
 #include <iostream>
-#include "ctpl_stl.h"
+#include <ctpl_stl.h>
 #include <atomic>
 #include "BoxCollider.h"
 class CollisionSystem

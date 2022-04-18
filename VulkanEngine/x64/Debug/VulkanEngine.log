@@ -1,5 +1,1 @@
-﻿  Game.cpp
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\Game.cpp(67,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\Game.cpp(67,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\Game.cpp(68,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  VulkanEngine.vcxproj -> C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\x64\Debug\VulkanEngine.exe
+﻿  VulkanEngine.vcxproj -> C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\x64\Debug\VulkanEngine.exe
