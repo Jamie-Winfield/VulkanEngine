@@ -48,6 +48,7 @@ private:
 	CollisionSystem* collisions;
 
 	std::unique_ptr<TextureAtlas> atlas;
+	std::unique_ptr<TextureAtlas> atlas2;
 	std::unique_ptr<LoadFont> font;
 
 	bool flip = false;

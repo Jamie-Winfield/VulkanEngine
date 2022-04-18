@@ -1,1 +1,11 @@
-﻿  VulkanEngine.vcxproj -> C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\x64\Debug\VulkanEngine.exe
+﻿  LoadFont.cpp
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(41,25): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(76,34): warning C4018: '>': signed/unsigned mismatch
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(152,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(155,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(225,10): warning C4244: 'initializing': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(228,7): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(233,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(269,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(272,22): warning C4018: '<': signed/unsigned mismatch
+  VulkanEngine.vcxproj -> C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\x64\Debug\VulkanEngine.exe

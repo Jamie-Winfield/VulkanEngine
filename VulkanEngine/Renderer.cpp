@@ -199,7 +199,7 @@ void Renderer::cleanup(VkDevice device)
     }
     imageViews.clear();
 
-    for (std::tuple<std::string, VkImage, VkDeviceMemory> image : images)
+    for (std::tuple<std::string, VkImage, VkDeviceMemory, Vector2> image : images)
     {
         vkFreeMemory(device, std::get<2>(image), nullptr);
         vkDestroyImage(device, std::get<1>(image), nullptr);
@@ -234,15 +234,16 @@ void Renderer::renderObject(SpriteObject* spriteObject)
     spriteObjects_new.emplace_back(spriteObject);
 }
 
-VkImage Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, 
+std::pair<VkImage,Vector2> Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, 
     const char* filename,  VkQueue graphicsQueue)
 {
 
-    for (std::tuple<std::string, VkImage, VkDeviceMemory> image : images)
+    for (std::tuple<std::string, VkImage, VkDeviceMemory, Vector2> image : images)
     {
         if (std::get<0>(image) == filename)
         {
-            return std::get<1>(image);
+            return std::make_pair(std::get<1>(image), std::get<3>(image));
+
         }
     }
 
@@ -298,20 +299,20 @@ VkImage Renderer::createTextureImage(VkDevice device, VkPhysicalDevice physicalD
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    std::tuple<std::string, VkImage, VkDeviceMemory> imageTuple = std::make_tuple(filename, image, imageMemory);
+    std::tuple<std::string, VkImage, VkDeviceMemory,Vector2> imageTuple = std::make_tuple(filename, image, imageMemory,Vector2(texWidth,texHeight));
     images.emplace_back(std::move(imageTuple));
-    return std::get<1>(images.back());
+    return std::make_pair(std::get<1>(images.back()), std::get<3>(images.back()));
 
 }
 
-VkImage Renderer::CreateAtlasImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height,
+std::pair<VkImage, Vector2> Renderer::CreateAtlasImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height,
     const char* atlasname, VkQueue graphicsQueue)
 {
-    for (std::tuple<std::string, VkImage, VkDeviceMemory> image : images)
+    for (std::tuple<std::string, VkImage, VkDeviceMemory, Vector2> image : images)
     {
         if (std::get<0>(image) == atlasname)
         {
-            return std::get<1>(image);
+            return std::make_pair(std::get<1>(image), std::get<3>(image));
         }
     }
 
@@ -344,9 +345,9 @@ VkImage Renderer::CreateAtlasImage(VkDevice device, VkPhysicalDevice physicalDev
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    std::tuple<std::string, VkImage, VkDeviceMemory> imageTuple = std::make_tuple(atlasname, image, imageMemory);
+    std::tuple<std::string, VkImage, VkDeviceMemory, Vector2> imageTuple = std::make_tuple(atlasname, image, imageMemory,Vector2(width,height));
     images.emplace_back(std::move(imageTuple));
-    return std::get<1>(images.back());
+    return std::make_pair(std::get<1>(images.back()), std::get<3>(images.back()));
 }
 
 Camera* Renderer::GetCamera()

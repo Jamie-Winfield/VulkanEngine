@@ -11,33 +11,34 @@ void Game::Start()
 	atlas->AddImage("textures/texture2.png");
 
 	font = std::make_unique<LoadFont>(engine);
-	font->AddFont();
+	auto font_id = font->CreateFont("Fonts/SalmaproMedium-0Wooo.ttf", 25);
+	atlas2 = font->LoadText("The quick Brown fox \n Jumped over the red fence", font_id, "atlas2");
 
 
 	sprite1 = engine->createSprite("atlas1");
 	sprite1->ChangeUVs(atlas->GetUV("textures/texture.jpg"), engine->getDevice(),
 		engine->getPhysicalDevice(), engine->getRenderer()->GetCommandPool(), engine->getGraphicsQueue());
-	sprite1->setScale(100, 100);
+	//sprite1->setScale(100, 100);
 	sprite1->setPos(200, 300, 0);
 
-	sprite2 = engine->createSprite("atlas1");
-	sprite2->setScale(200, 200);
-	sprite2->setPos(400, 400, 0);
+	//sprite2 = engine->createSprite("atlas1");
+	//sprite2->setPos(400, 400, 0);
 
 	sprite3 = engine->createSprite("atlas2");
-	sprite3->setScale(700, 700);
-	sprite3->setPos(700, 0, 1);
+	//sprite3->setScale(200, 200);
+	sprite3->setPos(500, 200, 1);
 	sprite3->FlipSprite();
 
 	
 
-	sprite4 = engine->createSprite("textures/alphatest.png");
-	sprite4->setScale(100, 100);
-	sprite4->setPos(50, 600, 0);
+	//sprite4 = engine->createSprite("textures/alphatest.png");
+	//sprite4->setScale(100, 100);
+	//sprite4->setPos(50, 600, 0);
 
 	sprite5 = engine->createSprite("textures/texture2.png");
-	sprite5->setScale(100, 100);
-	sprite5->setPos(350, 100, 0);
+	sprite5->setPos(190, 200, 0);
+	//sprite5->setScale(100, 100);
+	
 	
 
 	engine->EnableCollisionSystem();
@@ -46,12 +47,12 @@ void Game::Start()
 
 	collisions = engine->GetCollisionSystem();
 
-	collisions->CreateBoxCollider(sprite1);
-	collisions->CreateBoxCollider(sprite2);
+	//collisions->CreateBoxCollider(sprite1);
+	//collisions->CreateBoxCollider(sprite2);
 	//collisions->CreateBoxCollider(sprite3);
-	collisions->CreateBoxCollider(sprite4);
-	collisions->CreateBoxCollider(sprite5);
-	sprite5->GetBoxCollider()->SetMoveable(false);
+	//collisions->CreateBoxCollider(sprite4);
+	//collisions->CreateBoxCollider(sprite5);
+	//sprite5->GetBoxCollider()->SetMoveable(false);
 
 
 	
@@ -80,9 +81,9 @@ void Game::Update(float gameTime)
 void Game::Render(Renderer* renderer)
 {
 	renderer->renderObject(sprite1);
-	renderer->renderObject(sprite2);
+	//renderer->renderObject(sprite2);
 	renderer->renderObject(sprite3);
-	renderer->renderObject(sprite4);
+	//renderer->renderObject(sprite4);
 	renderer->renderObject(sprite5);
 	if (flip)
 	{

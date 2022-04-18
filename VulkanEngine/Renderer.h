@@ -30,9 +30,9 @@ public:
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,
 		VkDevice device, VkQueue graphicsQueue);
 	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkDevice device);
-	VkImage createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice,
+	std::pair<VkImage, Vector2> createTextureImage(VkDevice device, VkPhysicalDevice physicalDevice,
 		const char* filename, VkQueue graphicsQueue);
-	VkImage CreateAtlasImage(VkDevice device, VkPhysicalDevice physicalDevice,
+	std::pair<VkImage, Vector2> CreateAtlasImage(VkDevice device, VkPhysicalDevice physicalDevice,
 		uint32_t width, uint32_t height, const char* atlasname, VkQueue graphicsQueue);
 
 	unsigned char* GetPixels(const char* filename, int& texWidth, int& texHeight, int& texChannels);
@@ -104,7 +104,7 @@ private:
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 
-	std::vector<std::tuple<std::string, VkImage, VkDeviceMemory>> images;
+	std::vector<std::tuple<std::string, VkImage, VkDeviceMemory, Vector2>> images;
 	std::vector<std::pair<VkImage, VkImageView>> imageViews;
 	std::vector<std::pair<VkImageView,std::vector<VkDescriptorSet>>> descriptorSets;
 

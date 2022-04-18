@@ -29,7 +29,9 @@ SpriteObject* Engine::createSprite(const char* filename)
     }
     spriteObject->createVertexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
     spriteObject->createIndexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
-    spriteObject->textureImage = renderer->createTextureImage(device, physicalDevice, filename, graphicsQueue);
+    auto texture = renderer->createTextureImage(device, physicalDevice, filename, graphicsQueue);
+    spriteObject->textureImage = texture.first;
+    spriteObject->setScale(texture.second.x, texture.second.y);
     spriteObject->setTextureImageView(renderer->createImageView(spriteObject->textureImage, VK_FORMAT_R8G8B8A8_SRGB,
         VK_IMAGE_ASPECT_COLOR_BIT, device));
 
