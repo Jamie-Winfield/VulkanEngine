@@ -9,24 +9,6 @@ CollisionSystem::CollisionSystem(Vector2 _screen) : screen(_screen)
 	}
 }
 
-void CollisionSystem::AddSprite(SpriteObject* _sprite)
-{
-	if (std::find(sprites.begin(), sprites.end(), _sprite) == sprites.end())
-	{
-		sprites.emplace_back(_sprite);
-	}
-}
-
-
-
-void CollisionSystem::RemoveSprite(SpriteObject* _sprite)
-{
-	auto position = std::find(sprites.begin(), sprites.end(), _sprite);
-	if (position != sprites.end())
-	{
-		sprites.erase(position);
-	}
-}
 
 CollisionSystem::BoxColliderErrorCodes CollisionSystem::CreateBoxCollider(SpriteObject* _sprite)
 {

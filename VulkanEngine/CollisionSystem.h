@@ -17,8 +17,7 @@ public:
 
 	CollisionSystem(Vector2 _screen);
 
-	void AddSprite(SpriteObject* _sprite);
-	void RemoveSprite(SpriteObject* _sprite);
+	
 	BoxColliderErrorCodes CreateBoxCollider(SpriteObject* _sprite);
 	void DestroyBoxCollider(BoxCollider* _collider);
 	void UpdateCollsions();
@@ -34,12 +33,7 @@ private:
 
 	void UpdateBoxColliders();
 
-	std::vector<SpriteObject*> sprites;
-
-	std::vector<SpriteObject*> quad1;
-	std::vector<SpriteObject*> quad2;
-	std::vector<SpriteObject*> quad3;
-	std::vector<SpriteObject*> quad4;
+	
 
 	std::vector<std::unique_ptr<BoxCollider>> box_colliders;
 
