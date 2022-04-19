@@ -60,6 +60,7 @@ public:
 
 	float GetWindowWidth() { return window_width; }
 	float GetWindowHeight() { return window_height; }
+	Vector2 GetScreenSize() { return Vector2(window_width, window_height); }
 
 	void EnableCollisionSystem();
 	void DisableCollisionSystem();

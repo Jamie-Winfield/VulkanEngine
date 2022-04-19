@@ -23,7 +23,7 @@ CollisionSystem::BoxColliderErrorCodes CollisionSystem::CreateBoxCollider(Sprite
 			return ERROR_BOX_COLLIDER_ALREADY_PRESENT;
 		}
 	}
-	auto _collider = std::make_unique<BoxCollider>(_sprite->GetPos(), _sprite->GetRotation(),
+	auto _collider = std::make_unique<BoxCollider>(_sprite->GetPosition(), _sprite->GetRotation(),
 		_sprite->GetScale(), _sprite->GetId(), screen, _sprite);
 
 	box_colliders.emplace_back(std::move(_collider));
@@ -206,11 +206,11 @@ void SolveQuadBox(int id, std::vector<BoxCollider*> colliders)
 						float overlap_x = std::abs(sprite1_x_max - sprite2_x) + 1;
 						if (_collider2->GetMoveable())
 						{
-							_sprite2->updatePos(overlap_x, 0, 0);
+							_sprite2->ChangePos(overlap_x, 0);
 						}
 						if (_collider1->GetMoveable())
 						{
-							_sprite1->updatePos(-overlap_x, 0, 0);
+							_sprite1->ChangePos(-overlap_x, 0);
 						}
 					}
 					else if (_collider1->GetVector().x < 0)
@@ -219,11 +219,11 @@ void SolveQuadBox(int id, std::vector<BoxCollider*> colliders)
 						float overlap_x = std::abs(sprite1_x - sprite2_x_max) + 1;
 						if (_collider2->GetMoveable())
 						{
-							_sprite2->updatePos(-overlap_x, 0, 0);
+							_sprite2->ChangePos(-overlap_x, 0);
 						}
 						if (_collider1->GetMoveable())
 						{
-							_sprite1->updatePos(overlap_x, 0, 0);
+							_sprite1->ChangePos(overlap_x, 0);
 						}
 					}
 					if (_collider1->GetVector().y > 0)
@@ -232,11 +232,11 @@ void SolveQuadBox(int id, std::vector<BoxCollider*> colliders)
 						float overlap_y = std::abs(sprite1_y_max - sprite2_y) + 1;
 						if (_collider2->GetMoveable())
 						{
-							_sprite2->updatePos(0, overlap_y, 0);
+							_sprite2->ChangePos(0, overlap_y);
 						}
 						if (_collider1->GetMoveable())
 						{
-							_sprite1->updatePos(0, -overlap_y, 0);
+							_sprite1->ChangePos(0, -overlap_y);
 						}
 					}
 					else if (_collider1->GetVector().y < 0)
@@ -245,11 +245,11 @@ void SolveQuadBox(int id, std::vector<BoxCollider*> colliders)
 						float overlap_y = std::abs(sprite1_y - sprite2_y_max) + 1;
 						if (_collider2->GetMoveable())
 						{
-							_sprite2->updatePos(0, -overlap_y, 0);
+							_sprite2->ChangePos(0, -overlap_y);
 						}
 						if (_collider1->GetMoveable())
 						{
-							_sprite1->updatePos(0, overlap_y, 0);
+							_sprite1->ChangePos(0, overlap_y);
 						}
 					}
 

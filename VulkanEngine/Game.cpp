@@ -16,18 +16,17 @@ void Game::Start()
 
 
 	sprite1 = engine->createSprite("atlas1");
-	sprite1->ChangeUVs(atlas->GetUV("textures/texture.jpg"), engine->getDevice(),
-		engine->getPhysicalDevice(), engine->getRenderer()->GetCommandPool(), engine->getGraphicsQueue());
+	sprite1->SetUVs(atlas->GetUV("textures/texture.jpg"));
 	//sprite1->setScale(100, 100);
-	sprite1->setPos(200, 300, 0);
+	sprite1->SetPos(200, 300);
 
 	//sprite2 = engine->createSprite("atlas1");
 	//sprite2->setPos(400, 400, 0);
 
 	sprite3 = engine->createSprite("atlas2");
 	//sprite3->setScale(200, 200);
-	sprite3->setPos(500, 200, 1);
-	sprite3->FlipSprite();
+	sprite3->SetPos(500, 200);
+	sprite3->FlipRenderable();
 
 	
 
@@ -36,7 +35,7 @@ void Game::Start()
 	//sprite4->setPos(50, 600, 0);
 
 	sprite5 = engine->createSprite("textures/texture2.png");
-	sprite5->setPos(190, 200, 0);
+	sprite5->SetPos(190, 200);
 	//sprite5->setScale(100, 100);
 	
 	
@@ -64,9 +63,9 @@ void Game::Start()
 		std::mt19937                        generator(rand_dev());
 		std::uniform_int_distribution<int>  distr(range_from, range_to);
 		auto sprite = engine->createSprite("textures/texture.jpg");
-		sprite->setScale(10, 10);
-		sprite->setPos(distr(generator), distr(generator), 0);
-		sprite->setRotation(distr(generator));
+		sprite->SetScale(10, 10);
+		sprite->SetPos(distr(generator), distr(generator));
+		sprite->SetRotation(distr(generator));
 		
 		sprites.emplace_back(std::move(sprite));
 	}
@@ -106,19 +105,19 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 	{
 		if (keyEvent.key == GLFW_KEY_A)
 		{
-			sprite1->updatePos(-5, 0, 0);
+			sprite1->ChangePos(-5, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_D)
 		{
-			sprite1->updatePos(5, 0, 0);
+			sprite1->ChangePos(5, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_W)
 		{
-			sprite1->updatePos(0, 5, 0);
+			sprite1->ChangePos(0, 5);
 		}
 		else if (keyEvent.key == GLFW_KEY_S)
 		{
-			sprite1->updatePos(0, -5, 0);
+			sprite1->ChangePos(0, -5);
 		}
 		
 	}
@@ -130,32 +129,31 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 		}
 		if (keyEvent.key == GLFW_KEY_A)
 		{
-			sprite1->updatePos(-5, 0, 0);
+			sprite1->ChangePos(-5, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_D)
 		{
-			sprite1->updatePos(5, 0, 0);
+			sprite1->ChangePos(5, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_W)
 		{
-			sprite1->updatePos(0, 5, 0);
+			sprite1->ChangePos(0, 5);
 		}
 		else if (keyEvent.key == GLFW_KEY_S)
 		{
-			sprite1->updatePos(0, -5, 0);
+			sprite1->ChangePos(0, -5);
 		}
 		else if (keyEvent.key == GLFW_KEY_Q)
 		{
-			sprite3->Rotate(-5);
+			sprite3->ChangeRotation(-5);
 		}
 		else if (keyEvent.key == GLFW_KEY_E)
 		{
-			sprite3->Rotate(5);
+			sprite3->ChangeRotation(5);
 		}
 		else if (keyEvent.key == GLFW_KEY_R)
 		{
-			sprite1->ChangeUVs(atlas->GetUV("textures/texture2.png"), engine->getDevice(),
-				engine->getPhysicalDevice(), engine->getRenderer()->GetCommandPool(), engine->getGraphicsQueue());
+			sprite1->SetUVs(atlas->GetUV("textures/texture2.png"));
 		}
 		else if (keyEvent.key == GLFW_KEY_F)
 		{

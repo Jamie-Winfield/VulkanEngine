@@ -1,24 +1,2 @@
-﻿  LoadFont.cpp
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(41,25): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(76,34): warning C4018: '>': signed/unsigned mismatch
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(152,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(155,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(159,26): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=uint8_t
-          ]
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(160,26): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=uint8_t
-          ]
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(161,26): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=uint8_t
-          ]
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(166,16): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(172,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\VulkanEngine\LoadFont.cpp(177,55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+﻿  Renderable.cpp
   VulkanEngine.vcxproj -> C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\x64\Debug\VulkanEngine.exe

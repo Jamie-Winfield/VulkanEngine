@@ -175,8 +175,10 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Game_Engine_Parts\VulkanSDK\1.2.182.0\Include;C:\Game_Engine_Parts\glfw-3.3.4.bin.WIN64\include;C:\Game_Engine_Parts\glm</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Game_Engine_Parts\VulkanSDK\1.2.182.0\Include;C:\Game_Engine_Parts\glfw-3.3.4.bin.WIN64\include;C:\Game_Engine_Parts\glm</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="spriteObject.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureAtlas.cpp" />
     <ClCompile Include="VulkanEngineApplication.cpp" />
     <ClCompile Include="VulkanGame.cpp" />
@@ -186,7 +188,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Colors.h" />
-    <ClInclude Include="ctpl_stl.h" />
     <ClInclude Include="DebugMessenger.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Game.h" />
@@ -195,10 +196,12 @@
     <ClInclude Include="LoadFont.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="queueFamilyIndices.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="settings.hpp" />
     <ClInclude Include="spriteObject.h" />
     <ClInclude Include="swapChainSupportDetails.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="TextureAtlas.h" />
     <ClInclude Include="uniformBufferObject.h" />
     <ClInclude Include="Vertex.h" />

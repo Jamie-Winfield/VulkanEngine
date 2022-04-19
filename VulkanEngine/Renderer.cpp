@@ -22,7 +22,7 @@ void Renderer::init(Settings* _settings, VkDevice device, VkPhysicalDevice physi
     createDescriptorPool(device);
     for (auto& sprite : spriteObjects)
     {
-        createDescriptorSets(device, sprite->descriptorSets, sprite->textureImageView);
+        createDescriptorSets(device, sprite->descriptorSets, sprite->GetTextureImageView());
     }
     createCommandBuffers(device);
     createSyncObjects(device);
@@ -1018,22 +1018,22 @@ void Renderer::createCommandBuffers(VkDevice device)
             std::vector<VkDescriptorSet> descriptorSet;
             for (std::pair<VkImageView, std::vector<VkDescriptorSet>> descriptor : descriptorSets)
             {
-                if (spriteObjects[x]->textureImageView == descriptor.first)
+                if (spriteObjects[x]->GetTextureImageView() == descriptor.first)
                 {
                     descriptorSet = descriptor.second;
                 }
             }
 
         
-            VkBuffer vertexBuffers[] = { spriteObjects[x]->vertexBuffer };
+            VkBuffer vertexBuffers[] = { spriteObjects[x]->GetVertexBuffer() };
             VkDeviceSize offsets[] = { 0 };
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-            vkCmdBindIndexBuffer(commandBuffers[i], spriteObjects[x]->indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+            vkCmdBindIndexBuffer(commandBuffers[i], spriteObjects[x]->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT16);
             uint32_t dynamicOffset = x * sizeof(UniformBufferObject);
             vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet[i], 1, &dynamicOffset);
 
 
-            vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(spriteObjects[x]->indices.size()), 1, 0, 0, 0);
+            vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(spriteObjects[x]->GetIndices().size()), 1, 0, 0, 0);
         }
         vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -1084,7 +1084,7 @@ void Renderer::updateUniformBuffers(uint32_t currentImage, VkDevice device)
             currentImage == 0 && camera->updated1 || currentImage == 1 && camera->updated2 || currentImage == 2 && camera->updated3)
         {
 
-            ubo.model = spriteObjects[i]->modelMatrix;
+            ubo.model = spriteObjects[i]->GetModelMatrix();
             ubo.view = camera->GetView();
             ubo.proj = camera->GetProjection();
 
@@ -1148,7 +1148,7 @@ void Renderer::recreateSwapChain(GLFWwindow* window, VkDevice device, VkPhysical
     createDescriptorPool(device);
     for (auto& sprite : spriteObjects)
     {
-        createDescriptorSets(device, sprite->descriptorSets, sprite->textureImageView);
+        createDescriptorSets(device, sprite->descriptorSets, sprite->GetTextureImageView());
     }
     createCommandBuffers(device);
 }
@@ -1169,7 +1169,7 @@ void Renderer::recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice)
     createDescriptorPool(device);
     for (auto& sprite : spriteObjects)
     {
-        createDescriptorSets(device,sprite->descriptorSets,sprite->textureImageView);
+        createDescriptorSets(device,sprite->descriptorSets,sprite->GetTextureImageView());
     }
     createCommandBuffers(device);
 }

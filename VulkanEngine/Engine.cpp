@@ -4,7 +4,9 @@
 SpriteObject* Engine::createSprite(const char* filename)
 {
     std::unique_ptr<SpriteObject> spriteObject;
-    spriteObject = std::make_unique<SpriteObject>(device, settings->W_WIDTH,settings->W_HEIGHT, current_sprite_id);
+    
+    spriteObject = std::make_unique<SpriteObject>(device, GetScreenSize(), renderer->GetCommandPool(),
+        graphicsQueue, physicalDevice, current_sprite_id);
     current_sprite_id++;
 
     const std::vector<Vertex> vertices =
@@ -21,18 +23,18 @@ SpriteObject* Engine::createSprite(const char* filename)
 
     for (auto &vertex : vertices)
     {
-        spriteObject->addVertex(vertex);
+        spriteObject->AddVertex(vertex);
     }
     for (auto& index : indices)
     {
-        spriteObject->addIndex(index);
+        spriteObject->AddIndex(index);
     }
-    spriteObject->createVertexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
-    spriteObject->createIndexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
+    spriteObject->CreateVertexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
+    spriteObject->CreateIndexBuffer(device, physicalDevice, renderer->getCommandPool(), graphicsQueue);
     auto texture = renderer->createTextureImage(device, physicalDevice, filename, graphicsQueue);
-    spriteObject->textureImage = texture.first;
-    spriteObject->setScale(texture.second.x, texture.second.y);
-    spriteObject->setTextureImageView(renderer->createImageView(spriteObject->textureImage, VK_FORMAT_R8G8B8A8_SRGB,
+    spriteObject->SetTextureImage( texture.first);
+    spriteObject->SetScale(texture.second.x, texture.second.y);
+    spriteObject->SetTextureImageView(renderer->createImageView(spriteObject->GetTextureImage(), VK_FORMAT_R8G8B8A8_SRGB,
         VK_IMAGE_ASPECT_COLOR_BIT, device));
 
     createdSprites.emplace_back(std::move(spriteObject));
@@ -261,7 +263,7 @@ void Engine::cleanup()
     {
         if (sprite != nullptr)
         {
-            sprite->free();
+            sprite->Free();
             sprite.reset(nullptr);
         }
     }

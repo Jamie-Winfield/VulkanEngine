@@ -24,14 +24,28 @@ struct Vector3
 
 struct Vector2
 {
-	Vector2 operator -(Vector2 _other)
+	Vector2 operator - (Vector2 _other)
 	{
 		return { x - _other.x, y - _other.y };
 	}
 
-	Vector2 operator +(Vector2 _other)
+	Vector2 operator + (Vector2 _other)
 	{
 		return { x + _other.x, y + _other.y };
+	}
+
+	Vector2 operator += (Vector2 _other)
+	{
+		x += _other.x;
+		y += _other.y;
+		return {x, y};
+	}
+
+	Vector2 operator -= (Vector2 _other)
+	{
+		x += _other.x;
+		y += _other.y;
+		return { x, y };
 	}
 
 	Vector2(float _x, float _y)
@@ -61,6 +75,7 @@ struct UVector2
 	{
 		return { x + _other.x, y + _other.y };
 	}
+
 
 	UVector2(uint32_t _x, uint32_t _y)
 	{
