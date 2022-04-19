@@ -71,7 +71,7 @@ std::unique_ptr<TextureAtlas> LoadFont::LoadText(std::string text, uint32_t font
 			}
 			else
 			{
-				current_width += size;
+				current_width += size / 2;
 			}
 			if (_face->glyph->bitmap.rows > height)
 			{
@@ -96,7 +96,7 @@ std::unique_ptr<TextureAtlas> LoadFont::LoadText(std::string text, uint32_t font
 
 
 
-	auto atlas = std::make_unique<TextureAtlas>(static_cast<uint32_t>(width + 1), static_cast<uint32_t>((height * (rows + 1)) + 1),
+	auto atlas = std::make_unique<TextureAtlas>(static_cast<uint32_t>(width + 1), static_cast<uint32_t>(((height + size / 2) * (rows + 1)) + 1),
 		engine, text_name);
 	bool next_char_new_line = false;
 	for (auto _char : text)
@@ -110,12 +110,12 @@ std::unique_ptr<TextureAtlas> LoadFont::LoadText(std::string text, uint32_t font
 		{
 			if (!next_char_new_line)
 			{
-				atlas->AddEmptySpace(size, size);
+				atlas->AddEmptySpace(size / 2, size);
 			}
 			else
 			{
 				next_char_new_line = false;
-				atlas->AddEmptySpaceNewLine(size, size);
+				atlas->AddEmptySpaceNewLine(size / 2, size);
 			}
 			continue;
 		}
@@ -163,15 +163,18 @@ std::unique_ptr<TextureAtlas> LoadFont::LoadText(std::string text, uint32_t font
 			}
 			start += _face->glyph->bitmap.pitch;
 		}
+		float offset = size - _face->glyph->metrics.horiBearingY / 64;
+		
 
 		if (next_char_new_line)
 		{
-			atlas->AddTextNewLine(name, buffer.data(), width, height, size);
+			
+			atlas->AddTextNewLine(name, buffer.data(), width, height, offset);
 			next_char_new_line = false;
 		}
 		else
 		{
-			atlas->AddText(name, buffer.data(), width, height, size);
+			atlas->AddText(name, buffer.data(), width, height, offset);
 		}
 	}
 

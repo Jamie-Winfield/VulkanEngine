@@ -106,7 +106,7 @@ bool TextureAtlas::AddImage(const char* filename)
     return true;
 }
 
-bool TextureAtlas::AddText(const char* name, unsigned char* buffer, int width, int height, int text_height)
+bool TextureAtlas::AddText(const char* name, unsigned char* buffer, int width, int height, int y_offset)
 {
     int texWidth = width;
     int texHeight = height;
@@ -129,14 +129,14 @@ bool TextureAtlas::AddText(const char* name, unsigned char* buffer, int width, i
     uint32_t offset_y;
     Area area;
 
-    auto text_offset = text_height - texHeight;
+    
    
 
     if (lastArea.posMax.x + texWidth  < size.x)
     {
-        if (rowStartArea.position.y + texHeight < size.y)
+        if (rowStartArea.position.y + texHeight + y_offset < size.y)
         {
-            area = Area(Vector2(lastArea.posMax.x, rowStartArea.position.y + text_offset), UVector2(texWidth, texHeight));
+            area = Area(Vector2(lastArea.posMax.x, rowStartArea.position.y + y_offset), UVector2(texWidth, texHeight));
         }
         else
         {
@@ -146,9 +146,9 @@ bool TextureAtlas::AddText(const char* name, unsigned char* buffer, int width, i
     }
     else
     {
-        if (rowStartArea.posMax.y + texHeight < size.y)
+        if (rowStartArea.posMax.y + texHeight+ y_offset < size.y)
         {
-            area = Area(Vector2(rowStartArea.position.x, rowStartArea.posMax.y), UVector2(texWidth, texHeight));
+            area = Area(Vector2(rowStartArea.position.x, rowStartArea.posMax.y + y_offset), UVector2(texWidth, texHeight));
             rowStartArea = area;
         }
         else
@@ -306,12 +306,11 @@ void TextureAtlas::AddImageNewLine(const char* name, unsigned char* buffer, int 
     usedAreas.emplace_back(std::make_pair(name, area));
 }
 
-void TextureAtlas::AddTextNewLine(const char* name, unsigned char* buffer, int width, int height, int text_height)
+void TextureAtlas::AddTextNewLine(const char* name, unsigned char* buffer, int width, int height, int y_offset)
 {
     int texWidth = width;
     int texHeight = height;
 
-    auto text_offset = text_height - texHeight;
 
     unsigned char* pixels = buffer;
     VkDeviceSize imageSize = texWidth * texHeight * 4;
@@ -331,9 +330,9 @@ void TextureAtlas::AddTextNewLine(const char* name, unsigned char* buffer, int w
     uint32_t offset_y;
     Area area;
 
-    if (rowStartArea.posMax.y + texHeight < size.y)
+    if (rowStartArea.posMax.y + texHeight + y_offset < size.y)
     {
-        area = Area(Vector2(rowStartArea.position.x, rowStartArea.posMax.y + text_offset), UVector2(texWidth, texHeight));
+        area = Area(Vector2(rowStartArea.position.x, rowStartArea.posMax.y + y_offset), UVector2(texWidth, texHeight));
         auto area2 = Area(Vector2(rowStartArea.position.x, rowStartArea.posMax.y), UVector2(texWidth, texHeight));
         rowStartArea = area2;
     }
