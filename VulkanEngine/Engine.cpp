@@ -38,7 +38,7 @@ SpriteObject* Engine::createSprite(const char* filename)
         VK_IMAGE_ASPECT_COLOR_BIT, device));
 
     createdSprites.emplace_back(std::move(spriteObject));
-    return createdSprites.back().get();
+    return dynamic_cast<SpriteObject*>(createdSprites.back().get());
 }
 
 void Engine::initVulkan(Settings* _settings, GLFWwindow* _window)
@@ -248,7 +248,7 @@ bool Engine::isDeviceSuitable(VkPhysicalDevice physicalDevice)
 
 
 
-void Engine::updateRenderables(std::vector<SpriteObject*> objects)
+void Engine::updateRenderables(std::vector<Renderable*> objects)
 {
     renderer->updateRenderables(objects, window, device, physicalDevice, surface);
 }

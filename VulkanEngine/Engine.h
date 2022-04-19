@@ -54,7 +54,7 @@ public:
 	Renderer* getRenderer() { return renderer.get(); }
 	CollisionSystem* GetCollisionSystem() { return collision_system.get(); }
 	VkSurfaceKHR getSurface() { return surface; }
-	void updateRenderables(std::vector<SpriteObject*> objects);
+	void updateRenderables(std::vector<Renderable*> objects);
 	void cleanup();
 	void StopGame();
 
@@ -98,7 +98,7 @@ private:
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 	std::unique_ptr<Renderer> renderer;
-	std::vector<std::unique_ptr<SpriteObject>> createdSprites;
+	std::vector<std::unique_ptr<Renderable>> createdSprites;
 
 	uint16_t current_sprite_id = 0;
 

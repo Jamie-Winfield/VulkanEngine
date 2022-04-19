@@ -6,6 +6,7 @@
 #include "spriteObject.h"
 #include "settings.hpp"
 #include "Camera.h"
+#include "Renderable.h"
 
 
 
@@ -23,9 +24,9 @@ public:
 	
 	void cleanup(VkDevice device);
 
-	void updateRenderables(std::vector<SpriteObject*> objects, GLFWwindow* window, VkDevice device,
+	void updateRenderables(std::vector<Renderable*> objects, GLFWwindow* window, VkDevice device,
 		VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
-	void renderObject(SpriteObject* spriteObject);
+	void renderObject(Renderable* spriteObject);
 	VkCommandPool getCommandPool() { return commandPool; }
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,
 		VkDevice device, VkQueue graphicsQueue);
@@ -115,7 +116,7 @@ public:
 	bool framebufferResized = false;
 	
 
-	std::vector<SpriteObject*> spriteObjects;
-	std::vector<SpriteObject*> spriteObjects_new;
+	std::vector<Renderable*> spriteObjects;
+	std::vector<Renderable*> spriteObjects_new;
 };
 

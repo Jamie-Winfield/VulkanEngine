@@ -215,7 +215,7 @@ void Renderer::cleanup(VkDevice device)
     vkDestroyCommandPool(device, commandPool, nullptr);
 }
 
-void Renderer::updateRenderables(std::vector<SpriteObject*> objects, GLFWwindow* window, VkDevice device,
+void Renderer::updateRenderables(std::vector<Renderable*> objects, GLFWwindow* window, VkDevice device,
     VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
     spriteObjects = objects;
@@ -229,7 +229,7 @@ void Renderer::updateRenderables(std::vector<SpriteObject*> objects, GLFWwindow*
     recreateBuffers(device, physicalDevice);
 }
 
-void Renderer::renderObject(SpriteObject* spriteObject)
+void Renderer::renderObject(Renderable* spriteObject)
 {
     spriteObjects_new.emplace_back(spriteObject);
 }
