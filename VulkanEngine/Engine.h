@@ -43,7 +43,9 @@ class Engine
 {
 public:
 
+
 	SpriteObject* createSprite(const char* filename);
+	Renderable* AddCreatedSprite(std::unique_ptr<Renderable> _renderable);
 	void initVulkan(Settings* _settings, GLFWwindow* _window);
 	VkDevice getDevice() { return device; }
 	VkPhysicalDevice getPhysicalDevice() { return physicalDevice; }
@@ -103,5 +105,6 @@ private:
 	uint16_t current_sprite_id = 0;
 
 	std::unique_ptr<CollisionSystem> collision_system;
+	
 };
 

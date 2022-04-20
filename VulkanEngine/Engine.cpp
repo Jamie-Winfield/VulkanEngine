@@ -41,6 +41,14 @@ SpriteObject* Engine::createSprite(const char* filename)
     return dynamic_cast<SpriteObject*>(createdSprites.back().get());
 }
 
+Renderable* Engine::AddCreatedSprite(std::unique_ptr<Renderable> _renderable)
+{
+    createdSprites.emplace_back(std::move(_renderable));
+    return createdSprites.back().get();
+}
+
+
+
 void Engine::initVulkan(Settings* _settings, GLFWwindow* _window)
 {
 	settings = _settings;

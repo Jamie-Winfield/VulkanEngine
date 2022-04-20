@@ -6,14 +6,20 @@ void Game::Start()
 {
 
 
-	atlas = std::make_unique<TextureAtlas>(1000, 1000, engine, "atlas1");
+	atlas = game_helper->CreateTextureAtlas(1000, 1000, "atlas1");
 	atlas->AddImage("textures/texture.jpg");
 	atlas->AddImage("textures/texture2.png");
 
-	font = std::make_unique<LoadFont>(engine);
-	auto font_id = font->CreateFont("Fonts/SalmaproMedium-0Wooo.ttf", 25);
-	atlas2 = font->LoadText("qThe quick Brown fox \n Jumped over the red fence", font_id, "atlas2",Colors::Green);
 
+
+	auto _font = game_helper->GetFontLoader();
+	auto font_id = _font->CreateFont("Fonts/SalmaproMedium-0Wooo.ttf", 25);
+	atlas2 = _font->LoadText("qThe quick Brown fox \n Jumped over the red fence", font_id, "atlas2",Colors::Green);
+
+
+	text = game_helper->CreateTextObject("qThe quick Brown fox \n Jumped over the red fence", Colors::Red, font_id);
+	text->SetPos(500, 400);
+	text->SetZOrder(1);
 
 	sprite1 = engine->createSprite("atlas1");
 	sprite1->SetUVs(atlas->GetUV("textures/texture.jpg"));
@@ -84,6 +90,7 @@ void Game::Render(Renderer* renderer)
 	renderer->renderObject(sprite3);
 	//renderer->renderObject(sprite4);
 	renderer->renderObject(sprite5);
+	renderer->renderObject(text);
 	if (flip)
 	{
 		for (auto sprite : sprites)

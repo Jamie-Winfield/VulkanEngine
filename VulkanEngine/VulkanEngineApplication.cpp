@@ -5,9 +5,11 @@ void VulkanEngineApplication::run()
 {
     engine = std::make_unique<Engine>();
     settings = std::make_unique<Settings>();
-    game = std::make_unique<Game>(engine.get());
+    
     initWindow();
     engine->initVulkan(settings.get(), window);
+    game_helper = std::make_unique<GameHelper>(engine.get());
+    game = std::make_unique<Game>(engine.get(),game_helper.get());
     mainLoop();
     game->End();
     engine->cleanup();

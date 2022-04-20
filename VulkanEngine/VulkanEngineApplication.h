@@ -12,6 +12,7 @@
 #include "settings.hpp"
 #include "Engine.h"
 #include "Game.h"
+#include "GameHelper.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -39,6 +40,7 @@ private:
 
 private:
     std::unique_ptr<Engine> engine;
+    std::unique_ptr<GameHelper> game_helper;
 
 
 public:

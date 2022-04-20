@@ -169,6 +169,7 @@
     <ClCompile Include="DebugMessenger.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameHelper.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="LoadFont.cpp" />
     <ClCompile Include="main.cpp">
@@ -191,6 +192,7 @@
     <ClInclude Include="DebugMessenger.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameHelper.h" />
     <ClInclude Include="HelperTypes.h" />
     <ClInclude Include="keyEvent.h" />
     <ClInclude Include="LoadFont.h" />

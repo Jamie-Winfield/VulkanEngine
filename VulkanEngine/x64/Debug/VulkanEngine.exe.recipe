@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\jamie\Documents\C++\Year 3\DisEngine\refactoring\VulkanEngine\x64\Debug\VulkanEngine.exe</FullPath>
+      <FullPath>C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\x64\Debug\VulkanEngine.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

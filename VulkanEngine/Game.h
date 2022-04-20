@@ -6,10 +6,15 @@
 #include "Mouse.h"
 #include "TextureAtlas.h"
 #include "LoadFont.h"
+#include "GameHelper.h"
+#include "Text.h"
 class Game : public VulkanGame
 {
 public:
-	Game(Engine* _engine) { engine = _engine; }
+	Game(Engine* _engine, GameHelper* _game_helper) {
+		engine = _engine;
+		game_helper = _game_helper;
+	}
 	/// <summary>
 	/// Entrance to the game, creating spites or other initilisation should be preformed here.
 	/// </summary>
@@ -47,9 +52,13 @@ private:
 	std::vector<SpriteObject*> sprites;
 	CollisionSystem* collisions;
 
-	std::unique_ptr<TextureAtlas> atlas;
+	TextureAtlas* atlas;
 	std::unique_ptr<TextureAtlas> atlas2;
 	std::unique_ptr<LoadFont> font;
+
+	GameHelper* game_helper;
+
+	Text* text;
 
 	bool flip = false;
 
