@@ -3,7 +3,11 @@
 
 int main()
 {
-    VulkanEngineApplication app;
+
+    auto settings = std::make_unique<Settings>();
+    settings->W_WIDTH = 1920;
+    settings->W_HEIGHT = 1080;
+    VulkanEngineApplication app(std::move(settings));
 
     try
     {

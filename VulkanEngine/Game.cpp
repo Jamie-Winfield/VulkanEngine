@@ -6,22 +6,22 @@ void Game::Start()
 {
 
 
-	atlas = game_helper->CreateTextureAtlas(1000, 1000, "atlas1");
+	atlas = GameHelper::CreateTextureAtlas(1000, 1000, "atlas1");
 	atlas->AddImage("textures/texture.jpg");
 	atlas->AddImage("textures/texture2.png");
 
 
 
-	auto _font = game_helper->GetFontLoader();
+	auto _font = GameHelper::GetFontLoader();
 	auto font_id = _font->CreateFont("Fonts/SalmaproMedium-0Wooo.ttf", 25);
 	atlas2 = _font->LoadText("qThe quick Brown fox \n Jumped over the red fence", font_id, "atlas2",Colors::Green);
 
 
-	text = game_helper->CreateTextObject("qThe quick Brown fox \n Jumped over the red fence", Colors::Red, font_id);
+	text = GameHelper::CreateTextObject("qThe quick Brown fox \n Jumped over the red fence", Colors::Red, font_id);
 	text->SetPos(500, 400);
 	text->SetZOrder(1);
 
-	sprite1 = engine->createSprite("atlas1");
+	sprite1 = GameHelper::CreateSprite("atlas1");
 	sprite1->SetUVs(atlas->GetUV("textures/texture.jpg"));
 	//sprite1->setScale(100, 100);
 	sprite1->SetPos(200, 300);
@@ -29,7 +29,7 @@ void Game::Start()
 	//sprite2 = engine->createSprite("atlas1");
 	//sprite2->setPos(400, 400, 0);
 
-	sprite3 = engine->createSprite("atlas2");
+	sprite3 = GameHelper::CreateSprite("atlas2");
 	//sprite3->setScale(200, 200);
 	sprite3->SetPos(500, 200);
 	sprite3->FlipRenderable();
@@ -40,17 +40,17 @@ void Game::Start()
 	//sprite4->setScale(100, 100);
 	//sprite4->setPos(50, 600, 0);
 
-	sprite5 = engine->createSprite("textures/texture2.png");
+	sprite5 = GameHelper::CreateSprite("textures/texture2.png");
 	sprite5->SetPos(190, 200);
 	//sprite5->setScale(100, 100);
 	
 	
 
-	engine->EnableCollisionSystem();
+	GameHelper::EnableCollisionSystem(true);
 
 	
 
-	collisions = engine->GetCollisionSystem();
+	collisions = GameHelper::GetCollisionSystem();
 
 	//collisions->CreateBoxCollider(sprite1);
 	//collisions->CreateBoxCollider(sprite2);
@@ -68,7 +68,7 @@ void Game::Start()
 		std::random_device                  rand_dev;
 		std::mt19937                        generator(rand_dev());
 		std::uniform_int_distribution<int>  distr(range_from, range_to);
-		auto sprite = engine->createSprite("textures/texture.jpg");
+		auto sprite = GameHelper::CreateSprite("textures/texture.jpg");
 		sprite->SetScale(10, 10);
 		sprite->SetPos(distr(generator), distr(generator));
 		sprite->SetRotation(distr(generator));
@@ -132,7 +132,7 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 	{
 		if (keyEvent.key == GLFW_KEY_ESCAPE)
 		{
-			engine->StopGame();
+			GameHelper::StopGame();
 		}
 		if (keyEvent.key == GLFW_KEY_A)
 		{
@@ -169,19 +169,19 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 
 		if (keyEvent.key == GLFW_KEY_KP_4)
 		{
-			engine->getRenderer()->GetCamera()->ChangePosition(-5, 0, 0);
+			GameHelper::GetRenderer()->GetCamera()->ChangePosition(-5, 0, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_KP_6)
 		{
-			engine->getRenderer()->GetCamera()->ChangePosition(5, 0, 0);
+			GameHelper::GetRenderer()->GetCamera()->ChangePosition(5, 0, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_KP_8)
 		{
-			engine->getRenderer()->GetCamera()->ChangePosition(0, 5, 0);
+			GameHelper::GetRenderer()->GetCamera()->ChangePosition(0, 5, 0);
 		}
 		else if (keyEvent.key == GLFW_KEY_KP_2)
 		{
-			engine->getRenderer()->GetCamera()->ChangePosition(0, -5, 0);
+			GameHelper::GetRenderer()->GetCamera()->ChangePosition(0, -5, 0);
 		}
 	}
 }

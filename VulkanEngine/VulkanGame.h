@@ -1,7 +1,7 @@
 #pragma once
-#include "Engine.h"
 #include "keyEvent.h"
 #include "Mouse.h"
+#include "GameHelper.h"
 
 class VulkanGame
 {
@@ -14,7 +14,4 @@ class VulkanGame
 	virtual void KeyHandler(KeyEvent keyEvent, Mouse mouse) = 0;
 
 	virtual void End() = 0;
-
-protected:
-	Engine* engine = nullptr;
 };

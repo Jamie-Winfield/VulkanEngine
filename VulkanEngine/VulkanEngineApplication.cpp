@@ -1,15 +1,20 @@
 #include "VulkanEngineApplication.h"
 #include "Mouse.h"
 
+VulkanEngineApplication::VulkanEngineApplication(std::unique_ptr<Settings> _settings)
+{
+    settings = std::move(_settings);
+}
+
 void VulkanEngineApplication::run()
 {
     engine = std::make_unique<Engine>();
-    settings = std::make_unique<Settings>();
     
     initWindow();
     engine->initVulkan(settings.get(), window);
-    game_helper = std::make_unique<GameHelper>(engine.get());
-    game = std::make_unique<Game>(engine.get(),game_helper.get());
+    //game_helper = std::make_unique<GameHelper>(engine.get());
+    game = std::make_unique<Game>();
+    GameHelper::Init(engine.get());
     mainLoop();
     game->End();
     engine->cleanup();

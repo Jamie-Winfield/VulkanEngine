@@ -12,17 +12,21 @@
 #include "settings.hpp"
 #include "Engine.h"
 #include "Game.h"
-#include "GameHelper.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "GameHelper.h"
 
 #include <chrono>
 
 #include "keyEvent.h"
 class VulkanEngineApplication
 {
+
+public:
+    VulkanEngineApplication(std::unique_ptr<Settings> _settings);
 
 private:
     GLFWwindow* window;
@@ -40,7 +44,6 @@ private:
 
 private:
     std::unique_ptr<Engine> engine;
-    std::unique_ptr<GameHelper> game_helper;
 
 
 public:
