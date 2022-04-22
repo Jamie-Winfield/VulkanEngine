@@ -12,7 +12,6 @@ void VulkanEngineApplication::run()
     
     initWindow();
     engine->initVulkan(settings.get(), window);
-    //game_helper = std::make_unique<GameHelper>(engine.get());
     game = std::make_unique<Game>();
     GameHelper::Init(engine.get());
     mainLoop();

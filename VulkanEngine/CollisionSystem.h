@@ -4,6 +4,7 @@
 #include <ctpl_stl.h>
 #include <atomic>
 #include "BoxCollider.h"
+#include "CollisionEvent.h"
 class CollisionSystem
 {
 public:
@@ -16,6 +17,8 @@ public:
 
 
 	CollisionSystem(Vector2 _screen);
+
+	std::vector<CollisionEvent> GetCollisionEvents();
 
 	
 	BoxColliderErrorCodes CreateBoxCollider(SpriteObject* _sprite);
@@ -33,6 +36,7 @@ private:
 
 	void UpdateBoxColliders();
 
+	void ClearDuplicateEvents();
 	
 
 	std::vector<std::unique_ptr<BoxCollider>> box_colliders;
@@ -42,9 +46,14 @@ private:
 	std::vector<BoxCollider*> boxquad3;
 	std::vector<BoxCollider*> boxquad4;
 
+	std::vector<CollisionEvent> quad1_events;
+	std::vector<CollisionEvent> quad2_events;
+	std::vector<CollisionEvent> quad3_events;
+	std::vector<CollisionEvent> quad4_events;
+
 	Vector2 screen;
 
-
+	std::vector<CollisionEvent> collision_events;
 	
 
 	ctpl::thread_pool pool;

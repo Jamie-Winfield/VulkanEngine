@@ -9,6 +9,11 @@ CollisionSystem::CollisionSystem(Vector2 _screen) : screen(_screen)
 	}
 }
 
+std::vector<CollisionEvent> CollisionSystem::GetCollisionEvents()
+{
+	return collision_events;
+}
+
 
 CollisionSystem::BoxColliderErrorCodes CollisionSystem::CreateBoxCollider(SpriteObject* _sprite)
 {
@@ -49,7 +54,7 @@ void CollisionSystem::DestroyBoxCollider(BoxCollider* _collider)
 }
 
 
-void SolveQuadBox(int id, std::vector<BoxCollider*> colliders)
+void SolveQuadBox(int id, std::vector<BoxCollider*> colliders, std::vector<CollisionEvent>& events)
 {
 	for (auto& _collider1 : colliders)
 	{
@@ -187,11 +192,13 @@ void SolveQuadBox(int id, std::vector<BoxCollider*> colliders)
 
 					std::cout << "objects overlap \n";
 
-
 					// displace objects by how much they overlap
 					SpriteObject* sprite;
 					auto _sprite1 = _collider1->GetParent();
 					auto _sprite2 = _collider2->GetParent();
+
+					events.emplace_back(CollisionEvent(_sprite1, _sprite2));
+
 					if (_collider1->GetMoveable())
 					{
 						sprite = _sprite1;
@@ -271,7 +278,7 @@ void CollisionSystem::UpdateCollsions()
 		pool.resize(4);
 	}
 
-
+	
 	UpdateBoxColliders();
 	
 
@@ -283,6 +290,13 @@ void CollisionSystem::UpdateBoxColliders()
 	boxquad2.clear();
 	boxquad3.clear();
 	boxquad4.clear();
+
+	collision_events.clear();
+	quad1_events.clear();
+	quad2_events.clear();
+	quad3_events.clear();
+	quad4_events.clear();
+	
 
 	for (auto& collider : box_colliders)
 	{
@@ -349,10 +363,10 @@ void CollisionSystem::UpdateBoxColliders()
 	if (use_threads)
 	{
 
-		pool.push(SolveQuadBox, boxquad1);
-		pool.push(SolveQuadBox, boxquad2);
-		pool.push(SolveQuadBox, boxquad3);
-		pool.push(SolveQuadBox, boxquad4);
+		pool.push(SolveQuadBox, boxquad1, quad1_events);
+		pool.push(SolveQuadBox, boxquad2, quad2_events);
+		pool.push(SolveQuadBox, boxquad3, quad3_events);
+		pool.push(SolveQuadBox, boxquad4, quad4_events);
 		while (pool.n_idle() <= 0)
 		{
 			// wait for threads
@@ -362,12 +376,44 @@ void CollisionSystem::UpdateBoxColliders()
 	{
 
 
-		SolveQuadBox(0, boxquad1);
-		SolveQuadBox(0, boxquad2);
-		SolveQuadBox(0, boxquad3);
-		SolveQuadBox(0, boxquad4);
+		SolveQuadBox(0, boxquad1, quad1_events);
+		SolveQuadBox(0, boxquad2, quad2_events);
+		SolveQuadBox(0, boxquad3, quad3_events);
+		SolveQuadBox(0, boxquad4, quad4_events);
 
 	}
+
+	for (auto& event : quad1_events)
+	{
+		collision_events.emplace_back(event);
+	}
+	for (auto& event : quad2_events)
+	{
+		collision_events.emplace_back(event);
+	}
+	for (auto& event : quad3_events)
+	{
+		collision_events.emplace_back(event);
+	}
+	for (auto& event : quad4_events)
+	{
+		collision_events.emplace_back(event);
+	}
+
+	ClearDuplicateEvents();
+}
+
+void CollisionSystem::ClearDuplicateEvents()
+{
+	std::vector<CollisionEvent> events;
+	for (auto& event : collision_events)
+	{
+		if (std::find(events.begin(), events.end(), event) == events.end())
+		{
+			events.emplace_back(event);
+		}
+	}
+	collision_events = events;
 }
 
 

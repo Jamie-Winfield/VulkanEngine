@@ -23,11 +23,13 @@ void Game::Start()
 
 	sprite1 = GameHelper::CreateSprite("atlas1");
 	sprite1->SetUVs(atlas->GetUV("textures/texture.jpg"));
-	//sprite1->setScale(100, 100);
-	sprite1->SetPos(200, 300);
+	sprite1->SetScale(100, 100);
+	sprite1->SetPos(200, 200);
 
-	//sprite2 = engine->createSprite("atlas1");
-	//sprite2->setPos(400, 400, 0);
+	sprite2 = GameHelper::CreateSprite("atlas1");
+	sprite2->SetUVs(atlas->GetUV("textures/texture2.png"));
+	sprite2->SetPos(400, 400);
+	sprite1->SetScale(100, 100);
 
 	sprite3 = GameHelper::CreateSprite("atlas2");
 	//sprite3->setScale(200, 200);
@@ -52,8 +54,8 @@ void Game::Start()
 
 	collisions = GameHelper::GetCollisionSystem();
 
-	//collisions->CreateBoxCollider(sprite1);
-	//collisions->CreateBoxCollider(sprite2);
+	collisions->CreateBoxCollider(sprite1);
+	collisions->CreateBoxCollider(sprite2);
 	//collisions->CreateBoxCollider(sprite3);
 	//collisions->CreateBoxCollider(sprite4);
 	//collisions->CreateBoxCollider(sprite5);
@@ -81,12 +83,19 @@ void Game::Start()
 
 void Game::Update(float gameTime)
 {
+	auto collisions = GameHelper::GetCollisionSystem();
+	auto events = collisions->GetCollisionEvents();
+	if (std::find(events.begin(), events.end(), sprite1) != events.end())
+	{
+		std::cout << "found event!\n";
+	}
+	
 }
 
 void Game::Render(Renderer* renderer)
 {
 	renderer->renderObject(sprite1);
-	//renderer->renderObject(sprite2);
+	renderer->renderObject(sprite2);
 	renderer->renderObject(sprite3);
 	//renderer->renderObject(sprite4);
 	renderer->renderObject(sprite5);
