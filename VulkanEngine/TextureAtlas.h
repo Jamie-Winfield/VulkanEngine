@@ -39,15 +39,17 @@ public:
 
 	Vector2x2 GetUV(const char* filename);
 
+	VkImage image;
+
+	VkImageView imageView;
+
 private:
 	void CreateAtlas();
 
 
 	Engine* engine;
 	UVector2 size;
-	VkImage image;
-
-	VkImageView imageView;
+	
 
 	std::vector<std::pair<const char*,Area>> usedAreas;
 

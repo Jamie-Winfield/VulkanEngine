@@ -115,6 +115,25 @@ SpriteObject* GameHelper::CreateSprite(const char* _filename)
 	return engine->createSprite(_filename);
 }
 
+void GameHelper::ChangeText(Text* _textobject, std::string _text, Vector3 _color, uint32_t _font)
+{
+	engine->getRenderer()->ResetVKImage(_textobject->GetAtlas()->image, _textobject->GetAtlas()->imageView, engine->getDevice());
+	
+	auto atlas = font_loader->LoadText(_text, _font, _textobject->GetAtlasName().c_str(), _color);
+
+	_textobject->SetAtlas(atlas.get(), _textobject->GetAtlasName());
+
+	auto texture = engine->getRenderer()->createTextureImage(engine->getDevice(), engine->getPhysicalDevice(),
+		_textobject->GetAtlasName().c_str(), engine->getGraphicsQueue());
+	_textobject->SetTextureImage(texture.first);
+	_textobject->SetScale(texture.second.x, texture.second.y);
+	_textobject->SetTextureImageView(engine->getRenderer()->createImageView(_textobject->GetTextureImage(), VK_FORMAT_R8G8B8A8_SRGB,
+		VK_IMAGE_ASPECT_COLOR_BIT, engine->getDevice()));
+	atlas_list.emplace_back(std::move(atlas));
+	engine->getRenderer()->ResetCommandBuffers(engine->getDevice(),engine->getWindow(),engine->getPhysicalDevice(), engine->getSurface());
+	
+}
+
 void GameHelper::EnableCollisionSystem(bool _enable)
 {
 	if (_enable)

@@ -11,8 +11,8 @@ public:
 
 	std::string GetText();
 	std::string GetAtlasName();
+	TextureAtlas* GetAtlas();
 	void SetAtlas(TextureAtlas* _atlas, std::string _atlas_name);
-
 	void Update() override;
 
 

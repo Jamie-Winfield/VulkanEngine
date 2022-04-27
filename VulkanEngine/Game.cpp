@@ -10,26 +10,28 @@ void Game::Start()
 	atlas->AddImage("textures/texture.jpg");
 	atlas->AddImage("textures/texture2.png");
 
-
-
-	auto _font = GameHelper::GetFontLoader();
-	auto font_id = _font->CreateFont("Fonts/SalmaproMedium-0Wooo.ttf", 25);
-	atlas2 = _font->LoadText("qThe quick Brown fox \n Jumped over the red fence", font_id, "atlas2",Colors::Green);
-
-
-	text = GameHelper::CreateTextObject("qThe quick Brown fox \n Jumped over the red fence", Colors::Red, font_id);
-	text->SetPos(500, 400);
-	text->SetZOrder(1);
-
 	sprite1 = GameHelper::CreateSprite("atlas1");
 	sprite1->SetUVs(atlas->GetUV("textures/texture.jpg"));
 	sprite1->SetScale(100, 100);
 	sprite1->SetPos(200, 200);
 
+	
+	
+	auto _font = GameHelper::GetFontLoader();
+	font_id = _font->CreateFont("Fonts/SalmaproMedium-0Wooo.ttf", 25);
+
+	text = GameHelper::CreateTextObject("qThe quick Brown fox \n Jumped over the red fence", Colors::Red, font_id);
+	text->SetPos(500, 400);
+	text->SetZOrder(1);
+
+	
+
 	sprite2 = GameHelper::CreateSprite("atlas1");
 	sprite2->SetUVs(atlas->GetUV("textures/texture2.png"));
 	sprite2->SetPos(400, 400);
 	sprite1->SetScale(100, 100);
+
+	atlas2 = _font->LoadText("qThe quick Brown fox \n Jumped over the red fence", font_id, "atlas2", Colors::Green);
 
 	sprite3 = GameHelper::CreateSprite("atlas2");
 	//sprite3->setScale(200, 200);
@@ -44,7 +46,7 @@ void Game::Start()
 
 	sprite5 = GameHelper::CreateSprite("textures/texture2.png");
 	sprite5->SetPos(190, 200);
-	//sprite5->setScale(100, 100);
+	sprite5->SetScale(100, 100);
 	
 	
 
@@ -173,7 +175,7 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 		}
 		else if (keyEvent.key == GLFW_KEY_F)
 		{
-			collisions->use_threads = !collisions->use_threads;
+			GameHelper::ChangeText(text, "This has changed the text", Colors::Black, font_id);
 		}
 
 		if (keyEvent.key == GLFW_KEY_KP_4)

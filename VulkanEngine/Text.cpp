@@ -20,11 +20,18 @@ std::string Text::GetAtlasName()
     return atlas_name;
 }
 
+TextureAtlas* Text::GetAtlas()
+{
+    return atlas;
+}
+
 void Text::SetAtlas(TextureAtlas* _atlas, std::string _atlas_name)
 {
     atlas = _atlas;
     atlas_name = _atlas_name;
 }
+
+
 
 void Text::Update()
 {

@@ -36,6 +36,40 @@ unsigned char* Renderer::GetPixels(const char* filename, int& texWidth, int& tex
     return pixels;
 }
 
+void Renderer::ResetVKImage(VkImage _image, VkImageView _imageview, VkDevice _device)
+{
+    for (int i = 0; i < imageViews.size(); ++i)
+    {
+        if (imageViews[i].second == _imageview)
+        {
+            vkDestroyImageView(_device, imageViews[i].second, nullptr);
+            imageViews.erase(imageViews.begin() + i);
+            break;
+        }
+    }
+    for (int i = 0; i < images.size(); ++i)
+    {
+        if (std::get<1>(images[i]) == _image)
+        {
+            vkFreeMemory(_device, std::get<2>(images[i]), nullptr);
+            vkDestroyImage(_device, std::get<1>(images[i]), nullptr);
+            images.erase(images.begin() + i);
+            break;
+        }
+    }
+    
+    
+}
+
+void Renderer::ResetCommandBuffers(VkDevice _device, GLFWwindow* window, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+{
+    recreateSwapChain(window, _device, physicalDevice, surface);
+    camera->updated1 = true;
+    camera->updated2 = true;
+    camera->updated3 = true;
+
+}
+
 void Renderer::FreePixels(unsigned char* pixels)
 {
 

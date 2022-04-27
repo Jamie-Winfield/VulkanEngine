@@ -38,6 +38,9 @@ public:
 
 	unsigned char* GetPixels(const char* filename, int& texWidth, int& texHeight, int& texChannels);
 
+	void ResetVKImage(VkImage _image, VkImageView _imageview, VkDevice _device);
+	void ResetCommandBuffers(VkDevice _device, GLFWwindow* window, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+
 	void FreePixels(unsigned char* pixels);
 
 	Camera* GetCamera();

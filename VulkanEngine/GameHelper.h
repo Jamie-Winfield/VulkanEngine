@@ -31,6 +31,8 @@ namespace GameHelper
 
 	SpriteObject* CreateSprite(const char* _filename);
 
+	void ChangeText(Text* _textobject, std::string _text, Vector3 _color, uint32_t _font);
+
 	void EnableCollisionSystem(bool _enable);
 
 	CollisionSystem* GetCollisionSystem();

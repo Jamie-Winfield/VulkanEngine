@@ -1,2 +1,10 @@
-﻿  CollisionSystem.cpp
+﻿  Renderer.cpp
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(336,137): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(336,128): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(382,136): warning C4244: 'argument': conversion from 'uint32_t' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(382,130): warning C4244: 'argument': conversion from 'uint32_t' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(922,76): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(1066,69): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\memory(3580,56): warning C4244: 'argument': conversion from 'uint32_t' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(91): message : see reference to function template instantiation 'std::unique_ptr<Camera,std::default_delete<Camera>> std::make_unique<Camera,Camera::ProjectionMode,glm::vec3,glm::vec3,uint32_t&,uint32_t&,0>(Camera::ProjectionMode &&,glm::vec3 &&,glm::vec3 &&,uint32_t &,uint32_t &)' being compiled
   VulkanEngine.vcxproj -> C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\x64\Debug\VulkanEngine.exe

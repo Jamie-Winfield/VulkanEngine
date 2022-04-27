@@ -49,6 +49,8 @@ private:
 
 	Text* text;
 
+	uint32_t font_id = 0;
+
 	bool flip = false;
 
 	bool renderSprite = false;
