@@ -1,2 +1,4 @@
-﻿  Game.cpp
+﻿  Renderer.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\memory(3580,56): warning C4244: 'argument': conversion from 'uint32_t' to 'float', possible loss of data
+C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\VulkanEngine\Renderer.cpp(91): message : see reference to function template instantiation 'std::unique_ptr<Camera,std::default_delete<Camera>> std::make_unique<Camera,Camera::ProjectionMode,glm::vec3,glm::vec3,uint32_t&,uint32_t&,0>(Camera::ProjectionMode &&,glm::vec3 &&,glm::vec3 &&,uint32_t &,uint32_t &)' being compiled
   VulkanEngine.vcxproj -> C:\Users\jamie\Documents\C++\Year 3\DisEngine\temp\VulkanEngine\x64\Debug\VulkanEngine.exe
