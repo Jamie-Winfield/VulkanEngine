@@ -218,10 +218,8 @@
     <None Include="shaders\vert.spv" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\blackpixpng.png" />
     <Image Include="textures\NoTexture.png" />
     <Image Include="textures\texture.jpg" />
-    <Image Include="textures\texture2.png" />
     <Image Include="textures\whitepix.png" />
   </ItemGroup>
   <ItemGroup>
