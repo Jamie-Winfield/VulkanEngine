@@ -189,9 +189,7 @@ void SolveQuadBox(int id, std::vector<BoxCollider*> colliders, std::vector<Colli
 					(sprite1_y_max >= sprite2_y && sprite1_y_max <= sprite2_y_max))
 				{
 					//objects also overlap on the y axis
-
-					std::cout << "objects overlap \n";
-
+					// 
 					// displace objects by how much they overlap
 					SpriteObject* sprite;
 					auto _sprite1 = _collider1->GetParent();
