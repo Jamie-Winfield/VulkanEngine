@@ -17,22 +17,42 @@ public:
 	void Update(float gameTime) override;
 
 	/// <summary>
-	/// Spites which need to be rendered should be added to the render queue using renderer->renderObject(spriteObject*).
+	/// Spites which need to be rendered should be added to the render queue using renderer->renderObject(spriteObject*)
+	/// or renderer->renderObject(Text*).
 	/// </summary>
 	void Render(Renderer* renderer) override;
 
 	/// <summary>
 	/// Used to handle key events.
 	/// </summary>
-	/// <param name="keyEvent"></param>
 	void KeyHandler(KeyEvent keyEvent, Mouse mouse) override;
 
 	/// <summary>
-	/// Called at the end of the game and should be used to clean up any spriteObjects using free
-	///  and other memory used by the game.
+	/// Called at the end of the game and should be used to clean up memory
 	/// </summary>
 	void End() override;
 
 private:
+	SpriteObject* player1 = nullptr;
+	bool p1_move_up = false;
+	bool p1_move_down = false;
+
+	SpriteObject* player2 = nullptr;
+	bool p2_move_up = false;
+	bool p2_move_down = false;
+
+	SpriteObject* top = nullptr;
+	SpriteObject* bottom = nullptr;
+
+	SpriteObject* ball = nullptr;
+	Vector2 ball_vector = Vector2(1, 1);
+
+	Text* scoreText = nullptr;
+	Text* p1_score = nullptr;
+	int p1Score = 0;
+	Text* p2_score = nullptr;
+	int p2Score = 0;
+
+	int font_id = 0;
 };
 

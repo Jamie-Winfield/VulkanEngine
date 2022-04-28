@@ -5,9 +5,12 @@ int main()
 {
 
     auto settings = std::make_unique<Settings>();
-    settings->W_WIDTH = 1920;
-    settings->W_HEIGHT = 1080;
-    settings->window_name = "Vulkan Game";
+    settings->W_WIDTH = 800;
+    settings->W_HEIGHT = 800;
+    settings->window_name = "Pong Game";
+    settings->backgroundColorRed = 0;
+    settings->backgroundColorBlue = 0;
+    settings->backgroundColorGreen = 0;
     VulkanEngineApplication app(std::move(settings));
 
     try

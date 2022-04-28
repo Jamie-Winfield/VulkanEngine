@@ -60,6 +60,17 @@ struct Vector2
 		y = 0;
 	}
 
+	void Normalise()
+	{
+		float z = x + y;
+		if (z == 0)
+		{
+			return;
+		}
+		x /= z;
+		y /= z;
+	}
+
 	float x;
 	float y;
 };

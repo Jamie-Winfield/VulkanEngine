@@ -165,3 +165,13 @@ Renderer* GameHelper::GetRenderer()
 {
 	return engine->getRenderer();
 }
+
+void GameHelper::SetGameTime(float _time)
+{
+	gametime = _time;
+}
+
+float GameHelper::GameTimeDelta()
+{
+	return gametime;
+}

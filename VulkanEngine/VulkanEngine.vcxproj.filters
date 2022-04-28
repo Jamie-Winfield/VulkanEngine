@@ -160,6 +160,12 @@
     <Image Include="textures\NoTexture.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\blackpixpng.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\whitepix.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\SalmaproMedium-0Wooo.ttf" />

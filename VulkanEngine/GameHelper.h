@@ -14,6 +14,8 @@ namespace GameHelper
 
 		std::vector < std::unique_ptr<TextureAtlas>> atlas_list;
 		std::vector<std::string> atlasNames;
+
+		float gametime = 0;
 	}
 
 	void Init(Engine* _engine);
@@ -42,4 +44,10 @@ namespace GameHelper
 	void StopGame();
 
 	Renderer* GetRenderer();
+
+	void SetGameTime(float _time);
+
+	float GameTimeDelta();
+
+
 }
