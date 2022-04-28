@@ -34,5 +34,14 @@ public:
 	void End() override;
 
 private:
+	SpriteObject* sprite = nullptr;
+
+	SpriteObject* atlas_sprite = nullptr;
+
+	SpriteObject* atlas_sprite2 = nullptr;
+
+	TextureAtlas* atlas = nullptr;
+
+	Text* text = nullptr;
 };
 
