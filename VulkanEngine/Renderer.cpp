@@ -935,9 +935,10 @@ void Renderer::createDescriptorSets(VkDevice device, std::vector<VkDescriptorSet
         if (textureImageView == descriptorSet.first)
         {
             _descriptorSets.resize(swapChainImages.size());
-            _descriptorSets[0] = (descriptorSet.second[0]);
-            _descriptorSets[1] = (descriptorSet.second[1]);
-            _descriptorSets[2] = (descriptorSet.second[2]);
+            for (int i = 0; i < swapChainImages.size(); ++i)
+            {
+                _descriptorSets[i] = (descriptorSet.second[i]);
+            }
             return;
         }
     }
