@@ -154,10 +154,10 @@
     <Image Include="textures\texture.jpg">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="textures\texture2.png">
+    <Image Include="textures\NoTexture.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="textures\NoTexture.png">
+    <Image Include="textures\whitepix.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -63,7 +63,7 @@ void VulkanEngineApplication::framebufferResizeCallback(GLFWwindow* window, int 
 void VulkanEngineApplication::mainLoop()
 {
     game->Start();
-    
+    timeBetweenFrames = 0.0001;
     while (!glfwWindowShouldClose(window))
     {
         auto startTime = std::chrono::high_resolution_clock::now();
@@ -79,6 +79,7 @@ void VulkanEngineApplication::mainLoop()
             game->KeyHandler(keyEvent, mouse);
         }
         keyEvents.clear();
+        GameHelper::SetGameTime(timeBetweenFrames);
         game->Update(timeBetweenFrames);
         game->Render(engine->getRenderer());
         engine->getRenderer()->drawFrame(engine->getDevice(), engine->getGraphicsQueue(), engine->getPresentQueue(),
