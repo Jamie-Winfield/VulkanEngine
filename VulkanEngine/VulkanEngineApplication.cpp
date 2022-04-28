@@ -63,6 +63,7 @@ void VulkanEngineApplication::framebufferResizeCallback(GLFWwindow* window, int 
 void VulkanEngineApplication::mainLoop()
 {
     game->Start();
+    
     while (!glfwWindowShouldClose(window))
     {
         auto startTime = std::chrono::high_resolution_clock::now();
@@ -88,7 +89,15 @@ void VulkanEngineApplication::mainLoop()
         {
             engine->GetCollisionSystem()->UpdateCollsions();
         }
-        frameCounter(timeBetweenFrames);
+        if (engine->GetFrameCounterEnable())
+        {
+            frameCounter(timeBetweenFrames);
+        } 
+       
+        else
+        {
+            glfwSetWindowTitle(window, settings->window_name.c_str());
+        }
     }
 
     vkDeviceWaitIdle(engine->getDevice());

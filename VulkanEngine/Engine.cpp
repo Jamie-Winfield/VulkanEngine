@@ -305,6 +305,16 @@ void Engine::DisableCollisionSystem()
     collision_system.reset(nullptr);
 }
 
+bool Engine::GetFrameCounterEnable()
+{
+    return frameCounter;
+}
+
+void Engine::SetFrameCounterEnable(bool _enable)
+{
+    frameCounter = _enable;
+}
+
 bool Engine::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice)
 {
     uint32_t extensionCount;

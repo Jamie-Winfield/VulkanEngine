@@ -34,6 +34,11 @@ bool GameHelper::CheckAtlasName(const char* _name)
 	return false;
 }
 
+void GameHelper::ToggleFrameCounter(bool _enable)
+{
+	engine->SetFrameCounterEnable(_enable);
+}
+
 Text* GameHelper::CreateTextObject(std::string _text, Vector3 _color, uint32_t _font)
 {
 	std::unique_ptr<Text> text;

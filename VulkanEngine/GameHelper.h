@@ -27,6 +27,8 @@ namespace GameHelper
 	/// </summary>
 	bool CheckAtlasName(const char* _name);
 
+	void ToggleFrameCounter(bool _enable);
+
 	Text* CreateTextObject(std::string _text, Vector3 _color, uint32_t _font);
 
 	SpriteObject* CreateSprite(const char* _filename);

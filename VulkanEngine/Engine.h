@@ -67,6 +67,10 @@ public:
 	void EnableCollisionSystem();
 	void DisableCollisionSystem();
 
+	bool GetFrameCounterEnable();
+
+	void SetFrameCounterEnable(bool _enable);
+
 private:
 	void createInstance();
 	bool checkValidationLayerSupport();
@@ -80,7 +84,7 @@ private:
 	
 	void createLogicalDevice();
 
-
+	
 
 
 
@@ -105,6 +109,8 @@ private:
 	uint16_t current_sprite_id = 0;
 
 	std::unique_ptr<CollisionSystem> collision_system;
+
+	bool frameCounter = false;
 	
 };
 
