@@ -41,8 +41,6 @@ bool TextureAtlas::AddImage(const char* filename)
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
 
-    uint32_t offset_x;
-    uint32_t offset_y;
     Area area;
 
 
@@ -93,7 +91,7 @@ bool TextureAtlas::AddImage(const char* filename)
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
 
     Helpers::copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
-        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), area.position.x, area.position.y);
+        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), static_cast<uint32_t>(area.position.x), static_cast<uint32_t>(area.position.y));
 
     engine->getRenderer()->transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
@@ -125,8 +123,6 @@ bool TextureAtlas::AddText(const char* name, unsigned char* buffer, int width, i
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
 
-    uint32_t offset_x;
-    uint32_t offset_y;
     Area area;
 
     
@@ -179,7 +175,7 @@ bool TextureAtlas::AddText(const char* name, unsigned char* buffer, int width, i
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
 
     Helpers::copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
-        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), area.position.x, area.position.y);
+        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), static_cast<uint32_t>(area.position.x), static_cast<uint32_t>(area.position.y));
 
     engine->getRenderer()->transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
@@ -260,8 +256,6 @@ void TextureAtlas::AddImageNewLine(const char* name, unsigned char* buffer, int 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
 
-    uint32_t offset_x;
-    uint32_t offset_y;
     Area area;
 
     if (rowStartArea.posMax.y + texHeight < size.y)
@@ -295,7 +289,7 @@ void TextureAtlas::AddImageNewLine(const char* name, unsigned char* buffer, int 
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
 
     Helpers::copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
-        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), area.position.x, area.position.y);
+        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), static_cast<uint32_t>(area.position.x), static_cast<uint32_t>(area.position.y));
 
     engine->getRenderer()->transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
@@ -326,8 +320,6 @@ void TextureAtlas::AddTextNewLine(const char* name, unsigned char* buffer, int w
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
 
-    uint32_t offset_x;
-    uint32_t offset_y;
     Area area;
 
     if (rowStartArea.posMax.y + texHeight + y_offset < size.y)
@@ -362,7 +354,7 @@ void TextureAtlas::AddTextNewLine(const char* name, unsigned char* buffer, int w
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
 
     Helpers::copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight),
-        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), area.position.x, area.position.y);
+        engine->getDevice(), engine->getRenderer()->getCommandPool(), engine->getGraphicsQueue(), static_cast<uint32_t>(area.position.x), static_cast<uint32_t>(area.position.y));
 
     engine->getRenderer()->transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, engine->getDevice(), engine->getGraphicsQueue());
@@ -381,8 +373,8 @@ Vector2x2 TextureAtlas::GetUV(const char* filename)
     {
         if (area.first == filename)
         {
-            Vector2 x = Vector2(area.second.position.x / size.x, area.second.position.y / size.y);
-            Vector2 y = Vector2(area.second.posMax.x / size.x, area.second.posMax.y / size.y);
+            Vector2 x = Vector2(area.second.position.x / static_cast<float>(size.x), area.second.position.y / static_cast<float>(size.y));
+            Vector2 y = Vector2(area.second.posMax.x / static_cast<float>(size.x), area.second.posMax.y / static_cast<float>(size.y));
 
             return Vector2x2(x, y);
         }

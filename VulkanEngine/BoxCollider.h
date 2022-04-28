@@ -26,7 +26,7 @@ public:
 		LEFT_SIDE = 8,
 		RIGHT_SIDE = 15,
 		ALL = 120
-	}quad = ALL;
+	}quad = Quad::ALL;
 
 
 	BoxCollider(Vector2 _position, float _rotation, Vector2 _scale, uint16_t _id, Vector2 _screen, SpriteObject* _parent)

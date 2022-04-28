@@ -80,7 +80,7 @@ Text* GameHelper::CreateTextObject(std::string _text, Vector3 _color, uint32_t _
 
 		std::random_device random_device;
 		std::mt19937 generator(random_device());
-		std::uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
+		std::uniform_int_distribution<> distribution(0, static_cast<int>(CHARACTERS.size()) - 1);
 
 		random_string.clear();
 

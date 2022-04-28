@@ -38,7 +38,7 @@ uint32_t LoadFont::CreateFont(const char* fontname, uint32_t pixel_size)
 
 	faces.emplace_back(std::move(_face));
 	face_sizes.emplace_back(pixel_size);
-	return faces.size() - 1;
+	return static_cast<uint32_t>(faces.size() - 1);
 }
 
 std::unique_ptr<TextureAtlas> LoadFont::LoadText(std::string text, uint32_t font_id, const char* text_name, Vector3 color)
@@ -53,10 +53,10 @@ std::unique_ptr<TextureAtlas> LoadFont::LoadText(std::string text, uint32_t font
 
 	auto size = face_sizes[font_id] + 1;
 
-	int width = 0;
-	int height = size;
-	int rows = 0;
-	int current_width = 0;
+	unsigned int width = 0;
+	unsigned int height = size;
+	unsigned int rows = 0;
+	unsigned int current_width = 0;
 	for (auto _char : text)
 	{
 		
@@ -149,32 +149,32 @@ std::unique_ptr<TextureAtlas> LoadFont::LoadText(std::string text, uint32_t font
 		uint8_t* start = src;
 		int dst = 0;
 
-		for (int y = 0; y < height; ++y)
+		for (unsigned int y = 0; y < height; ++y)
 		{
 			src = start;
-			for (int x = 0; x < width; ++x)
+			for (unsigned int x = 0; x < width; ++x)
 			{
 				auto value = *src;
 				src++;
-				buffer[dst++] = color.x;
-				buffer[dst++] = color.y;
-				buffer[dst++] = color.z;
+				buffer[dst++] = static_cast<uint8_t>(color.x);
+				buffer[dst++] = static_cast<uint8_t>(color.y);
+				buffer[dst++] = static_cast<uint8_t>(color.z);
 				buffer[dst++] = value;
 			}
 			start += _face->glyph->bitmap.pitch;
 		}
-		float offset = size - _face->glyph->metrics.horiBearingY / 64;
+		float offset = static_cast<float>(size - _face->glyph->metrics.horiBearingY / static_cast<float>(64));
 		
 
 		if (next_char_new_line)
 		{
 			
-			atlas->AddTextNewLine(name, buffer.data(), width, height, offset);
+			atlas->AddTextNewLine(name, buffer.data(), width, height, static_cast<int>(offset));
 			next_char_new_line = false;
 		}
 		else
 		{
-			atlas->AddText(name, buffer.data(), width, height, offset);
+			atlas->AddText(name, buffer.data(), width, height, static_cast<int>(offset));
 		}
 	}
 

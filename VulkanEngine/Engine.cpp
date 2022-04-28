@@ -53,8 +53,8 @@ void Engine::initVulkan(Settings* _settings, GLFWwindow* _window)
 {
 	settings = _settings;
     window = _window;
-    window_width = settings->W_WIDTH;
-    window_height = settings->W_HEIGHT;
+    window_width = static_cast<float>(settings->W_WIDTH);
+    window_height = static_cast<float>(settings->W_HEIGHT);
 	createInstance();
     debugMessenger.setupDebugMessenger(settings, instance);
     createSurface(window);
@@ -297,7 +297,7 @@ void Engine::StopGame()
 
 void Engine::EnableCollisionSystem()
 {
-    collision_system = std::make_unique<CollisionSystem>( Vector2(settings->W_WIDTH,settings->W_HEIGHT) );
+    collision_system = std::make_unique<CollisionSystem>( Vector2(static_cast<float>(settings->W_WIDTH),static_cast<float>(settings->W_HEIGHT)) );
 }
 
 void Engine::DisableCollisionSystem()

@@ -333,7 +333,7 @@ std::pair<VkImage,Vector2> Renderer::createTextureImage(VkDevice device, VkPhysi
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    std::tuple<std::string, VkImage, VkDeviceMemory,Vector2> imageTuple = std::make_tuple(filename, image, imageMemory,Vector2(texWidth,texHeight));
+    std::tuple<std::string, VkImage, VkDeviceMemory,Vector2> imageTuple = std::make_tuple(filename, image, imageMemory,Vector2(static_cast<float>(texWidth),static_cast<float>(texHeight)));
     images.emplace_back(std::move(imageTuple));
     return std::make_pair(std::get<1>(images.back()), std::get<3>(images.back()));
 
@@ -379,7 +379,7 @@ std::pair<VkImage, Vector2> Renderer::CreateAtlasImage(VkDevice device, VkPhysic
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    std::tuple<std::string, VkImage, VkDeviceMemory, Vector2> imageTuple = std::make_tuple(atlasname, image, imageMemory,Vector2(width,height));
+    std::tuple<std::string, VkImage, VkDeviceMemory, Vector2> imageTuple = std::make_tuple(atlasname, image, imageMemory,Vector2(static_cast<float>(width),static_cast<float>(height)));
     images.emplace_back(std::move(imageTuple));
     return std::make_pair(std::get<1>(images.back()), std::get<3>(images.back()));
 }
@@ -919,7 +919,7 @@ void Renderer::createDescriptorPool(VkDevice device)
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
     poolInfo.pPoolSizes = poolSizes.data();
-    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size()) * size;
+    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size()) * static_cast<uint32_t>(size);
 
     auto result = vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
     if (result != VK_SUCCESS)
@@ -1063,7 +1063,7 @@ void Renderer::createCommandBuffers(VkDevice device)
             VkDeviceSize offsets[] = { 0 };
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
             vkCmdBindIndexBuffer(commandBuffers[i], spriteObjects[x]->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT16);
-            uint32_t dynamicOffset = x * sizeof(UniformBufferObject);
+            uint32_t dynamicOffset = static_cast<uint32_t>(x * sizeof(UniformBufferObject));
             vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet[i], 1, &dynamicOffset);
 
 
