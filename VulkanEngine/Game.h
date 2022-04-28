@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "keyEvent.h"
 #include "VulkanGame.h"
+
 class Game : public VulkanGame
 {
 public:
@@ -33,26 +34,5 @@ public:
 	void End() override;
 
 private:
-	SpriteObject* player1 = nullptr;
-	bool p1_move_up = false;
-	bool p1_move_down = false;
-
-	SpriteObject* player2 = nullptr;
-	bool p2_move_up = false;
-	bool p2_move_down = false;
-
-	SpriteObject* top = nullptr;
-	SpriteObject* bottom = nullptr;
-
-	SpriteObject* ball = nullptr;
-	Vector2 ball_vector = Vector2(1, 1);
-
-	Text* scoreText = nullptr;
-	Text* p1_score = nullptr;
-	int p1Score = 0;
-	Text* p2_score = nullptr;
-	int p2Score = 0;
-
-	int font_id = 0;
 };
 
