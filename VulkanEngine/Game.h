@@ -34,25 +34,5 @@ public:
 	void End() override;
 
 private:
-	SpriteObject* sprite1;
-	SpriteObject* sprite2;
-	SpriteObject* sprite3;
-	SpriteObject* sprite4;
-	SpriteObject* sprite5;
-	std::vector<SpriteObject*> sprites;
-	CollisionSystem* collisions;
-
-	TextureAtlas* atlas;
-	std::unique_ptr<TextureAtlas> atlas2;
-	std::unique_ptr<LoadFont> font;
-
-
-	Text* text;
-
-	uint32_t font_id = 0;
-
-	bool flip = false;
-
-	bool renderSprite = false;
 };
 
