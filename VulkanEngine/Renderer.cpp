@@ -205,7 +205,7 @@ void Renderer::drawFrame(VkDevice device, VkQueue graphicsQueue, VkQueue present
         throw std::runtime_error("failed to present swap chain image! vk error: " + std::to_string(result));
     }
 
-    currentFrame = (currentFrame + 1) % settings->MAX_FRAMES_IN_FLIGHT;
+    currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     spriteObjects_new.clear();
 }
 
@@ -217,7 +217,7 @@ void Renderer::cleanup(VkDevice device)
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
-    for (size_t i = 0; i < settings->MAX_FRAMES_IN_FLIGHT; ++i)
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
     {
         vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
         vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
@@ -919,7 +919,8 @@ void Renderer::createDescriptorPool(VkDevice device)
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
     poolInfo.pPoolSizes = poolSizes.data();
-    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size()) * static_cast<uint32_t>(size);
+    poolInfo.maxSets = static_cast<uint32_t>((swapChainImages.size()) * poolSizes.size()) * static_cast<uint32_t>(size);
+    
 
     auto result = vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
     if (result != VK_SUCCESS)
@@ -1082,9 +1083,9 @@ void Renderer::createCommandBuffers(VkDevice device)
 
 void Renderer::createSyncObjects(VkDevice device)
 {
-    imageAvailableSemaphores.resize(settings->MAX_FRAMES_IN_FLIGHT);
-    renderFinishedSemaphores.resize(settings->MAX_FRAMES_IN_FLIGHT);
-    inFlightFences.resize(settings->MAX_FRAMES_IN_FLIGHT);
+    imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+    renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+    inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
 
     VkSemaphoreCreateInfo semaphoreInfo{};
@@ -1093,7 +1094,7 @@ void Renderer::createSyncObjects(VkDevice device)
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-    for (size_t i = 0; i < settings->MAX_FRAMES_IN_FLIGHT; ++i)
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
     {
         auto result_image = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]);
         auto result_render = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]);
@@ -1183,6 +1184,7 @@ void Renderer::recreateSwapChain(GLFWwindow* window, VkDevice device, VkPhysical
     createDescriptorPool(device);
     for (auto& sprite : spriteObjects)
     {
+        sprite->descriptorSets.clear();
         createDescriptorSets(device, sprite->descriptorSets, sprite->GetTextureImageView());
     }
     createCommandBuffers(device);
@@ -1204,6 +1206,7 @@ void Renderer::recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice)
     createDescriptorPool(device);
     for (auto& sprite : spriteObjects)
     {
+        sprite->descriptorSets.clear();
         createDescriptorSets(device,sprite->descriptorSets,sprite->GetTextureImageView());
     }
     createCommandBuffers(device);

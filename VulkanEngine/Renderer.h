@@ -108,6 +108,8 @@ private:
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 
+	const int MAX_FRAMES_IN_FLIGHT = 2;
+
 	std::vector<std::tuple<std::string, VkImage, VkDeviceMemory, Vector2>> images;
 	std::vector<std::pair<VkImage, VkImageView>> imageViews;
 	std::vector<std::pair<VkImageView,std::vector<VkDescriptorSet>>> descriptorSets;
