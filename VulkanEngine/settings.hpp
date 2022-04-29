@@ -19,11 +19,7 @@ struct Settings
 	float backgroundColorGreen = 0.f;
 	float backgroundColorBlue = 1.f;
 
-#ifdef NDEBUG
 	const bool enableValidationLayers = false;
-#else
-	const bool enableValidationLayers = true;
-#endif
 
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 

@@ -908,10 +908,6 @@ void Renderer::createDescriptorPool(VkDevice device)
     {
         size = 1;
     }
-    if (size >= 2)
-    {
-        size--;
-    }
 
     std::array<VkDescriptorPoolSize, 2> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
@@ -923,7 +919,8 @@ void Renderer::createDescriptorPool(VkDevice device)
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
     poolInfo.pPoolSizes = poolSizes.data();
-    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size()) * static_cast<uint32_t>(size);
+    poolInfo.maxSets = static_cast<uint32_t>((swapChainImages.size()) * poolSizes.size()) * static_cast<uint32_t>(size);
+    
 
     auto result = vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
     if (result != VK_SUCCESS)
@@ -1187,6 +1184,7 @@ void Renderer::recreateSwapChain(GLFWwindow* window, VkDevice device, VkPhysical
     createDescriptorPool(device);
     for (auto& sprite : spriteObjects)
     {
+        sprite->descriptorSets.clear();
         createDescriptorSets(device, sprite->descriptorSets, sprite->GetTextureImageView());
     }
     createCommandBuffers(device);
@@ -1208,6 +1206,7 @@ void Renderer::recreateBuffers(VkDevice device, VkPhysicalDevice physicalDevice)
     createDescriptorPool(device);
     for (auto& sprite : spriteObjects)
     {
+        sprite->descriptorSets.clear();
         createDescriptorSets(device,sprite->descriptorSets,sprite->GetTextureImageView());
     }
     createCommandBuffers(device);
