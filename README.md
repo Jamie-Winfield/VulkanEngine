@@ -122,10 +122,57 @@ void Game::KeyHandler(KeyEvent keyEvent, Mouse mouse)
 }
 ```
 
+# Collision System
 
+To start using the built in collision system it first must be enabled through the game helper.
 
+```C++
+GameHelper::EnableCollisionSystem(true);
+```
 
+Then sprites which should have their collisions tracked just need to be added to the system
+```C++
+auto collision_system = GameHelper::GetCollisionSystem();
+collision_system->CreateBoxCollider(sprite);
 
+// Collisions between sprites added to the system are handled automatically.
 
+// Sprites can also be removed from the system easily.
+collision_system->DestroyBoxCollider(sprite->GetBoxCollider());
+```
+
+While collisions for added sprites are automatically handled the collision events are also provided every frame
+```C++
+auto collision_events = GameHelper::GetCollisionSystem()->GetCollisionEvents();
+for (auto& _event : collision_events)
+{
+	if(_event.Contains(sprite))
+	{
+		// if the event is between the provided sprite and another this will be executed
+	}
+	if(_event.ContainsBoth(sprite, sprite2))
+	{
+		// if both of the provided sprites were involved in the event then this will be executed
+	}
+}
+```
+
+If you just need the collision events and don't need sprites to be moved when they collide with eachother then you can set the sprites to not be moveable
+
+```C++
+sprite->GetBoxCollider()->SetMoveable(false);
+```
+
+# Exiting the Engine
+
+To quit the game there is a simple function which can be called from the Game helper
+
+```C++
+GameHelper::StopGame();
+```
+
+# Known Bugs
+
+There is a bug with the text system on some graphics cards which causes the engine to crash.
 
 
